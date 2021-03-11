@@ -1,0 +1,399 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "xmc_rtc.c"
+  16              	 .section .text.XMC_RTC_Start,"ax",%progbits
+  17              	 .align 1
+  18              	 .global XMC_RTC_Start
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	XMC_RTC_Start:
+  23              	 
+  24              	 
+  25              	 
+  26              	.L2:
+  27 0000 054B     	 ldr r3,.L5
+  28 0002 D3F8C430 	 ldr r3,[r3,#196]
+  29 0006 DB05     	 lsls r3,r3,#23
+  30 0008 FAD4     	 bmi .L2
+  31 000a 044A     	 ldr r2,.L5+4
+  32 000c 5368     	 ldr r3,[r2,#4]
+  33 000e 43F00103 	 orr r3,r3,#1
+  34 0012 5360     	 str r3,[r2,#4]
+  35 0014 7047     	 bx lr
+  36              	.L6:
+  37 0016 00BF     	 .align 2
+  38              	.L5:
+  39 0018 00400050 	 .word 1342193664
+  40 001c 004A0050 	 .word 1342196224
+  42              	 .section .text.XMC_RTC_Stop,"ax",%progbits
+  43              	 .align 1
+  44              	 .global XMC_RTC_Stop
+  45              	 .thumb
+  46              	 .thumb_func
+  48              	XMC_RTC_Stop:
+  49              	 
+  50              	 
+  51              	 
+  52              	.L8:
+  53 0000 054B     	 ldr r3,.L10
+  54 0002 D3F8C430 	 ldr r3,[r3,#196]
+  55 0006 DB05     	 lsls r3,r3,#23
+  56 0008 FAD4     	 bmi .L8
+  57 000a 044A     	 ldr r2,.L10+4
+  58 000c 5368     	 ldr r3,[r2,#4]
+  59 000e 23F00103 	 bic r3,r3,#1
+  60 0012 5360     	 str r3,[r2,#4]
+  61 0014 7047     	 bx lr
+  62              	.L11:
+  63 0016 00BF     	 .align 2
+  64              	.L10:
+  65 0018 00400050 	 .word 1342193664
+  66 001c 004A0050 	 .word 1342196224
+  68              	 .section .text.XMC_RTC_SetPrescaler,"ax",%progbits
+  69              	 .align 1
+  70              	 .global XMC_RTC_SetPrescaler
+  71              	 .thumb
+  72              	 .thumb_func
+  74              	XMC_RTC_SetPrescaler:
+  75              	 
+  76              	 
+  77              	 
+  78              	.L13:
+  79 0000 054B     	 ldr r3,.L15
+  80 0002 D3F8C430 	 ldr r3,[r3,#196]
+  81 0006 DB05     	 lsls r3,r3,#23
+  82 0008 FAD4     	 bmi .L13
+  83 000a 044A     	 ldr r2,.L15+4
+  84 000c 5368     	 ldr r3,[r2,#4]
+  85 000e 9BB2     	 uxth r3,r3
+  86 0010 43EA0040 	 orr r0,r3,r0,lsl#16
+  87 0014 5060     	 str r0,[r2,#4]
+  88 0016 7047     	 bx lr
+  89              	.L16:
+  90              	 .align 2
+  91              	.L15:
+  92 0018 00400050 	 .word 1342193664
+  93 001c 004A0050 	 .word 1342196224
+  95              	 .section .text.XMC_RTC_SetTime,"ax",%progbits
+  96              	 .align 1
+  97              	 .global XMC_RTC_SetTime
+  98              	 .thumb
+  99              	 .thumb_func
+ 101              	XMC_RTC_SetTime:
+ 102              	 
+ 103              	 
+ 104              	 
+ 105              	.L18:
+ 106 0000 084B     	 ldr r3,.L22
+ 107 0002 D3F8C420 	 ldr r2,[r3,#196]
+ 108 0006 12F4006F 	 tst r2,#2048
+ 109 000a 1A46     	 mov r2,r3
+ 110 000c F8D1     	 bne .L18
+ 111 000e 03F52063 	 add r3,r3,#2560
+ 112 0012 0168     	 ldr r1,[r0]
+ 113 0014 1962     	 str r1,[r3,#32]
+ 114              	.L19:
+ 115 0016 D2F8C410 	 ldr r1,[r2,#196]
+ 116 001a C904     	 lsls r1,r1,#19
+ 117 001c FBD4     	 bmi .L19
+ 118 001e 4268     	 ldr r2,[r0,#4]
+ 119 0020 5A62     	 str r2,[r3,#36]
+ 120 0022 7047     	 bx lr
+ 121              	.L23:
+ 122              	 .align 2
+ 123              	.L22:
+ 124 0024 00400050 	 .word 1342193664
+ 126              	 .section .text.XMC_RTC_GetTime,"ax",%progbits
+ 127              	 .align 1
+ 128              	 .global XMC_RTC_GetTime
+ 129              	 .thumb
+ 130              	 .thumb_func
+ 132              	XMC_RTC_GetTime:
+ 133              	 
+ 134              	 
+ 135              	 
+ 136 0000 024B     	 ldr r3,.L25
+ 137 0002 1A6A     	 ldr r2,[r3,#32]
+ 138 0004 0260     	 str r2,[r0]
+ 139 0006 5B6A     	 ldr r3,[r3,#36]
+ 140 0008 4360     	 str r3,[r0,#4]
+ 141 000a 7047     	 bx lr
+ 142              	.L26:
+ 143              	 .align 2
+ 144              	.L25:
+ 145 000c 004A0050 	 .word 1342196224
+ 147              	 .section .text.XMC_RTC_SetTimeStdFormat,"ax",%progbits
+ 148              	 .align 1
+ 149              	 .global XMC_RTC_SetTimeStdFormat
+ 150              	 .thumb
+ 151              	 .thumb_func
+ 153              	XMC_RTC_SetTimeStdFormat:
+ 154              	 
+ 155              	 
+ 156 0000 07B5     	 push {r0,r1,r2,lr}
+ 157 0002 0268     	 ldr r2,[r0]
+ 158 0004 9DF80030 	 ldrb r3,[sp]
+ 159 0008 62F30503 	 bfi r3,r2,#0,#6
+ 160 000c 8DF80030 	 strb r3,[sp]
+ 161 0010 4268     	 ldr r2,[r0,#4]
+ 162 0012 9DF80130 	 ldrb r3,[sp,#1]
+ 163 0016 62F30503 	 bfi r3,r2,#0,#6
+ 164 001a 8DF80130 	 strb r3,[sp,#1]
+ 165 001e 8268     	 ldr r2,[r0,#8]
+ 166 0020 9DF80230 	 ldrb r3,[sp,#2]
+ 167 0024 62F30403 	 bfi r3,r2,#0,#5
+ 168 0028 8DF80230 	 strb r3,[sp,#2]
+ 169 002c C368     	 ldr r3,[r0,#12]
+ 170 002e 9DF80320 	 ldrb r2,[sp,#3]
+ 171 0032 013B     	 subs r3,r3,#1
+ 172 0034 63F30402 	 bfi r2,r3,#0,#5
+ 173 0038 8DF80320 	 strb r2,[sp,#3]
+ 174 003c 9DF80530 	 ldrb r3,[sp,#5]
+ 175 0040 0269     	 ldr r2,[r0,#16]
+ 176 0042 62F30303 	 bfi r3,r2,#0,#4
+ 177 0046 8DF80530 	 strb r3,[sp,#5]
+ 178 004a 4369     	 ldr r3,[r0,#20]
+ 179 004c 8269     	 ldr r2,[r0,#24]
+ 180 004e 03F26C73 	 addw r3,r3,#1900
+ 181 0052 ADF80630 	 strh r3,[sp,#6]
+ 182 0056 9DF80430 	 ldrb r3,[sp,#4]
+ 183 005a 6846     	 mov r0,sp
+ 184 005c 62F30203 	 bfi r3,r2,#0,#3
+ 185 0060 8DF80430 	 strb r3,[sp,#4]
+ 186 0064 FFF7FEFF 	 bl XMC_RTC_SetTime
+ 187 0068 03B0     	 add sp,sp,#12
+ 188              	 
+ 189 006a 5DF804FB 	 ldr pc,[sp],#4
+ 191              	 .section .text.XMC_RTC_GetTimeStdFormat,"ax",%progbits
+ 192              	 .align 1
+ 193              	 .global XMC_RTC_GetTimeStdFormat
+ 194              	 .thumb
+ 195              	 .thumb_func
+ 197              	XMC_RTC_GetTimeStdFormat:
+ 198              	 
+ 199              	 
+ 200              	 
+ 201 0000 124B     	 ldr r3,.L29
+ 202 0002 82B0     	 sub sp,sp,#8
+ 203 0004 1A6A     	 ldr r2,[r3,#32]
+ 204 0006 0092     	 str r2,[sp]
+ 205 0008 9DF80020 	 ldrb r2,[sp]
+ 206 000c 5B6A     	 ldr r3,[r3,#36]
+ 207 000e 02F03F02 	 and r2,r2,#63
+ 208 0012 0260     	 str r2,[r0]
+ 209 0014 9DF80120 	 ldrb r2,[sp,#1]
+ 210 0018 02F03F02 	 and r2,r2,#63
+ 211 001c 4260     	 str r2,[r0,#4]
+ 212 001e 9DF80220 	 ldrb r2,[sp,#2]
+ 213 0022 02F01F02 	 and r2,r2,#31
+ 214 0026 8260     	 str r2,[r0,#8]
+ 215 0028 9DF80320 	 ldrb r2,[sp,#3]
+ 216 002c 02F01F02 	 and r2,r2,#31
+ 217 0030 0132     	 adds r2,r2,#1
+ 218 0032 C260     	 str r2,[r0,#12]
+ 219 0034 C3F30322 	 ubfx r2,r3,#8,#4
+ 220 0038 0261     	 str r2,[r0,#16]
+ 221 003a 1A0C     	 lsrs r2,r3,#16
+ 222 003c A2F26C72 	 subw r2,r2,#1900
+ 223 0040 03F00703 	 and r3,r3,#7
+ 224 0044 4261     	 str r2,[r0,#20]
+ 225 0046 8361     	 str r3,[r0,#24]
+ 226 0048 02B0     	 add sp,sp,#8
+ 227              	 
+ 228 004a 7047     	 bx lr
+ 229              	.L30:
+ 230              	 .align 2
+ 231              	.L29:
+ 232 004c 004A0050 	 .word 1342196224
+ 234              	 .section .text.XMC_RTC_SetAlarm,"ax",%progbits
+ 235              	 .align 1
+ 236              	 .global XMC_RTC_SetAlarm
+ 237              	 .thumb
+ 238              	 .thumb_func
+ 240              	XMC_RTC_SetAlarm:
+ 241              	 
+ 242              	 
+ 243              	 
+ 244              	.L32:
+ 245 0000 084B     	 ldr r3,.L36
+ 246 0002 D3F8C420 	 ldr r2,[r3,#196]
+ 247 0006 12F4007F 	 tst r2,#512
+ 248 000a 1A46     	 mov r2,r3
+ 249 000c F8D1     	 bne .L32
+ 250 000e 03F52063 	 add r3,r3,#2560
+ 251 0012 0168     	 ldr r1,[r0]
+ 252 0014 9961     	 str r1,[r3,#24]
+ 253              	.L33:
+ 254 0016 D2F8C410 	 ldr r1,[r2,#196]
+ 255 001a 4905     	 lsls r1,r1,#21
+ 256 001c FBD4     	 bmi .L33
+ 257 001e 4268     	 ldr r2,[r0,#4]
+ 258 0020 DA61     	 str r2,[r3,#28]
+ 259 0022 7047     	 bx lr
+ 260              	.L37:
+ 261              	 .align 2
+ 262              	.L36:
+ 263 0024 00400050 	 .word 1342193664
+ 265              	 .section .text.XMC_RTC_GetAlarm,"ax",%progbits
+ 266              	 .align 1
+ 267              	 .global XMC_RTC_GetAlarm
+ 268              	 .thumb
+ 269              	 .thumb_func
+ 271              	XMC_RTC_GetAlarm:
+ 272              	 
+ 273              	 
+ 274              	 
+ 275 0000 024B     	 ldr r3,.L39
+ 276 0002 9A69     	 ldr r2,[r3,#24]
+ 277 0004 0260     	 str r2,[r0]
+ 278 0006 DB69     	 ldr r3,[r3,#28]
+ 279 0008 4360     	 str r3,[r0,#4]
+ 280 000a 7047     	 bx lr
+ 281              	.L40:
+ 282              	 .align 2
+ 283              	.L39:
+ 284 000c 004A0050 	 .word 1342196224
+ 286              	 .section .text.XMC_RTC_SetAlarmStdFormat,"ax",%progbits
+ 287              	 .align 1
+ 288              	 .global XMC_RTC_SetAlarmStdFormat
+ 289              	 .thumb
+ 290              	 .thumb_func
+ 292              	XMC_RTC_SetAlarmStdFormat:
+ 293              	 
+ 294              	 
+ 295 0000 07B5     	 push {r0,r1,r2,lr}
+ 296 0002 0268     	 ldr r2,[r0]
+ 297 0004 9DF80030 	 ldrb r3,[sp]
+ 298 0008 62F30503 	 bfi r3,r2,#0,#6
+ 299 000c 8DF80030 	 strb r3,[sp]
+ 300 0010 4268     	 ldr r2,[r0,#4]
+ 301 0012 9DF80130 	 ldrb r3,[sp,#1]
+ 302 0016 62F30503 	 bfi r3,r2,#0,#6
+ 303 001a 8DF80130 	 strb r3,[sp,#1]
+ 304 001e 8268     	 ldr r2,[r0,#8]
+ 305 0020 9DF80230 	 ldrb r3,[sp,#2]
+ 306 0024 62F30403 	 bfi r3,r2,#0,#5
+ 307 0028 8DF80230 	 strb r3,[sp,#2]
+ 308 002c C368     	 ldr r3,[r0,#12]
+ 309 002e 9DF80320 	 ldrb r2,[sp,#3]
+ 310 0032 013B     	 subs r3,r3,#1
+ 311 0034 63F30402 	 bfi r2,r3,#0,#5
+ 312 0038 8DF80320 	 strb r2,[sp,#3]
+ 313 003c 9DF80530 	 ldrb r3,[sp,#5]
+ 314 0040 0269     	 ldr r2,[r0,#16]
+ 315 0042 62F30303 	 bfi r3,r2,#0,#4
+ 316 0046 8DF80530 	 strb r3,[sp,#5]
+ 317 004a 4369     	 ldr r3,[r0,#20]
+ 318 004c 6846     	 mov r0,sp
+ 319 004e 03F26C73 	 addw r3,r3,#1900
+ 320 0052 ADF80630 	 strh r3,[sp,#6]
+ 321 0056 FFF7FEFF 	 bl XMC_RTC_SetAlarm
+ 322 005a 03B0     	 add sp,sp,#12
+ 323              	 
+ 324 005c 5DF804FB 	 ldr pc,[sp],#4
+ 326              	 .section .text.XMC_RTC_GetAlarmStdFormat,"ax",%progbits
+ 327              	 .align 1
+ 328              	 .global XMC_RTC_GetAlarmStdFormat
+ 329              	 .thumb
+ 330              	 .thumb_func
+ 332              	XMC_RTC_GetAlarmStdFormat:
+ 333              	 
+ 334              	 
+ 335              	 
+ 336 0000 114B     	 ldr r3,.L43
+ 337 0002 82B0     	 sub sp,sp,#8
+ 338 0004 9A69     	 ldr r2,[r3,#24]
+ 339 0006 0092     	 str r2,[sp]
+ 340 0008 9DF80020 	 ldrb r2,[sp]
+ 341 000c DB69     	 ldr r3,[r3,#28]
+ 342 000e 02F03F02 	 and r2,r2,#63
+ 343 0012 0260     	 str r2,[r0]
+ 344 0014 9DF80120 	 ldrb r2,[sp,#1]
+ 345 0018 02F03F02 	 and r2,r2,#63
+ 346 001c 4260     	 str r2,[r0,#4]
+ 347 001e 9DF80220 	 ldrb r2,[sp,#2]
+ 348 0022 02F01F02 	 and r2,r2,#31
+ 349 0026 8260     	 str r2,[r0,#8]
+ 350 0028 9DF80320 	 ldrb r2,[sp,#3]
+ 351 002c 02F01F02 	 and r2,r2,#31
+ 352 0030 0132     	 adds r2,r2,#1
+ 353 0032 C260     	 str r2,[r0,#12]
+ 354 0034 C3F30322 	 ubfx r2,r3,#8,#4
+ 355 0038 1B0C     	 lsrs r3,r3,#16
+ 356 003a A3F26C73 	 subw r3,r3,#1900
+ 357 003e 0261     	 str r2,[r0,#16]
+ 358 0040 4361     	 str r3,[r0,#20]
+ 359 0042 02B0     	 add sp,sp,#8
+ 360              	 
+ 361 0044 7047     	 bx lr
+ 362              	.L44:
+ 363 0046 00BF     	 .align 2
+ 364              	.L43:
+ 365 0048 004A0050 	 .word 1342196224
+ 367              	 .section .text.XMC_RTC_GetEventStatus,"ax",%progbits
+ 368              	 .align 1
+ 369              	 .global XMC_RTC_GetEventStatus
+ 370              	 .thumb
+ 371              	 .thumb_func
+ 373              	XMC_RTC_GetEventStatus:
+ 374              	 
+ 375              	 
+ 376              	 
+ 377 0000 014B     	 ldr r3,.L46
+ 378 0002 D868     	 ldr r0,[r3,#12]
+ 379 0004 7047     	 bx lr
+ 380              	.L47:
+ 381 0006 00BF     	 .align 2
+ 382              	.L46:
+ 383 0008 004A0050 	 .word 1342196224
+ 385              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_rtc.c
+    {standard input}:17     .text.XMC_RTC_Start:00000000 $t
+    {standard input}:22     .text.XMC_RTC_Start:00000000 XMC_RTC_Start
+    {standard input}:39     .text.XMC_RTC_Start:00000018 $d
+    {standard input}:43     .text.XMC_RTC_Stop:00000000 $t
+    {standard input}:48     .text.XMC_RTC_Stop:00000000 XMC_RTC_Stop
+    {standard input}:65     .text.XMC_RTC_Stop:00000018 $d
+    {standard input}:69     .text.XMC_RTC_SetPrescaler:00000000 $t
+    {standard input}:74     .text.XMC_RTC_SetPrescaler:00000000 XMC_RTC_SetPrescaler
+    {standard input}:92     .text.XMC_RTC_SetPrescaler:00000018 $d
+    {standard input}:96     .text.XMC_RTC_SetTime:00000000 $t
+    {standard input}:101    .text.XMC_RTC_SetTime:00000000 XMC_RTC_SetTime
+    {standard input}:124    .text.XMC_RTC_SetTime:00000024 $d
+    {standard input}:127    .text.XMC_RTC_GetTime:00000000 $t
+    {standard input}:132    .text.XMC_RTC_GetTime:00000000 XMC_RTC_GetTime
+    {standard input}:145    .text.XMC_RTC_GetTime:0000000c $d
+    {standard input}:148    .text.XMC_RTC_SetTimeStdFormat:00000000 $t
+    {standard input}:153    .text.XMC_RTC_SetTimeStdFormat:00000000 XMC_RTC_SetTimeStdFormat
+    {standard input}:192    .text.XMC_RTC_GetTimeStdFormat:00000000 $t
+    {standard input}:197    .text.XMC_RTC_GetTimeStdFormat:00000000 XMC_RTC_GetTimeStdFormat
+    {standard input}:232    .text.XMC_RTC_GetTimeStdFormat:0000004c $d
+    {standard input}:235    .text.XMC_RTC_SetAlarm:00000000 $t
+    {standard input}:240    .text.XMC_RTC_SetAlarm:00000000 XMC_RTC_SetAlarm
+    {standard input}:263    .text.XMC_RTC_SetAlarm:00000024 $d
+    {standard input}:266    .text.XMC_RTC_GetAlarm:00000000 $t
+    {standard input}:271    .text.XMC_RTC_GetAlarm:00000000 XMC_RTC_GetAlarm
+    {standard input}:284    .text.XMC_RTC_GetAlarm:0000000c $d
+    {standard input}:287    .text.XMC_RTC_SetAlarmStdFormat:00000000 $t
+    {standard input}:292    .text.XMC_RTC_SetAlarmStdFormat:00000000 XMC_RTC_SetAlarmStdFormat
+    {standard input}:327    .text.XMC_RTC_GetAlarmStdFormat:00000000 $t
+    {standard input}:332    .text.XMC_RTC_GetAlarmStdFormat:00000000 XMC_RTC_GetAlarmStdFormat
+    {standard input}:365    .text.XMC_RTC_GetAlarmStdFormat:00000048 $d
+    {standard input}:368    .text.XMC_RTC_GetEventStatus:00000000 $t
+    {standard input}:373    .text.XMC_RTC_GetEventStatus:00000000 XMC_RTC_GetEventStatus
+    {standard input}:383    .text.XMC_RTC_GetEventStatus:00000008 $d
+
+NO UNDEFINED SYMBOLS

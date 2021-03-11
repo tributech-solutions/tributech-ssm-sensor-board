@@ -1,0 +1,596 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "USBVCH.c"
+  16              	 .section .text.USBVCH_Process,"ax",%progbits
+  17              	 .align 1
+  18              	 .global USBVCH_Process
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	USBVCH_Process:
+  23              	 
+  24              	 
+  25 0000 2DE9F341 	 push {r0,r1,r4,r5,r6,r7,r8,lr}
+  26 0004 0DF10700 	 add r0,sp,#7
+  27 0008 FFF7FEFF 	 bl USB_GetHostState
+  28 000c 9DF80730 	 ldrb r3,[sp,#7]
+  29 0010 0A2B     	 cmp r3,#10
+  30 0012 4ED1     	 bne .L8
+  31 0014 434D     	 ldr r5,.L19
+  32 0016 4448     	 ldr r0,.L19+4
+  33 0018 0021     	 movs r1,#0
+  34 001a 4FF40072 	 mov r2,#512
+  35 001e FFF7FEFF 	 bl memset
+  36 0022 0120     	 movs r0,#1
+  37 0024 2946     	 mov r1,r5
+  38 0026 404A     	 ldr r2,.L19+4
+  39 0028 4FF40073 	 mov r3,#512
+  40 002c FFF7FEFF 	 bl USB_Host_GetDeviceConfigDescriptor
+  41 0030 0446     	 mov r4,r0
+  42 0032 0028     	 cmp r0,#0
+  43 0034 69D1     	 bne .L3
+  44 0036 3D48     	 ldr r0,.L19+8
+  45 0038 2988     	 ldrh r1,[r5]
+  46 003a 3B4A     	 ldr r2,.L19+4
+  47 003c FFF7FEFF 	 bl CDC_Host_ConfigurePipes
+  48 0040 0446     	 mov r4,r0
+  49 0042 0028     	 cmp r0,#0
+  50 0044 61D1     	 bne .L3
+  51 0046 0120     	 movs r0,#1
+  52 0048 FFF7FEFF 	 bl USB_Host_SetDeviceConfiguration
+  53 004c 0446     	 mov r4,r0
+  54 004e 0028     	 cmp r0,#0
+  55 0050 5BD1     	 bne .L3
+  56 0052 374D     	 ldr r5,.L19+12
+  57 0054 374E     	 ldr r6,.L19+16
+  58 0056 2868     	 ldr r0,[r5]
+  59 0058 DFF8F080 	 ldr r8,.L19+40
+  60 005c FFF7FEFF 	 bl USBH_PipeGetToggle
+  61 0060 354B     	 ldr r3,.L19+20
+  62 0062 2A68     	 ldr r2,[r5]
+  63 0064 9D6B     	 ldr r5,[r3,#56]
+  64 0066 354B     	 ldr r3,.L19+24
+  65 0068 1344     	 add r3,r3,r2
+  66 006a 1427     	 movs r7,#20
+  67 006c 5B09     	 lsrs r3,r3,#5
+  68 006e 07FB0363 	 mla r3,r7,r3,r6
+  69 0072 40F00301 	 orr r1,r0,#3
+  70 0076 DB68     	 ldr r3,[r3,#12]
+  71 0078 1046     	 mov r0,r2
+  72 007a 314A     	 ldr r2,.L19+28
+  73 007c A847     	 blx r5
+  74 007e D8F80000 	 ldr r0,[r8]
+  75 0082 FFF7FEFF 	 bl USBH_PipeGetToggle
+  76 0086 D8F80020 	 ldr r2,[r8]
+  77 008a 2C4B     	 ldr r3,.L19+24
+  78 008c 1344     	 add r3,r3,r2
+  79 008e 5B09     	 lsrs r3,r3,#5
+  80 0090 07FB0363 	 mla r3,r7,r3,r6
+  81 0094 40F00301 	 orr r1,r0,#3
+  82 0098 DB68     	 ldr r3,[r3,#12]
+  83 009a 1046     	 mov r0,r2
+  84 009c 294A     	 ldr r2,.L19+32
+  85 009e A847     	 blx r5
+  86 00a0 2046     	 mov r0,r4
+  87              	.L7:
+  88 00a2 294B     	 ldr r3,.L19+36
+  89 00a4 1B68     	 ldr r3,[r3]
+  90 00a6 2BB1     	 cbz r3,.L2
+  91 00a8 9B68     	 ldr r3,[r3,#8]
+  92 00aa 1BB1     	 cbz r3,.L2
+  93 00ac E1B2     	 uxtb r1,r4
+  94 00ae 9847     	 blx r3
+  95 00b0 00E0     	 b .L2
+  96              	.L8:
+  97 00b2 0124     	 movs r4,#1
+  98              	.L2:
+  99 00b4 0DF10700 	 add r0,sp,#7
+ 100 00b8 FFF7FEFF 	 bl USB_GetHostState
+ 101 00bc 9DF80730 	 ldrb r3,[sp,#7]
+ 102 00c0 0B2B     	 cmp r3,#11
+ 103 00c2 20D1     	 bne .L10
+ 104 00c4 FCB9     	 cbnz r4,.L10
+ 105 00c6 194D     	 ldr r5,.L19+8
+ 106 00c8 4FF47A70 	 mov r0,#1000
+ 107 00cc FFF7FEFF 	 bl XMC_USBH_osDelay
+ 108 00d0 0123     	 movs r3,#1
+ 109 00d2 6B83     	 strh r3,[r5,#26]
+ 110 00d4 4FF41653 	 mov r3,#9600
+ 111 00d8 EB83     	 strh r3,[r5,#30]
+ 112 00da 2846     	 mov r0,r5
+ 113 00dc 0823     	 movs r3,#8
+ 114 00de 6C76     	 strb r4,[r5,#25]
+ 115 00e0 2C84     	 strh r4,[r5,#32]
+ 116 00e2 85F82240 	 strb r4,[r5,#34]
+ 117 00e6 85F82430 	 strb r3,[r5,#36]
+ 118 00ea 85F82340 	 strb r4,[r5,#35]
+ 119 00ee FFF7FEFF 	 bl CDC_Host_SendControlLineStateChange
+ 120 00f2 18B1     	 cbz r0,.L5
+ 121              	.L6:
+ 122 00f4 0020     	 movs r0,#0
+ 123 00f6 FFF7FEFF 	 bl USB_SetHostState
+ 124 00fa 0BE0     	 b .L4
+ 125              	.L5:
+ 126 00fc 2846     	 mov r0,r5
+ 127 00fe FFF7FEFF 	 bl CDC_Host_SetLineEncoding
+ 128 0102 38B1     	 cbz r0,.L4
+ 129 0104 F6E7     	 b .L6
+ 130              	.L10:
+ 131 0106 0124     	 movs r4,#1
+ 132 0108 04E0     	 b .L4
+ 133              	.L3:
+ 134 010a 0020     	 movs r0,#0
+ 135 010c FFF7FEFF 	 bl USB_SetHostState
+ 136 0110 0320     	 movs r0,#3
+ 137 0112 C6E7     	 b .L7
+ 138              	.L4:
+ 139 0114 0548     	 ldr r0,.L19+8
+ 140 0116 FFF7FEFF 	 bl CDC_Host_USBTask
+ 141 011a 2046     	 mov r0,r4
+ 142 011c 02B0     	 add sp,sp,#8
+ 143              	 
+ 144 011e BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 145              	.L20:
+ 146 0122 00BF     	 .align 2
+ 147              	.L19:
+ 148 0124 00000000 	 .word USBVCH_ConfigDescriptorSize
+ 149 0128 00000000 	 .word USBVCH_ConfigDescriptorData
+ 150 012c 00000000 	 .word USBVCH_CDCInterface
+ 151 0130 00000000 	 .word CDC_INTERRUPT_pipe_handle
+ 152 0134 00000000 	 .word USBHost_Pipe_State
+ 153 0138 00000000 	 .word Driver_USBH0
+ 154 013c 00FBFBAF 	 .word -1342440704
+ 155 0140 00000000 	 .word SerialState
+ 156 0144 00000000 	 .word USBH_VCOM_Packet_Buffer
+ 157 0148 00000000 	 .word USBH_EventCB
+ 158 014c 00000000 	 .word CDC_BULK_IN_pipe_handle
+ 160              	 .section .text.USBVCH_SendByte,"ax",%progbits
+ 161              	 .align 1
+ 162              	 .global USBVCH_SendByte
+ 163              	 .thumb
+ 164              	 .thumb_func
+ 166              	USBVCH_SendByte:
+ 167              	 
+ 168              	 
+ 169 0000 13B5     	 push {r0,r1,r4,lr}
+ 170 0002 0446     	 mov r4,r0
+ 171 0004 0DF10700 	 add r0,sp,#7
+ 172 0008 FFF7FEFF 	 bl USB_GetHostState
+ 173 000c 9DF80730 	 ldrb r3,[sp,#7]
+ 174 0010 0B2B     	 cmp r3,#11
+ 175 0012 07D1     	 bne .L23
+ 176 0014 0548     	 ldr r0,.L24
+ 177 0016 2146     	 mov r1,r4
+ 178 0018 FFF7FEFF 	 bl CDC_Host_SendByte
+ 179 001c 0030     	 adds r0,r0,#0
+ 180 001e 18BF     	 it ne
+ 181 0020 0120     	 movne r0,#1
+ 182 0022 00E0     	 b .L22
+ 183              	.L23:
+ 184 0024 0120     	 movs r0,#1
+ 185              	.L22:
+ 186 0026 02B0     	 add sp,sp,#8
+ 187              	 
+ 188 0028 10BD     	 pop {r4,pc}
+ 189              	.L25:
+ 190 002a 00BF     	 .align 2
+ 191              	.L24:
+ 192 002c 00000000 	 .word USBVCH_CDCInterface
+ 194              	 .section .text.USBVCH_SendData,"ax",%progbits
+ 195              	 .align 1
+ 196              	 .global USBVCH_SendData
+ 197              	 .thumb
+ 198              	 .thumb_func
+ 200              	USBVCH_SendData:
+ 201              	 
+ 202              	 
+ 203 0000 73B5     	 push {r0,r1,r4,r5,r6,lr}
+ 204 0002 0646     	 mov r6,r0
+ 205 0004 0DF10700 	 add r0,sp,#7
+ 206 0008 0C46     	 mov r4,r1
+ 207 000a 1546     	 mov r5,r2
+ 208 000c FFF7FEFF 	 bl USB_GetHostState
+ 209 0010 9DF80730 	 ldrb r3,[sp,#7]
+ 210 0014 0B2B     	 cmp r3,#11
+ 211 0016 01D0     	 beq .L27
+ 212              	.L29:
+ 213 0018 0120     	 movs r0,#1
+ 214 001a 1CE0     	 b .L38
+ 215              	.L27:
+ 216 001c 002C     	 cmp r4,#0
+ 217 001e FBD0     	 beq .L29
+ 218 0020 0E4B     	 ldr r3,.L42
+ 219 0022 0F4A     	 ldr r2,.L42+4
+ 220 0024 1B68     	 ldr r3,[r3]
+ 221 0026 1A44     	 add r2,r2,r3
+ 222 0028 0E4B     	 ldr r3,.L42+8
+ 223 002a 5009     	 lsrs r0,r2,#5
+ 224 002c 1422     	 movs r2,#20
+ 225 002e 02FB0032 	 mla r2,r2,r0,r3
+ 226 0032 D368     	 ldr r3,[r2,#12]
+ 227 0034 9C42     	 cmp r4,r3
+ 228 0036 01D8     	 bhi .L41
+ 229 0038 E4B2     	 uxtb r4,r4
+ 230 003a 00E0     	 b .L31
+ 231              	.L41:
+ 232 003c DCB2     	 uxtb r4,r3
+ 233              	.L31:
+ 234 003e A4B2     	 uxth r4,r4
+ 235 0040 0948     	 ldr r0,.L42+12
+ 236 0042 3146     	 mov r1,r6
+ 237 0044 2246     	 mov r2,r4
+ 238 0046 FFF7FEFF 	 bl CDC_Host_SendData
+ 239 004a 0028     	 cmp r0,#0
+ 240 004c E4D1     	 bne .L29
+ 241 004e 0DB1     	 cbz r5,.L34
+ 242 0050 2C80     	 strh r4,[r5]
+ 243 0052 00E0     	 b .L38
+ 244              	.L34:
+ 245 0054 2846     	 mov r0,r5
+ 246              	.L38:
+ 247 0056 02B0     	 add sp,sp,#8
+ 248              	 
+ 249 0058 70BD     	 pop {r4,r5,r6,pc}
+ 250              	.L43:
+ 251 005a 00BF     	 .align 2
+ 252              	.L42:
+ 253 005c 00000000 	 .word CDC_BULK_OUT_pipe_handle
+ 254 0060 00FBFBAF 	 .word -1342440704
+ 255 0064 00000000 	 .word USBHost_Pipe_State
+ 256 0068 00000000 	 .word USBVCH_CDCInterface
+ 258              	 .section .text.USBVCH_ReceiveByte,"ax",%progbits
+ 259              	 .align 1
+ 260              	 .global USBVCH_ReceiveByte
+ 261              	 .thumb
+ 262              	 .thumb_func
+ 264              	USBVCH_ReceiveByte:
+ 265              	 
+ 266              	 
+ 267 0000 13B5     	 push {r0,r1,r4,lr}
+ 268 0002 0446     	 mov r4,r0
+ 269 0004 0DF10700 	 add r0,sp,#7
+ 270 0008 FFF7FEFF 	 bl USB_GetHostState
+ 271 000c 9DF80730 	 ldrb r3,[sp,#7]
+ 272 0010 0B2B     	 cmp r3,#11
+ 273 0012 01D0     	 beq .L45
+ 274              	.L47:
+ 275 0014 0120     	 movs r0,#1
+ 276 0016 06E0     	 b .L46
+ 277              	.L45:
+ 278 0018 0448     	 ldr r0,.L51
+ 279 001a FFF7FEFF 	 bl CDC_Host_ReceiveByte
+ 280 001e 431C     	 adds r3,r0,#1
+ 281 0020 F8D0     	 beq .L47
+ 282 0022 2070     	 strb r0,[r4]
+ 283 0024 0020     	 movs r0,#0
+ 284              	.L46:
+ 285 0026 02B0     	 add sp,sp,#8
+ 286              	 
+ 287 0028 10BD     	 pop {r4,pc}
+ 288              	.L52:
+ 289 002a 00BF     	 .align 2
+ 290              	.L51:
+ 291 002c 00000000 	 .word USBVCH_CDCInterface
+ 293              	 .section .text.USBVCH_CDCHost_USBTask,"ax",%progbits
+ 294              	 .align 1
+ 295              	 .global USBVCH_CDCHost_USBTask
+ 296              	 .thumb
+ 297              	 .thumb_func
+ 299              	USBVCH_CDCHost_USBTask:
+ 300              	 
+ 301              	 
+ 302              	 
+ 303 0000 0148     	 ldr r0,.L54
+ 304 0002 FFF7FEBF 	 b CDC_Host_USBTask
+ 305              	.L55:
+ 306 0006 00BF     	 .align 2
+ 307              	.L54:
+ 308 0008 00000000 	 .word USBVCH_CDCInterface
+ 310              	 .section .text.EVENT_USB_Host_DeviceEnumerationComplete,"ax",%progbits
+ 311              	 .align 1
+ 312              	 .global EVENT_USB_Host_DeviceEnumerationComplete
+ 313              	 .thumb
+ 314              	 .thumb_func
+ 316              	EVENT_USB_Host_DeviceEnumerationComplete:
+ 317              	 
+ 318              	 
+ 319              	 
+ 320 0000 7047     	 bx lr
+ 322              	 .section .text.EVENT_USB_Host_DeviceEnumerationFailed,"ax",%progbits
+ 323              	 .align 1
+ 324              	 .global EVENT_USB_Host_DeviceEnumerationFailed
+ 325              	 .thumb
+ 326              	 .thumb_func
+ 328              	EVENT_USB_Host_DeviceEnumerationFailed:
+ 329              	 
+ 330              	 
+ 331              	 
+ 332 0000 7047     	 bx lr
+ 334              	 .section .text.EVENT_USB_Host_DeviceUnattached,"ax",%progbits
+ 335              	 .align 1
+ 336              	 .global EVENT_USB_Host_DeviceUnattached
+ 337              	 .thumb
+ 338              	 .thumb_func
+ 340              	EVENT_USB_Host_DeviceUnattached:
+ 341              	 
+ 342              	 
+ 343              	 
+ 344 0000 0020     	 movs r0,#0
+ 345 0002 FFF7FEBF 	 b USB_SetHostState
+ 347              	 .section .text.USBH_VCOM_Rx_Data_Handler,"ax",%progbits
+ 348              	 .align 1
+ 349              	 .global USBH_VCOM_Rx_Data_Handler
+ 350              	 .thumb
+ 351              	 .thumb_func
+ 353              	USBH_VCOM_Rx_Data_Handler:
+ 354              	 
+ 355              	 
+ 356 0000 2DE9F341 	 push {r0,r1,r4,r5,r6,r7,r8,lr}
+ 357 0004 264C     	 ldr r4,.L71
+ 358 0006 2368     	 ldr r3,[r4]
+ 359 0008 9842     	 cmp r0,r3
+ 360 000a 3CD1     	 bne .L60
+ 361 000c CA07     	 lsls r2,r1,#31
+ 362 000e 43D5     	 bpl .L59
+ 363 0010 244B     	 ldr r3,.L71+4
+ 364 0012 254A     	 ldr r2,.L71+8
+ 365 0014 0344     	 add r3,r3,r0
+ 366 0016 23F01F05 	 bic r5,r3,#31
+ 367 001a 5319     	 adds r3,r2,r5
+ 368 001c 0021     	 movs r1,#0
+ 369 001e DF68     	 ldr r7,[r3,#12]
+ 370 0020 224B     	 ldr r3,.L71+12
+ 371 0022 D3F800E0 	 ldr lr,[r3]
+ 372 0026 1646     	 mov r6,r2
+ 373              	.L62:
+ 374 0028 B942     	 cmp r1,r7
+ 375 002a 0DD0     	 beq .L70
+ 376 002c 7219     	 adds r2,r6,r5
+ 377 002e DFF894C0 	 ldr ip,.L71+36
+ 378 0032 5268     	 ldr r2,[r2,#4]
+ 379 0034 12F80180 	 ldrb r8,[r2,r1]
+ 380 0038 01EB0E02 	 add r2,r1,lr
+ 381 003c C2F30A02 	 ubfx r2,r2,#0,#11
+ 382 0040 0131     	 adds r1,r1,#1
+ 383 0042 0CF80280 	 strb r8,[ip,r2]
+ 384 0046 EFE7     	 b .L62
+ 385              	.L70:
+ 386 0048 1A68     	 ldr r2,[r3]
+ 387 004a 0A44     	 add r2,r2,r1
+ 388 004c C2F30A02 	 ubfx r2,r2,#0,#11
+ 389 0050 1A60     	 str r2,[r3]
+ 390 0052 FFF7FEFF 	 bl USBH_PipeSetNextToggle
+ 391 0056 2068     	 ldr r0,[r4]
+ 392 0058 FFF7FEFF 	 bl USBH_PipeGetToggle
+ 393 005c 2468     	 ldr r4,[r4]
+ 394 005e 114B     	 ldr r3,.L71+4
+ 395 0060 2344     	 add r3,r3,r4
+ 396 0062 5A09     	 lsrs r2,r3,#5
+ 397 0064 124B     	 ldr r3,.L71+16
+ 398 0066 40F00301 	 orr r1,r0,#3
+ 399 006a 1420     	 movs r0,#20
+ 400 006c 00FB0233 	 mla r3,r0,r2,r3
+ 401 0070 2046     	 mov r0,r4
+ 402 0072 104C     	 ldr r4,.L71+20
+ 403 0074 104A     	 ldr r2,.L71+24
+ 404 0076 A46B     	 ldr r4,[r4,#56]
+ 405 0078 DB68     	 ldr r3,[r3,#12]
+ 406 007a 0194     	 str r4,[sp,#4]
+ 407 007c A446     	 mov ip,r4
+ 408 007e 02B0     	 add sp,sp,#8
+ 409              	 
+ 410 0080 BDE8F041 	 pop {r4,r5,r6,r7,r8,lr}
+ 411 0084 6047     	 bx ip
+ 412              	.L60:
+ 413 0086 0D4B     	 ldr r3,.L71+28
+ 414 0088 1B68     	 ldr r3,[r3]
+ 415 008a 9842     	 cmp r0,r3
+ 416 008c 04D1     	 bne .L59
+ 417 008e CB07     	 lsls r3,r1,#31
+ 418 0090 42BF     	 ittt mi
+ 419 0092 0B4B     	 ldrmi r3,.L71+32
+ 420 0094 0122     	 movmi r2,#1
+ 421 0096 1A70     	 strbmi r2,[r3]
+ 422              	.L59:
+ 423 0098 02B0     	 add sp,sp,#8
+ 424              	 
+ 425 009a BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 426              	.L72:
+ 427 009e 00BF     	 .align 2
+ 428              	.L71:
+ 429 00a0 00000000 	 .word CDC_BULK_IN_pipe_handle
+ 430 00a4 00FBFBAF 	 .word -1342440704
+ 431 00a8 00000000 	 .word pipe
+ 432 00ac 00000000 	 .word USBH_VCOM_RX_cur_index
+ 433 00b0 00000000 	 .word USBHost_Pipe_State
+ 434 00b4 00000000 	 .word Driver_USBH0
+ 435 00b8 00000000 	 .word USBH_VCOM_Packet_Buffer
+ 436 00bc 00000000 	 .word CDC_BULK_OUT_pipe_handle
+ 437 00c0 00000000 	 .word .LANCHOR0
+ 438 00c4 00000000 	 .word USBH_VCOM_RX_Buffer
+ 440              	 .section .text.USBVCH_Pipe_BytesInPipe,"ax",%progbits
+ 441              	 .align 1
+ 442              	 .global USBVCH_Pipe_BytesInPipe
+ 443              	 .thumb
+ 444              	 .thumb_func
+ 446              	USBVCH_Pipe_BytesInPipe:
+ 447              	 
+ 448              	 
+ 449              	 
+ 450 0000 054A     	 ldr r2,.L77
+ 451 0002 064B     	 ldr r3,.L77+4
+ 452 0004 1068     	 ldr r0,[r2]
+ 453 0006 1B68     	 ldr r3,[r3]
+ 454 0008 8342     	 cmp r3,r0
+ 455 000a 38BF     	 it cc
+ 456 000c 03F50063 	 addcc r3,r3,#2048
+ 457 0010 181A     	 subs r0,r3,r0
+ 458 0012 80B2     	 uxth r0,r0
+ 459 0014 7047     	 bx lr
+ 460              	.L78:
+ 461 0016 00BF     	 .align 2
+ 462              	.L77:
+ 463 0018 00000000 	 .word USBH_VCOM_RX_prev_index
+ 464 001c 00000000 	 .word USBH_VCOM_RX_cur_index
+ 466              	 .section .text.USBVCH_Pipe_Read_8,"ax",%progbits
+ 467              	 .align 1
+ 468              	 .global USBVCH_Pipe_Read_8
+ 469              	 .thumb
+ 470              	 .thumb_func
+ 472              	USBVCH_Pipe_Read_8:
+ 473              	 
+ 474              	 
+ 475              	 
+ 476 0000 0449     	 ldr r1,.L80
+ 477 0002 0A68     	 ldr r2,[r1]
+ 478 0004 531C     	 adds r3,r2,#1
+ 479 0006 C3F30A03 	 ubfx r3,r3,#0,#11
+ 480 000a 0B60     	 str r3,[r1]
+ 481 000c 024B     	 ldr r3,.L80+4
+ 482 000e 985C     	 ldrb r0,[r3,r2]
+ 483 0010 7047     	 bx lr
+ 484              	.L81:
+ 485 0012 00BF     	 .align 2
+ 486              	.L80:
+ 487 0014 00000000 	 .word USBH_VCOM_RX_prev_index
+ 488 0018 00000000 	 .word USBH_VCOM_RX_Buffer
+ 490              	 .section .text.USBVCH_Pipe_IsINReceived,"ax",%progbits
+ 491              	 .align 1
+ 492              	 .global USBVCH_Pipe_IsINReceived
+ 493              	 .thumb
+ 494              	 .thumb_func
+ 496              	USBVCH_Pipe_IsINReceived:
+ 497              	 
+ 498              	 
+ 499 0000 0E4B     	 ldr r3,.L90
+ 500 0002 1B68     	 ldr r3,[r3]
+ 501 0004 9842     	 cmp r0,r3
+ 502 0006 10B5     	 push {r4,lr}
+ 503 0008 0446     	 mov r4,r0
+ 504 000a 07D1     	 bne .L83
+ 505 000c 0C4A     	 ldr r2,.L90+4
+ 506 000e 0D4B     	 ldr r3,.L90+8
+ 507 0010 1068     	 ldr r0,[r2]
+ 508 0012 1B68     	 ldr r3,[r3]
+ 509 0014 181A     	 subs r0,r3,r0
+ 510 0016 18BF     	 it ne
+ 511 0018 0120     	 movne r0,#1
+ 512 001a 10BD     	 pop {r4,pc}
+ 513              	.L83:
+ 514 001c 0A4B     	 ldr r3,.L90+12
+ 515 001e 1B68     	 ldr r3,[r3]
+ 516 0020 9842     	 cmp r0,r3
+ 517 0022 01D0     	 beq .L85
+ 518              	.L86:
+ 519 0024 0020     	 movs r0,#0
+ 520 0026 10BD     	 pop {r4,pc}
+ 521              	.L85:
+ 522 0028 FFF7FEFF 	 bl USBH_PipeEventGet
+ 523 002c C307     	 lsls r3,r0,#31
+ 524 002e F9D5     	 bpl .L86
+ 525 0030 2046     	 mov r0,r4
+ 526 0032 0121     	 movs r1,#1
+ 527 0034 FFF7FEFF 	 bl USBH_PipeEventReset
+ 528 0038 0120     	 movs r0,#1
+ 529 003a 10BD     	 pop {r4,pc}
+ 530              	.L91:
+ 531              	 .align 2
+ 532              	.L90:
+ 533 003c 00000000 	 .word CDC_BULK_IN_pipe_handle
+ 534 0040 00000000 	 .word USBH_VCOM_RX_prev_index
+ 535 0044 00000000 	 .word USBH_VCOM_RX_cur_index
+ 536 0048 00000000 	 .word CDC_INTERRUPT_pipe_handle
+ 538              	 .global BULK_OUT_TransferCompleted
+ 539              	 .comm USBH_VCOM_RX_prev_index,4,4
+ 540              	 .comm USBH_VCOM_RX_cur_index,4,4
+ 541              	 .comm USBH_VCOM_RX_Buffer,2048,1
+ 542              	 .comm USBVCH_ConfigDescriptorData,512,1
+ 543              	 .comm USBVCH_ConfigDescriptorSize,2,2
+ 544              	 .comm USBVCH_CDCInterface,38,2
+ 545              	 .section .bss.BULK_OUT_TransferCompleted,"aw",%nobits
+ 546              	 .set .LANCHOR0,.+0
+ 549              	BULK_OUT_TransferCompleted:
+ 550 0000 00       	 .space 1
+ 551              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 USBVCH.c
+    {standard input}:17     .text.USBVCH_Process:00000000 $t
+    {standard input}:22     .text.USBVCH_Process:00000000 USBVCH_Process
+    {standard input}:148    .text.USBVCH_Process:00000124 $d
+                            *COM*:00000002 USBVCH_ConfigDescriptorSize
+                            *COM*:00000200 USBVCH_ConfigDescriptorData
+                            *COM*:00000026 USBVCH_CDCInterface
+    {standard input}:161    .text.USBVCH_SendByte:00000000 $t
+    {standard input}:166    .text.USBVCH_SendByte:00000000 USBVCH_SendByte
+    {standard input}:192    .text.USBVCH_SendByte:0000002c $d
+    {standard input}:195    .text.USBVCH_SendData:00000000 $t
+    {standard input}:200    .text.USBVCH_SendData:00000000 USBVCH_SendData
+    {standard input}:253    .text.USBVCH_SendData:0000005c $d
+    {standard input}:259    .text.USBVCH_ReceiveByte:00000000 $t
+    {standard input}:264    .text.USBVCH_ReceiveByte:00000000 USBVCH_ReceiveByte
+    {standard input}:291    .text.USBVCH_ReceiveByte:0000002c $d
+    {standard input}:294    .text.USBVCH_CDCHost_USBTask:00000000 $t
+    {standard input}:299    .text.USBVCH_CDCHost_USBTask:00000000 USBVCH_CDCHost_USBTask
+    {standard input}:308    .text.USBVCH_CDCHost_USBTask:00000008 $d
+    {standard input}:311    .text.EVENT_USB_Host_DeviceEnumerationComplete:00000000 $t
+    {standard input}:316    .text.EVENT_USB_Host_DeviceEnumerationComplete:00000000 EVENT_USB_Host_DeviceEnumerationComplete
+    {standard input}:323    .text.EVENT_USB_Host_DeviceEnumerationFailed:00000000 $t
+    {standard input}:328    .text.EVENT_USB_Host_DeviceEnumerationFailed:00000000 EVENT_USB_Host_DeviceEnumerationFailed
+    {standard input}:335    .text.EVENT_USB_Host_DeviceUnattached:00000000 $t
+    {standard input}:340    .text.EVENT_USB_Host_DeviceUnattached:00000000 EVENT_USB_Host_DeviceUnattached
+    {standard input}:348    .text.USBH_VCOM_Rx_Data_Handler:00000000 $t
+    {standard input}:353    .text.USBH_VCOM_Rx_Data_Handler:00000000 USBH_VCOM_Rx_Data_Handler
+    {standard input}:429    .text.USBH_VCOM_Rx_Data_Handler:000000a0 $d
+                            *COM*:00000004 USBH_VCOM_RX_cur_index
+                            *COM*:00000800 USBH_VCOM_RX_Buffer
+    {standard input}:441    .text.USBVCH_Pipe_BytesInPipe:00000000 $t
+    {standard input}:446    .text.USBVCH_Pipe_BytesInPipe:00000000 USBVCH_Pipe_BytesInPipe
+    {standard input}:463    .text.USBVCH_Pipe_BytesInPipe:00000018 $d
+                            *COM*:00000004 USBH_VCOM_RX_prev_index
+    {standard input}:467    .text.USBVCH_Pipe_Read_8:00000000 $t
+    {standard input}:472    .text.USBVCH_Pipe_Read_8:00000000 USBVCH_Pipe_Read_8
+    {standard input}:487    .text.USBVCH_Pipe_Read_8:00000014 $d
+    {standard input}:491    .text.USBVCH_Pipe_IsINReceived:00000000 $t
+    {standard input}:496    .text.USBVCH_Pipe_IsINReceived:00000000 USBVCH_Pipe_IsINReceived
+    {standard input}:533    .text.USBVCH_Pipe_IsINReceived:0000003c $d
+    {standard input}:549    .bss.BULK_OUT_TransferCompleted:00000000 BULK_OUT_TransferCompleted
+    {standard input}:550    .bss.BULK_OUT_TransferCompleted:00000000 $d
+
+UNDEFINED SYMBOLS
+USB_GetHostState
+memset
+USB_Host_GetDeviceConfigDescriptor
+CDC_Host_ConfigurePipes
+USB_Host_SetDeviceConfiguration
+USBH_PipeGetToggle
+XMC_USBH_osDelay
+CDC_Host_SendControlLineStateChange
+USB_SetHostState
+CDC_Host_SetLineEncoding
+CDC_Host_USBTask
+CDC_INTERRUPT_pipe_handle
+USBHost_Pipe_State
+Driver_USBH0
+SerialState
+USBH_VCOM_Packet_Buffer
+USBH_EventCB
+CDC_BULK_IN_pipe_handle
+CDC_Host_SendByte
+CDC_Host_SendData
+CDC_BULK_OUT_pipe_handle
+CDC_Host_ReceiveByte
+USBH_PipeSetNextToggle
+pipe
+USBH_PipeEventGet
+USBH_PipeEventReset

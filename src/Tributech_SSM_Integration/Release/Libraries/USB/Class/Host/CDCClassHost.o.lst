@@ -1,0 +1,909 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "CDCClassHost.c"
+  16              	 .section .text.DCOMP_CDC_Host_NextCDCControlInterface,"ax",%progbits
+  17              	 .align 1
+  18              	 .thumb
+  19              	 .thumb_func
+  21              	DCOMP_CDC_Host_NextCDCControlInterface:
+  22              	 
+  23              	 
+  24              	 
+  25 0000 4378     	 ldrb r3,[r0,#1]
+  26 0002 042B     	 cmp r3,#4
+  27 0004 0AD1     	 bne .L4
+  28 0006 4279     	 ldrb r2,[r0,#5]
+  29 0008 022A     	 cmp r2,#2
+  30 000a 07D1     	 bne .L4
+  31 000c 8379     	 ldrb r3,[r0,#6]
+  32 000e 022B     	 cmp r3,#2
+  33 0010 06D1     	 bne .L5
+  34 0012 C279     	 ldrb r2,[r0,#7]
+  35 0014 012A     	 cmp r2,#1
+  36 0016 08BF     	 it eq
+  37 0018 0023     	 moveq r3,#0
+  38 001a 02E0     	 b .L2
+  39              	.L4:
+  40 001c 0223     	 movs r3,#2
+  41 001e 00E0     	 b .L2
+  42              	.L5:
+  43 0020 1346     	 mov r3,r2
+  44              	.L2:
+  45 0022 1846     	 mov r0,r3
+  46 0024 7047     	 bx lr
+  48              	 .section .text.DCOMP_CDC_Host_NextCDCDataInterface,"ax",%progbits
+  49              	 .align 1
+  50              	 .thumb
+  51              	 .thumb_func
+  53              	DCOMP_CDC_Host_NextCDCDataInterface:
+  54              	 
+  55              	 
+  56              	 
+  57 0000 4378     	 ldrb r3,[r0,#1]
+  58 0002 042B     	 cmp r3,#4
+  59 0004 09D1     	 bne .L11
+  60 0006 4379     	 ldrb r3,[r0,#5]
+  61 0008 0A2B     	 cmp r3,#10
+  62 000a 06D1     	 bne .L11
+  63 000c 8379     	 ldrb r3,[r0,#6]
+  64 000e 23B9     	 cbnz r3,.L11
+  65 0010 C079     	 ldrb r0,[r0,#7]
+  66 0012 0028     	 cmp r0,#0
+  67 0014 18BF     	 it ne
+  68 0016 0220     	 movne r0,#2
+  69 0018 7047     	 bx lr
+  70              	.L11:
+  71 001a 0220     	 movs r0,#2
+  72 001c 7047     	 bx lr
+  74              	 .section .text.DCOMP_CDC_Host_NextCDCInterfaceEndpoint,"ax",%progbits
+  75              	 .align 1
+  76              	 .thumb
+  77              	 .thumb_func
+  79              	DCOMP_CDC_Host_NextCDCInterfaceEndpoint:
+  80              	 
+  81              	 
+  82              	 
+  83 0000 4378     	 ldrb r3,[r0,#1]
+  84 0002 052B     	 cmp r3,#5
+  85 0004 08D1     	 bne .L14
+  86 0006 C378     	 ldrb r3,[r0,#3]
+  87 0008 03F00303 	 and r3,r3,#3
+  88 000c 023B     	 subs r3,r3,#2
+  89 000e 012B     	 cmp r3,#1
+  90 0010 8CBF     	 ite hi
+  91 0012 0220     	 movhi r0,#2
+  92 0014 0020     	 movls r0,#0
+  93 0016 7047     	 bx lr
+  94              	.L14:
+  95 0018 042B     	 cmp r3,#4
+  96 001a 14BF     	 ite ne
+  97 001c 0220     	 movne r0,#2
+  98 001e 0120     	 moveq r0,#1
+  99 0020 7047     	 bx lr
+ 101              	 .section .text.CDC_Host_ConfigurePipes,"ax",%progbits
+ 102              	 .align 1
+ 103              	 .global CDC_Host_ConfigurePipes
+ 104              	 .thumb
+ 105              	 .thumb_func
+ 107              	CDC_Host_ConfigurePipes:
+ 108              	 
+ 109              	 
+ 110 0000 2DE9F04F 	 push {r4,r5,r6,r7,r8,r9,r10,fp,lr}
+ 111 0004 89B0     	 sub sp,sp,#36
+ 112 0006 0746     	 mov r7,r0
+ 113 0008 0692     	 str r2,[sp,#24]
+ 114 000a ADF81E10 	 strh r1,[sp,#30]
+ 115 000e 1830     	 adds r0,r0,#24
+ 116 0010 0021     	 movs r1,#0
+ 117 0012 0E22     	 movs r2,#14
+ 118 0014 FFF7FEFF 	 bl memset
+ 119 0018 069B     	 ldr r3,[sp,#24]
+ 120 001a 5D78     	 ldrb r5,[r3,#1]
+ 121 001c 022D     	 cmp r5,#2
+ 122 001e 40F0E380 	 bne .L32
+ 123 0022 4FF00009 	 mov r9,#0
+ 124 0026 4C46     	 mov r4,r9
+ 125 0028 4E46     	 mov r6,r9
+ 126 002a C846     	 mov r8,r9
+ 127              	.L20:
+ 128 002c B8F1000F 	 cmp r8,#0
+ 129 0030 04D1     	 bne .L54
+ 130              	.L28:
+ 131 0032 B9F1000F 	 cmp r9,#0
+ 132 0036 08D1     	 bne .L21
+ 133              	.L24:
+ 134 0038 84B9     	 cbnz r4,.L22
+ 135 003a 1BE0     	 b .L23
+ 136              	.L54:
+ 137 003c 002E     	 cmp r6,#0
+ 138 003e F8D0     	 beq .L28
+ 139 0040 002C     	 cmp r4,#0
+ 140 0042 33D1     	 bne .L55
+ 141 0044 B9F1000F 	 cmp r9,#0
+ 142 0048 14D0     	 beq .L23
+ 143              	.L21:
+ 144 004a 0DF11E00 	 add r0,sp,#30
+ 145 004e 06A9     	 add r1,sp,#24
+ 146 0050 684A     	 ldr r2,.L57
+ 147 0052 FFF7FEFF 	 bl USB_GetNextDescriptorComp
+ 148 0056 0028     	 cmp r0,#0
+ 149 0058 EED1     	 bne .L24
+ 150 005a 18E0     	 b .L56
+ 151              	.L22:
+ 152 005c 0DF11E00 	 add r0,sp,#30
+ 153 0060 06A9     	 add r1,sp,#24
+ 154 0062 654A     	 ldr r2,.L57+4
+ 155 0064 FFF7FEFF 	 bl USB_GetNextDescriptorComp
+ 156 0068 0028     	 cmp r0,#0
+ 157 006a 40F0BE80 	 bne .L41
+ 158 006e 0646     	 mov r6,r0
+ 159 0070 8046     	 mov r8,r0
+ 160 0072 DEE7     	 b .L28
+ 161              	.L23:
+ 162 0074 0DF11E00 	 add r0,sp,#30
+ 163 0078 06A9     	 add r1,sp,#24
+ 164 007a 604A     	 ldr r2,.L57+8
+ 165 007c FFF7FEFF 	 bl USB_GetNextDescriptorComp
+ 166 0080 0028     	 cmp r0,#0
+ 167 0082 40F0B280 	 bne .L41
+ 168 0086 DDF81890 	 ldr r9,[sp,#24]
+ 169 008a 0446     	 mov r4,r0
+ 170 008c CEE7     	 b .L20
+ 171              	.L56:
+ 172 008e 069B     	 ldr r3,[sp,#24]
+ 173 0090 93F90220 	 ldrsb r2,[r3,#2]
+ 174 0094 002A     	 cmp r2,#0
+ 175 0096 07DA     	 bge .L34
+ 176 0098 DA78     	 ldrb r2,[r3,#3]
+ 177 009a 02F00302 	 and r2,r2,#3
+ 178 009e 032A     	 cmp r2,#3
+ 179 00a0 14BF     	 ite ne
+ 180 00a2 9846     	 movne r8,r3
+ 181 00a4 1C46     	 moveq r4,r3
+ 182 00a6 C1E7     	 b .L20
+ 183              	.L34:
+ 184 00a8 1E46     	 mov r6,r3
+ 185 00aa BFE7     	 b .L20
+ 186              	.L55:
+ 187 00ac 98F80520 	 ldrb r2,[r8,#5]
+ 188 00b0 98F80430 	 ldrb r3,[r8,#4]
+ 189 00b4 DFF85CA1 	 ldr r10,.L57+32
+ 190 00b8 43EA0223 	 orr r3,r3,r2,lsl#8
+ 191 00bc 7B80     	 strh r3,[r7,#2]
+ 192 00be 98F80230 	 ldrb r3,[r8,#2]
+ 193 00c2 3B71     	 strb r3,[r7,#4]
+ 194 00c4 4FF0020C 	 mov ip,#2
+ 195 00c8 87F805C0 	 strb ip,[r7,#5]
+ 196 00cc 7279     	 ldrb r2,[r6,#5]
+ 197 00ce 3379     	 ldrb r3,[r6,#4]
+ 198 00d0 43EA0223 	 orr r3,r3,r2,lsl#8
+ 199 00d4 7B81     	 strh r3,[r7,#10]
+ 200 00d6 B378     	 ldrb r3,[r6,#2]
+ 201 00d8 3B73     	 strb r3,[r7,#12]
+ 202 00da 87F80DC0 	 strb ip,[r7,#13]
+ 203 00de 6279     	 ldrb r2,[r4,#5]
+ 204 00e0 2379     	 ldrb r3,[r4,#4]
+ 205 00e2 CDF814C0 	 str ip,[sp,#20]
+ 206 00e6 43EA0223 	 orr r3,r3,r2,lsl#8
+ 207 00ea 7B82     	 strh r3,[r7,#18]
+ 208 00ec A378     	 ldrb r3,[r4,#2]
+ 209 00ee 3B75     	 strb r3,[r7,#20]
+ 210 00f0 434B     	 ldr r3,.L57+12
+ 211 00f2 4FF0030B 	 mov fp,#3
+ 212 00f6 87F815B0 	 strb fp,[r7,#21]
+ 213 00fa 9B6A     	 ldr r3,[r3,#40]
+ 214 00fc 0493     	 str r3,[sp,#16]
+ 215 00fe 98F80230 	 ldrb r3,[r8,#2]
+ 216 0102 049D     	 ldr r5,[sp,#16]
+ 217 0104 03F07F03 	 and r3,r3,#127
+ 218 0108 8DE80810 	 stmia sp,{r3,ip}
+ 219 010c B8F80430 	 ldrh r3,[r8,#4]
+ 220 0110 0293     	 str r3,[sp,#8]
+ 221 0112 0120     	 movs r0,#1
+ 222 0114 0023     	 movs r3,#0
+ 223 0116 1A46     	 mov r2,r3
+ 224 0118 0393     	 str r3,[sp,#12]
+ 225 011a 0146     	 mov r1,r0
+ 226 011c A847     	 blx r5
+ 227 011e 394B     	 ldr r3,.L57+16
+ 228 0120 DDF814C0 	 ldr ip,[sp,#20]
+ 229 0124 1860     	 str r0,[r3]
+ 230 0126 384B     	 ldr r3,.L57+20
+ 231 0128 0344     	 add r3,r3,r0
+ 232 012a 1422     	 movs r2,#20
+ 233 012c 5B09     	 lsrs r3,r3,#5
+ 234 012e 5343     	 muls r3,r2,r3
+ 235 0130 0AEB0302 	 add r2,r10,r3
+ 236 0134 02F10801 	 add r1,r2,#8
+ 237 0138 9060     	 str r0,[r2,#8]
+ 238 013a 0028     	 cmp r0,#0
+ 239 013c 52D0     	 beq .L53
+ 240 013e 98F80200 	 ldrb r0,[r8,#2]
+ 241 0142 1074     	 strb r0,[r2,#16]
+ 242 0144 1022     	 movs r2,#16
+ 243 0146 4AF80320 	 str r2,[r10,r3]
+ 244 014a B8F80430 	 ldrh r3,[r8,#4]
+ 245 014e 4B60     	 str r3,[r1,#4]
+ 246 0150 B378     	 ldrb r3,[r6,#2]
+ 247 0152 049D     	 ldr r5,[sp,#16]
+ 248 0154 8DE80810 	 stmia sp,{r3,ip}
+ 249 0158 B388     	 ldrh r3,[r6,#4]
+ 250 015a 0293     	 str r3,[sp,#8]
+ 251 015c 0120     	 movs r0,#1
+ 252 015e 0023     	 movs r3,#0
+ 253 0160 1A46     	 mov r2,r3
+ 254 0162 0393     	 str r3,[sp,#12]
+ 255 0164 0146     	 mov r1,r0
+ 256 0166 A847     	 blx r5
+ 257 0168 284B     	 ldr r3,.L57+24
+ 258 016a 1860     	 str r0,[r3]
+ 259 016c 264B     	 ldr r3,.L57+20
+ 260 016e 0344     	 add r3,r3,r0
+ 261 0170 1422     	 movs r2,#20
+ 262 0172 5B09     	 lsrs r3,r3,#5
+ 263 0174 5343     	 muls r3,r2,r3
+ 264 0176 0AEB0302 	 add r2,r10,r3
+ 265 017a 02F10801 	 add r1,r2,#8
+ 266 017e 9060     	 str r0,[r2,#8]
+ 267 0180 80B3     	 cbz r0,.L53
+ 268 0182 B078     	 ldrb r0,[r6,#2]
+ 269 0184 1074     	 strb r0,[r2,#16]
+ 270 0186 1022     	 movs r2,#16
+ 271 0188 4AF80320 	 str r2,[r10,r3]
+ 272 018c B388     	 ldrh r3,[r6,#4]
+ 273 018e 4B60     	 str r3,[r1,#4]
+ 274 0190 A378     	 ldrb r3,[r4,#2]
+ 275 0192 049D     	 ldr r5,[sp,#16]
+ 276 0194 8DE80808 	 stmia sp,{r3,fp}
+ 277 0198 A388     	 ldrh r3,[r4,#4]
+ 278 019a 0293     	 str r3,[sp,#8]
+ 279 019c A379     	 ldrb r3,[r4,#6]
+ 280 019e 0393     	 str r3,[sp,#12]
+ 281 01a0 0022     	 movs r2,#0
+ 282 01a2 0120     	 movs r0,#1
+ 283 01a4 1346     	 mov r3,r2
+ 284 01a6 0146     	 mov r1,r0
+ 285 01a8 A847     	 blx r5
+ 286 01aa 194B     	 ldr r3,.L57+28
+ 287 01ac 1860     	 str r0,[r3]
+ 288 01ae 164B     	 ldr r3,.L57+20
+ 289 01b0 0344     	 add r3,r3,r0
+ 290 01b2 1422     	 movs r2,#20
+ 291 01b4 5B09     	 lsrs r3,r3,#5
+ 292 01b6 5343     	 muls r3,r2,r3
+ 293 01b8 0AEB0302 	 add r2,r10,r3
+ 294 01bc 02F10801 	 add r1,r2,#8
+ 295 01c0 9060     	 str r0,[r2,#8]
+ 296 01c2 78B1     	 cbz r0,.L53
+ 297 01c4 A078     	 ldrb r0,[r4,#2]
+ 298 01c6 1074     	 strb r0,[r2,#16]
+ 299 01c8 1022     	 movs r2,#16
+ 300 01ca 4AF80320 	 str r2,[r10,r3]
+ 301 01ce A388     	 ldrh r3,[r4,#4]
+ 302 01d0 4B60     	 str r3,[r1,#4]
+ 303 01d2 99F80230 	 ldrb r3,[r9,#2]
+ 304 01d6 7B76     	 strb r3,[r7,#25]
+ 305 01d8 0123     	 movs r3,#1
+ 306 01da A7F81AB0 	 strh fp,[r7,#26]
+ 307 01de A7F81CB0 	 strh fp,[r7,#28]
+ 308 01e2 3B76     	 strb r3,[r7,#24]
+ 309              	.L53:
+ 310 01e4 0025     	 movs r5,#0
+ 311 01e6 00E0     	 b .L41
+ 312              	.L32:
+ 313 01e8 0125     	 movs r5,#1
+ 314              	.L41:
+ 315 01ea 2846     	 mov r0,r5
+ 316 01ec 09B0     	 add sp,sp,#36
+ 317              	 
+ 318 01ee BDE8F08F 	 pop {r4,r5,r6,r7,r8,r9,r10,fp,pc}
+ 319              	.L58:
+ 320 01f2 00BF     	 .align 2
+ 321              	.L57:
+ 322 01f4 00000000 	 .word DCOMP_CDC_Host_NextCDCInterfaceEndpoint
+ 323 01f8 00000000 	 .word DCOMP_CDC_Host_NextCDCDataInterface
+ 324 01fc 00000000 	 .word DCOMP_CDC_Host_NextCDCControlInterface
+ 325 0200 00000000 	 .word Driver_USBH0
+ 326 0204 00000000 	 .word CDC_BULK_IN_pipe_handle
+ 327 0208 00FBFBAF 	 .word -1342440704
+ 328 020c 00000000 	 .word CDC_BULK_OUT_pipe_handle
+ 329 0210 00000000 	 .word CDC_INTERRUPT_pipe_handle
+ 330 0214 00000000 	 .word USBHost_Pipe_State
+ 332              	 .section .text.CDC_Host_SetLineEncoding,"ax",%progbits
+ 333              	 .align 1
+ 334              	 .global CDC_Host_SetLineEncoding
+ 335              	 .thumb
+ 336              	 .thumb_func
+ 338              	CDC_Host_SetLineEncoding:
+ 339              	 
+ 340              	 
+ 341 0000 10B5     	 push {r4,lr}
+ 342 0002 0B4B     	 ldr r3,.L60
+ 343 0004 427E     	 ldrb r2,[r0,#25]
+ 344 0006 9A80     	 strh r2,[r3,#4]
+ 345 0008 2121     	 movs r1,#33
+ 346 000a 0446     	 mov r4,r0
+ 347 000c 1970     	 strb r1,[r3]
+ 348 000e 0020     	 movs r0,#0
+ 349 0010 2021     	 movs r1,#32
+ 350 0012 0722     	 movs r2,#7
+ 351 0014 9870     	 strb r0,[r3,#2]
+ 352 0016 D870     	 strb r0,[r3,#3]
+ 353 0018 D871     	 strb r0,[r3,#7]
+ 354 001a 5970     	 strb r1,[r3,#1]
+ 355 001c 9A71     	 strb r2,[r3,#6]
+ 356 001e FFF7FEFF 	 bl Pipe_SelectPipe
+ 357 0022 04F11E00 	 add r0,r4,#30
+ 358 0026 BDE81040 	 pop {r4,lr}
+ 359 002a FFF7FEBF 	 b USB_Host_SendControlRequest
+ 360              	.L61:
+ 361 002e 00BF     	 .align 2
+ 362              	.L60:
+ 363 0030 00000000 	 .word USB_ControlRequest
+ 365              	 .section .text.CDC_Host_SendControlLineStateChange,"ax",%progbits
+ 366              	 .align 1
+ 367              	 .global CDC_Host_SendControlLineStateChange
+ 368              	 .thumb
+ 369              	 .thumb_func
+ 371              	CDC_Host_SendControlLineStateChange:
+ 372              	 
+ 373              	 
+ 374 0000 10B5     	 push {r4,lr}
+ 375 0002 0A4B     	 ldr r3,.L63
+ 376 0004 418B     	 ldrh r1,[r0,#26]
+ 377 0006 427E     	 ldrb r2,[r0,#25]
+ 378 0008 5980     	 strh r1,[r3,#2]
+ 379 000a 2120     	 movs r0,#33
+ 380 000c 0024     	 movs r4,#0
+ 381 000e 1870     	 strb r0,[r3]
+ 382 0010 2220     	 movs r0,#34
+ 383 0012 5870     	 strb r0,[r3,#1]
+ 384 0014 2046     	 mov r0,r4
+ 385 0016 9C71     	 strb r4,[r3,#6]
+ 386 0018 DC71     	 strb r4,[r3,#7]
+ 387 001a 9A80     	 strh r2,[r3,#4]
+ 388 001c FFF7FEFF 	 bl Pipe_SelectPipe
+ 389 0020 2046     	 mov r0,r4
+ 390 0022 BDE81040 	 pop {r4,lr}
+ 391 0026 FFF7FEBF 	 b USB_Host_SendControlRequest
+ 392              	.L64:
+ 393 002a 00BF     	 .align 2
+ 394              	.L63:
+ 395 002c 00000000 	 .word USB_ControlRequest
+ 397              	 .section .text.CDC_Host_SendBreak,"ax",%progbits
+ 398              	 .align 1
+ 399              	 .global CDC_Host_SendBreak
+ 400              	 .thumb
+ 401              	 .thumb_func
+ 403              	CDC_Host_SendBreak:
+ 404              	 
+ 405              	 
+ 406 0000 10B5     	 push {r4,lr}
+ 407 0002 094B     	 ldr r3,.L66
+ 408 0004 427E     	 ldrb r2,[r0,#25]
+ 409 0006 5980     	 strh r1,[r3,#2]
+ 410 0008 2120     	 movs r0,#33
+ 411 000a 0024     	 movs r4,#0
+ 412 000c 1870     	 strb r0,[r3]
+ 413 000e 2320     	 movs r0,#35
+ 414 0010 5870     	 strb r0,[r3,#1]
+ 415 0012 2046     	 mov r0,r4
+ 416 0014 9C71     	 strb r4,[r3,#6]
+ 417 0016 DC71     	 strb r4,[r3,#7]
+ 418 0018 9A80     	 strh r2,[r3,#4]
+ 419 001a FFF7FEFF 	 bl Pipe_SelectPipe
+ 420 001e 2046     	 mov r0,r4
+ 421 0020 BDE81040 	 pop {r4,lr}
+ 422 0024 FFF7FEBF 	 b USB_Host_SendControlRequest
+ 423              	.L67:
+ 424              	 .align 2
+ 425              	.L66:
+ 426 0028 00000000 	 .word USB_ControlRequest
+ 428              	 .section .text.CDC_Host_SendData,"ax",%progbits
+ 429              	 .align 1
+ 430              	 .global CDC_Host_SendData
+ 431              	 .thumb
+ 432              	 .thumb_func
+ 434              	CDC_Host_SendData:
+ 435              	 
+ 436              	 
+ 437 0000 70B5     	 push {r4,r5,r6,lr}
+ 438 0002 134B     	 ldr r3,.L72
+ 439 0004 1B78     	 ldrb r3,[r3]
+ 440 0006 0B2B     	 cmp r3,#11
+ 441 0008 0C46     	 mov r4,r1
+ 442 000a 1646     	 mov r6,r2
+ 443 000c 1ED1     	 bne .L71
+ 444 000e 037E     	 ldrb r3,[r0,#24]
+ 445 0010 E3B1     	 cbz r3,.L71
+ 446 0012 104D     	 ldr r5,.L72+4
+ 447 0014 2868     	 ldr r0,[r5]
+ 448 0016 FFF7FEFF 	 bl Pipe_SelectPipe
+ 449 001a FFF7FEFF 	 bl Pipe_Unfreeze
+ 450 001e 2868     	 ldr r0,[r5]
+ 451 0020 FFF7FEFF 	 bl USBH_PipeGetToggle
+ 452 0024 2246     	 mov r2,r4
+ 453 0026 0C4C     	 ldr r4,.L72+8
+ 454 0028 3346     	 mov r3,r6
+ 455 002a 40F00201 	 orr r1,r0,#2
+ 456 002e A46B     	 ldr r4,[r4,#56]
+ 457 0030 2868     	 ldr r0,[r5]
+ 458 0032 A047     	 blx r4
+ 459 0034 2868     	 ldr r0,[r5]
+ 460 0036 FFF7FEFF 	 bl USBH_WaitForTransfer
+ 461 003a 3146     	 mov r1,r6
+ 462 003c 0446     	 mov r4,r0
+ 463 003e 2868     	 ldr r0,[r5]
+ 464 0040 FFF7FEFF 	 bl USBH_PipeSetNextToggle
+ 465 0044 FFF7FEFF 	 bl Pipe_Freeze
+ 466 0048 2046     	 mov r0,r4
+ 467 004a 70BD     	 pop {r4,r5,r6,pc}
+ 468              	.L71:
+ 469 004c 0220     	 movs r0,#2
+ 470 004e 70BD     	 pop {r4,r5,r6,pc}
+ 471              	.L73:
+ 472              	 .align 2
+ 473              	.L72:
+ 474 0050 00000000 	 .word USB_HostState
+ 475 0054 00000000 	 .word CDC_BULK_OUT_pipe_handle
+ 476 0058 00000000 	 .word Driver_USBH0
+ 478              	 .section .text.CDC_Host_SendString,"ax",%progbits
+ 479              	 .align 1
+ 480              	 .global CDC_Host_SendString
+ 481              	 .thumb
+ 482              	 .thumb_func
+ 484              	CDC_Host_SendString:
+ 485              	 
+ 486              	 
+ 487 0000 70B5     	 push {r4,r5,r6,lr}
+ 488 0002 164B     	 ldr r3,.L78
+ 489 0004 1B78     	 ldrb r3,[r3]
+ 490 0006 0B2B     	 cmp r3,#11
+ 491 0008 0E46     	 mov r6,r1
+ 492 000a 25D1     	 bne .L77
+ 493 000c 037E     	 ldrb r3,[r0,#24]
+ 494 000e 1BB3     	 cbz r3,.L77
+ 495 0010 134D     	 ldr r5,.L78+4
+ 496 0012 2868     	 ldr r0,[r5]
+ 497 0014 FFF7FEFF 	 bl Pipe_SelectPipe
+ 498 0018 FFF7FEFF 	 bl Pipe_Unfreeze
+ 499 001c 2868     	 ldr r0,[r5]
+ 500 001e FFF7FEFF 	 bl USBH_PipeGetToggle
+ 501 0022 0446     	 mov r4,r0
+ 502 0024 3046     	 mov r0,r6
+ 503 0026 FFF7FEFF 	 bl strlen
+ 504 002a 44F00201 	 orr r1,r4,#2
+ 505 002e 0D4C     	 ldr r4,.L78+8
+ 506 0030 0346     	 mov r3,r0
+ 507 0032 3246     	 mov r2,r6
+ 508 0034 2868     	 ldr r0,[r5]
+ 509 0036 A46B     	 ldr r4,[r4,#56]
+ 510 0038 A047     	 blx r4
+ 511 003a 2868     	 ldr r0,[r5]
+ 512 003c FFF7FEFF 	 bl USBH_WaitForTransfer
+ 513 0040 0446     	 mov r4,r0
+ 514 0042 3046     	 mov r0,r6
+ 515 0044 FFF7FEFF 	 bl strlen
+ 516 0048 0146     	 mov r1,r0
+ 517 004a 2868     	 ldr r0,[r5]
+ 518 004c FFF7FEFF 	 bl USBH_PipeSetNextToggle
+ 519 0050 FFF7FEFF 	 bl Pipe_Freeze
+ 520 0054 2046     	 mov r0,r4
+ 521 0056 70BD     	 pop {r4,r5,r6,pc}
+ 522              	.L77:
+ 523 0058 0220     	 movs r0,#2
+ 524 005a 70BD     	 pop {r4,r5,r6,pc}
+ 525              	.L79:
+ 526              	 .align 2
+ 527              	.L78:
+ 528 005c 00000000 	 .word USB_HostState
+ 529 0060 00000000 	 .word CDC_BULK_OUT_pipe_handle
+ 530 0064 00000000 	 .word Driver_USBH0
+ 532              	 .section .text.CDC_Host_SendByte,"ax",%progbits
+ 533              	 .align 1
+ 534              	 .global CDC_Host_SendByte
+ 535              	 .thumb
+ 536              	 .thumb_func
+ 538              	CDC_Host_SendByte:
+ 539              	 
+ 540              	 
+ 541 0000 F7B5     	 push {r0,r1,r2,r4,r5,r6,r7,lr}
+ 542 0002 254B     	 ldr r3,.L89
+ 543 0004 8DF80710 	 strb r1,[sp,#7]
+ 544 0008 1B78     	 ldrb r3,[r3]
+ 545 000a 0B2B     	 cmp r3,#11
+ 546 000c 40D1     	 bne .L85
+ 547 000e 037E     	 ldrb r3,[r0,#24]
+ 548 0010 002B     	 cmp r3,#0
+ 549 0012 3DD0     	 beq .L85
+ 550 0014 214C     	 ldr r4,.L89+4
+ 551 0016 2068     	 ldr r0,[r4]
+ 552 0018 FFF7FEFF 	 bl Pipe_SelectPipe
+ 553 001c FFF7FEFF 	 bl Pipe_Unfreeze
+ 554 0020 FFF7FEFF 	 bl Pipe_IsReadWriteAllowed
+ 555 0024 68B3     	 cbz r0,.L82
+ 556              	.L83:
+ 557 0026 2068     	 ldr r0,[r4]
+ 558 0028 FFF7FEFF 	 bl USBH_PipeGetToggle
+ 559 002c 1C4B     	 ldr r3,.L89+8
+ 560 002e 0DF10702 	 add r2,sp,#7
+ 561 0032 40F00201 	 orr r1,r0,#2
+ 562 0036 9E6B     	 ldr r6,[r3,#56]
+ 563 0038 2068     	 ldr r0,[r4]
+ 564 003a 0123     	 movs r3,#1
+ 565 003c B047     	 blx r6
+ 566 003e 2068     	 ldr r0,[r4]
+ 567 0040 FFF7FEFF 	 bl USBH_WaitForTransfer
+ 568 0044 2068     	 ldr r0,[r4]
+ 569 0046 174C     	 ldr r4,.L89+12
+ 570 0048 0121     	 movs r1,#1
+ 571 004a FFF7FEFF 	 bl USBH_PipeSetNextToggle
+ 572 004e FFF7FEFF 	 bl Pipe_Freeze
+ 573 0052 2068     	 ldr r0,[r4]
+ 574 0054 FFF7FEFF 	 bl USBH_PipeGetToggle
+ 575 0058 2768     	 ldr r7,[r4]
+ 576 005a 134B     	 ldr r3,.L89+16
+ 577 005c 3B44     	 add r3,r3,r7
+ 578 005e 5A09     	 lsrs r2,r3,#5
+ 579 0060 124B     	 ldr r3,.L89+20
+ 580 0062 1421     	 movs r1,#20
+ 581 0064 01FB0233 	 mla r3,r1,r2,r3
+ 582 0068 40F00301 	 orr r1,r0,#3
+ 583 006c DD68     	 ldr r5,[r3,#12]
+ 584 006e 104A     	 ldr r2,.L89+24
+ 585 0070 2B46     	 mov r3,r5
+ 586 0072 3846     	 mov r0,r7
+ 587 0074 B047     	 blx r6
+ 588 0076 2068     	 ldr r0,[r4]
+ 589 0078 2946     	 mov r1,r5
+ 590 007a FFF7FEFF 	 bl USBH_PipeSetNextToggle
+ 591 007e 0020     	 movs r0,#0
+ 592 0080 07E0     	 b .L81
+ 593              	.L82:
+ 594 0082 FFF7FEFF 	 bl Pipe_ClearOUT
+ 595 0086 FFF7FEFF 	 bl Pipe_WaitUntilReady
+ 596 008a 0028     	 cmp r0,#0
+ 597 008c CBD0     	 beq .L83
+ 598 008e 00E0     	 b .L81
+ 599              	.L85:
+ 600 0090 0220     	 movs r0,#2
+ 601              	.L81:
+ 602 0092 03B0     	 add sp,sp,#12
+ 603              	 
+ 604 0094 F0BD     	 pop {r4,r5,r6,r7,pc}
+ 605              	.L90:
+ 606 0096 00BF     	 .align 2
+ 607              	.L89:
+ 608 0098 00000000 	 .word USB_HostState
+ 609 009c 00000000 	 .word CDC_BULK_OUT_pipe_handle
+ 610 00a0 00000000 	 .word Driver_USBH0
+ 611 00a4 00000000 	 .word CDC_BULK_IN_pipe_handle
+ 612 00a8 00FBFBAF 	 .word -1342440704
+ 613 00ac 00000000 	 .word USBHost_Pipe_State
+ 614 00b0 00000000 	 .word USBH_VCOM_Packet_Buffer
+ 616              	 .section .text.CDC_Host_BytesReceived,"ax",%progbits
+ 617              	 .align 1
+ 618              	 .global CDC_Host_BytesReceived
+ 619              	 .thumb
+ 620              	 .thumb_func
+ 622              	CDC_Host_BytesReceived:
+ 623              	 
+ 624              	 
+ 625 0000 08B5     	 push {r3,lr}
+ 626 0002 0F4B     	 ldr r3,.L98
+ 627 0004 1B78     	 ldrb r3,[r3]
+ 628 0006 0B2B     	 cmp r3,#11
+ 629 0008 18D1     	 bne .L92
+ 630 000a 037E     	 ldrb r3,[r0,#24]
+ 631 000c B3B1     	 cbz r3,.L92
+ 632 000e 0D4B     	 ldr r3,.L98+4
+ 633 0010 1868     	 ldr r0,[r3]
+ 634 0012 FFF7FEFF 	 bl Pipe_SelectPipe
+ 635 0016 FFF7FEFF 	 bl Pipe_Unfreeze
+ 636 001a FFF7FEFF 	 bl Pipe_IsINReceived
+ 637 001e 58B1     	 cbz r0,.L93
+ 638 0020 FFF7FEFF 	 bl Pipe_BytesInPipe
+ 639 0024 10B9     	 cbnz r0,.L94
+ 640 0026 FFF7FEFF 	 bl Pipe_ClearIN
+ 641 002a 05E0     	 b .L93
+ 642              	.L94:
+ 643 002c FFF7FEFF 	 bl Pipe_Freeze
+ 644 0030 BDE80840 	 pop {r3,lr}
+ 645 0034 FFF7FEBF 	 b Pipe_BytesInPipe
+ 646              	.L93:
+ 647 0038 FFF7FEFF 	 bl Pipe_Freeze
+ 648              	.L92:
+ 649 003c 0020     	 movs r0,#0
+ 650 003e 08BD     	 pop {r3,pc}
+ 651              	.L99:
+ 652              	 .align 2
+ 653              	.L98:
+ 654 0040 00000000 	 .word USB_HostState
+ 655 0044 00000000 	 .word CDC_BULK_IN_pipe_handle
+ 657              	 .section .text.CDC_Host_ReceiveByte,"ax",%progbits
+ 658              	 .align 1
+ 659              	 .global CDC_Host_ReceiveByte
+ 660              	 .thumb
+ 661              	 .thumb_func
+ 663              	CDC_Host_ReceiveByte:
+ 664              	 
+ 665              	 
+ 666 0000 10B5     	 push {r4,lr}
+ 667 0002 144B     	 ldr r3,.L108
+ 668 0004 1B78     	 ldrb r3,[r3]
+ 669 0006 0B2B     	 cmp r3,#11
+ 670 0008 1FD1     	 bne .L105
+ 671 000a 037E     	 ldrb r3,[r0,#24]
+ 672 000c EBB1     	 cbz r3,.L105
+ 673 000e 124B     	 ldr r3,.L108+4
+ 674 0010 1868     	 ldr r0,[r3]
+ 675 0012 FFF7FEFF 	 bl Pipe_SelectPipe
+ 676 0016 FFF7FEFF 	 bl Pipe_Unfreeze
+ 677 001a FFF7FEFF 	 bl Pipe_IsINReceived
+ 678 001e 70B1     	 cbz r0,.L106
+ 679 0020 FFF7FEFF 	 bl Pipe_BytesInPipe
+ 680 0024 18B1     	 cbz r0,.L107
+ 681 0026 FFF7FEFF 	 bl Pipe_Read_8
+ 682 002a 84B2     	 uxth r4,r0
+ 683 002c 01E0     	 b .L103
+ 684              	.L107:
+ 685 002e 4FF6FF74 	 movw r4,#65535
+ 686              	.L103:
+ 687 0032 FFF7FEFF 	 bl Pipe_BytesInPipe
+ 688 0036 20B9     	 cbnz r0,.L102
+ 689 0038 FFF7FEFF 	 bl Pipe_ClearIN
+ 690 003c 01E0     	 b .L102
+ 691              	.L106:
+ 692 003e 4FF6FF74 	 movw r4,#65535
+ 693              	.L102:
+ 694 0042 FFF7FEFF 	 bl Pipe_Freeze
+ 695 0046 2046     	 mov r0,r4
+ 696 0048 01E0     	 b .L101
+ 697              	.L105:
+ 698 004a 4FF6FF70 	 movw r0,#65535
+ 699              	.L101:
+ 700 004e 00B2     	 sxth r0,r0
+ 701 0050 10BD     	 pop {r4,pc}
+ 702              	.L109:
+ 703 0052 00BF     	 .align 2
+ 704              	.L108:
+ 705 0054 00000000 	 .word USB_HostState
+ 706 0058 00000000 	 .word CDC_BULK_IN_pipe_handle
+ 708              	 .section .text.CDC_Host_Flush,"ax",%progbits
+ 709              	 .align 1
+ 710              	 .global CDC_Host_Flush
+ 711              	 .thumb
+ 712              	 .thumb_func
+ 714              	CDC_Host_Flush:
+ 715              	 
+ 716              	 
+ 717 0000 10B5     	 push {r4,lr}
+ 718 0002 0F4B     	 ldr r3,.L117
+ 719 0004 1B78     	 ldrb r3,[r3]
+ 720 0006 0B2B     	 cmp r3,#11
+ 721 0008 18D1     	 bne .L114
+ 722 000a 037E     	 ldrb r3,[r0,#24]
+ 723 000c B3B1     	 cbz r3,.L114
+ 724 000e 007A     	 ldrb r0,[r0,#8]
+ 725 0010 FFF7FEFF 	 bl Pipe_SelectPipe
+ 726 0014 FFF7FEFF 	 bl Pipe_Unfreeze
+ 727 0018 FFF7FEFF 	 bl Pipe_BytesInPipe
+ 728 001c 78B1     	 cbz r0,.L111
+ 729 001e FFF7FEFF 	 bl Pipe_IsReadWriteAllowed
+ 730 0022 0446     	 mov r4,r0
+ 731 0024 FFF7FEFF 	 bl Pipe_ClearOUT
+ 732 0028 24B9     	 cbnz r4,.L112
+ 733 002a FFF7FEFF 	 bl Pipe_WaitUntilReady
+ 734 002e 30B9     	 cbnz r0,.L111
+ 735 0030 FFF7FEFF 	 bl Pipe_ClearOUT
+ 736              	.L112:
+ 737 0034 FFF7FEFF 	 bl Pipe_Freeze
+ 738 0038 0020     	 movs r0,#0
+ 739 003a 10BD     	 pop {r4,pc}
+ 740              	.L114:
+ 741 003c 0220     	 movs r0,#2
+ 742              	.L111:
+ 743 003e 10BD     	 pop {r4,pc}
+ 744              	.L118:
+ 745              	 .align 2
+ 746              	.L117:
+ 747 0040 00000000 	 .word USB_HostState
+ 749              	 .section .text.CDC_Host_Event_Stub,"ax",%progbits
+ 750              	 .align 1
+ 751              	 .global CDC_Host_Event_Stub
+ 752              	 .thumb
+ 753              	 .thumb_func
+ 755              	CDC_Host_Event_Stub:
+ 756              	 
+ 757              	 
+ 758              	 
+ 759 0000 7047     	 bx lr
+ 761              	 .weak EVENT_CDC_Host_ControLineStateChanged
+ 762              	 .thumb_set EVENT_CDC_Host_ControLineStateChanged,CDC_Host_Event_Stub
+ 763              	 .section .text.CDC_Host_USBTask,"ax",%progbits
+ 764              	 .align 1
+ 765              	 .global CDC_Host_USBTask
+ 766              	 .thumb
+ 767              	 .thumb_func
+ 769              	CDC_Host_USBTask:
+ 770              	 
+ 771              	 
+ 772 0000 70B5     	 push {r4,r5,r6,lr}
+ 773 0002 244B     	 ldr r3,.L131
+ 774 0004 1B78     	 ldrb r3,[r3]
+ 775 0006 0B2B     	 cmp r3,#11
+ 776 0008 0546     	 mov r5,r0
+ 777 000a 41D1     	 bne .L120
+ 778 000c 037E     	 ldrb r3,[r0,#24]
+ 779 000e 002B     	 cmp r3,#0
+ 780 0010 3ED0     	 beq .L120
+ 781 0012 214C     	 ldr r4,.L131+4
+ 782 0014 2068     	 ldr r0,[r4]
+ 783 0016 FFF7FEFF 	 bl Pipe_SelectPipe
+ 784 001a FFF7FEFF 	 bl Pipe_Unfreeze
+ 785 001e FFF7FEFF 	 bl Pipe_IsINReceived
+ 786 0022 0028     	 cmp r0,#0
+ 787 0024 2DD0     	 beq .L122
+ 788 0026 2068     	 ldr r0,[r4]
+ 789 0028 1C4E     	 ldr r6,.L131+8
+ 790 002a 0821     	 movs r1,#8
+ 791 002c FFF7FEFF 	 bl USBH_PipeSetNextToggle
+ 792 0030 1B4B     	 ldr r3,.L131+12
+ 793 0032 5A78     	 ldrb r2,[r3,#1]
+ 794 0034 202A     	 cmp r2,#32
+ 795 0036 0CD1     	 bne .L123
+ 796 0038 1A78     	 ldrb r2,[r3]
+ 797 003a A12A     	 cmp r2,#161
+ 798 003c 09D1     	 bne .L123
+ 799 003e 3268     	 ldr r2,[r6]
+ 800 0040 9A42     	 cmp r2,r3
+ 801 0042 1BBF     	 ittet ne
+ 802 0044 3360     	 strne r3,[r6]
+ 803 0046 174B     	 ldrne r3,.L131+16
+ 804 0048 0832     	 addeq r2,r2,#8
+ 805 004a 0122     	 movne r2,#1
+ 806 004c 0CBF     	 ite eq
+ 807 004e 3260     	 streq r2,[r6]
+ 808 0050 1A70     	 strbne r2,[r3]
+ 809              	.L123:
+ 810 0052 FFF7FEFF 	 bl Pipe_ClearIN
+ 811 0056 2068     	 ldr r0,[r4]
+ 812 0058 FFF7FEFF 	 bl USBH_PipeGetToggle
+ 813 005c 2468     	 ldr r4,[r4]
+ 814 005e 124B     	 ldr r3,.L131+20
+ 815 0060 2344     	 add r3,r3,r4
+ 816 0062 5A09     	 lsrs r2,r3,#5
+ 817 0064 114B     	 ldr r3,.L131+24
+ 818 0066 40F00301 	 orr r1,r0,#3
+ 819 006a 1420     	 movs r0,#20
+ 820 006c 00FB0233 	 mla r3,r0,r2,r3
+ 821 0070 2046     	 mov r0,r4
+ 822 0072 0F4C     	 ldr r4,.L131+28
+ 823 0074 3268     	 ldr r2,[r6]
+ 824 0076 DB68     	 ldr r3,[r3,#12]
+ 825 0078 A46B     	 ldr r4,[r4,#56]
+ 826 007a A047     	 blx r4
+ 827 007c 2846     	 mov r0,r5
+ 828 007e FFF7FEFF 	 bl EVENT_CDC_Host_ControLineStateChanged
+ 829              	.L122:
+ 830 0082 FFF7FEFF 	 bl Pipe_Freeze
+ 831 0086 2846     	 mov r0,r5
+ 832 0088 BDE87040 	 pop {r4,r5,r6,lr}
+ 833 008c FFF7FEBF 	 b CDC_Host_Flush
+ 834              	.L120:
+ 835 0090 70BD     	 pop {r4,r5,r6,pc}
+ 836              	.L132:
+ 837 0092 00BF     	 .align 2
+ 838              	.L131:
+ 839 0094 00000000 	 .word USB_HostState
+ 840 0098 00000000 	 .word CDC_INTERRUPT_pipe_handle
+ 841 009c 00000000 	 .word .LANCHOR0
+ 842 00a0 00000000 	 .word SerialState
+ 843 00a4 00000000 	 .word .LANCHOR1
+ 844 00a8 00FBFBAF 	 .word -1342440704
+ 845 00ac 00000000 	 .word USBHost_Pipe_State
+ 846 00b0 00000000 	 .word Driver_USBH0
+ 848              	 .comm SerialState,10,1
+ 849              	 .global NOTIFICATION_TransferCompleted
+ 850              	 .comm USBH_VCOM_Packet_Buffer,64,1
+ 851              	 .comm CDC_INTERRUPT_pipe_handle,4,4
+ 852              	 .comm CDC_BULK_IN_pipe_handle,4,4
+ 853              	 .comm CDC_BULK_OUT_pipe_handle,4,4
+ 854              	 .section .bss.NOTIFICATION_TransferCompleted,"aw",%nobits
+ 855              	 .set .LANCHOR1,.+0
+ 858              	NOTIFICATION_TransferCompleted:
+ 859 0000 00       	 .space 1
+ 860              	 .section .data.data_ptr.9348,"aw",%progbits
+ 861              	 .align 2
+ 862              	 .set .LANCHOR0,.+0
+ 865              	data_ptr.9348:
+ 866 0000 00000000 	 .word SerialState
+ 867              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 CDCClassHost.c
+    {standard input}:17     .text.DCOMP_CDC_Host_NextCDCControlInterface:00000000 $t
+    {standard input}:21     .text.DCOMP_CDC_Host_NextCDCControlInterface:00000000 DCOMP_CDC_Host_NextCDCControlInterface
+    {standard input}:49     .text.DCOMP_CDC_Host_NextCDCDataInterface:00000000 $t
+    {standard input}:53     .text.DCOMP_CDC_Host_NextCDCDataInterface:00000000 DCOMP_CDC_Host_NextCDCDataInterface
+    {standard input}:75     .text.DCOMP_CDC_Host_NextCDCInterfaceEndpoint:00000000 $t
+    {standard input}:79     .text.DCOMP_CDC_Host_NextCDCInterfaceEndpoint:00000000 DCOMP_CDC_Host_NextCDCInterfaceEndpoint
+    {standard input}:102    .text.CDC_Host_ConfigurePipes:00000000 $t
+    {standard input}:107    .text.CDC_Host_ConfigurePipes:00000000 CDC_Host_ConfigurePipes
+    {standard input}:322    .text.CDC_Host_ConfigurePipes:000001f4 $d
+                            *COM*:00000004 CDC_BULK_IN_pipe_handle
+                            *COM*:00000004 CDC_BULK_OUT_pipe_handle
+                            *COM*:00000004 CDC_INTERRUPT_pipe_handle
+    {standard input}:333    .text.CDC_Host_SetLineEncoding:00000000 $t
+    {standard input}:338    .text.CDC_Host_SetLineEncoding:00000000 CDC_Host_SetLineEncoding
+    {standard input}:363    .text.CDC_Host_SetLineEncoding:00000030 $d
+    {standard input}:366    .text.CDC_Host_SendControlLineStateChange:00000000 $t
+    {standard input}:371    .text.CDC_Host_SendControlLineStateChange:00000000 CDC_Host_SendControlLineStateChange
+    {standard input}:395    .text.CDC_Host_SendControlLineStateChange:0000002c $d
+    {standard input}:398    .text.CDC_Host_SendBreak:00000000 $t
+    {standard input}:403    .text.CDC_Host_SendBreak:00000000 CDC_Host_SendBreak
+    {standard input}:426    .text.CDC_Host_SendBreak:00000028 $d
+    {standard input}:429    .text.CDC_Host_SendData:00000000 $t
+    {standard input}:434    .text.CDC_Host_SendData:00000000 CDC_Host_SendData
+    {standard input}:474    .text.CDC_Host_SendData:00000050 $d
+    {standard input}:479    .text.CDC_Host_SendString:00000000 $t
+    {standard input}:484    .text.CDC_Host_SendString:00000000 CDC_Host_SendString
+    {standard input}:528    .text.CDC_Host_SendString:0000005c $d
+    {standard input}:533    .text.CDC_Host_SendByte:00000000 $t
+    {standard input}:538    .text.CDC_Host_SendByte:00000000 CDC_Host_SendByte
+    {standard input}:608    .text.CDC_Host_SendByte:00000098 $d
+                            *COM*:00000040 USBH_VCOM_Packet_Buffer
+    {standard input}:617    .text.CDC_Host_BytesReceived:00000000 $t
+    {standard input}:622    .text.CDC_Host_BytesReceived:00000000 CDC_Host_BytesReceived
+    {standard input}:654    .text.CDC_Host_BytesReceived:00000040 $d
+    {standard input}:658    .text.CDC_Host_ReceiveByte:00000000 $t
+    {standard input}:663    .text.CDC_Host_ReceiveByte:00000000 CDC_Host_ReceiveByte
+    {standard input}:705    .text.CDC_Host_ReceiveByte:00000054 $d
+    {standard input}:709    .text.CDC_Host_Flush:00000000 $t
+    {standard input}:714    .text.CDC_Host_Flush:00000000 CDC_Host_Flush
+    {standard input}:747    .text.CDC_Host_Flush:00000040 $d
+    {standard input}:750    .text.CDC_Host_Event_Stub:00000000 $t
+    {standard input}:755    .text.CDC_Host_Event_Stub:00000000 CDC_Host_Event_Stub
+    {standard input}:755    .text.CDC_Host_Event_Stub:00000000 EVENT_CDC_Host_ControLineStateChanged
+    {standard input}:764    .text.CDC_Host_USBTask:00000000 $t
+    {standard input}:769    .text.CDC_Host_USBTask:00000000 CDC_Host_USBTask
+    {standard input}:839    .text.CDC_Host_USBTask:00000094 $d
+                            *COM*:0000000a SerialState
+    {standard input}:858    .bss.NOTIFICATION_TransferCompleted:00000000 NOTIFICATION_TransferCompleted
+    {standard input}:859    .bss.NOTIFICATION_TransferCompleted:00000000 $d
+    {standard input}:861    .data.data_ptr.9348:00000000 $d
+    {standard input}:865    .data.data_ptr.9348:00000000 data_ptr.9348
+
+UNDEFINED SYMBOLS
+memset
+USB_GetNextDescriptorComp
+Driver_USBH0
+USBHost_Pipe_State
+Pipe_SelectPipe
+USB_Host_SendControlRequest
+USB_ControlRequest
+Pipe_Unfreeze
+USBH_PipeGetToggle
+USBH_WaitForTransfer
+USBH_PipeSetNextToggle
+Pipe_Freeze
+USB_HostState
+strlen
+Pipe_IsReadWriteAllowed
+Pipe_ClearOUT
+Pipe_WaitUntilReady
+Pipe_IsINReceived
+Pipe_BytesInPipe
+Pipe_ClearIN
+Pipe_Read_8

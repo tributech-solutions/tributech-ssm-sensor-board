@@ -1,0 +1,1374 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "USB_Glue.c"
+  16              	 .section .text.USBH_SignalPortEventHandler,"ax",%progbits
+  17              	 .align 1
+  18              	 .global USBH_SignalPortEventHandler
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	USBH_SignalPortEventHandler:
+  23              	 
+  24              	 
+  25              	 
+  26 0000 11F00102 	 ands r2,r1,#1
+  27 0004 01D0     	 beq .L2
+  28 0006 0222     	 movs r2,#2
+  29 0008 01E0     	 b .L14
+  30              	.L2:
+  31 000a 8B07     	 lsls r3,r1,#30
+  32 000c 01D5     	 bpl .L3
+  33              	.L14:
+  34 000e 044B     	 ldr r3,.L16
+  35 0010 1A70     	 strb r2,[r3]
+  36              	.L3:
+  37 0012 044B     	 ldr r3,.L16+4
+  38 0014 1B68     	 ldr r3,[r3]
+  39 0016 13B1     	 cbz r3,.L1
+  40 0018 1B68     	 ldr r3,[r3]
+  41 001a 03B1     	 cbz r3,.L1
+  42 001c 1847     	 bx r3
+  43              	.L1:
+  44 001e 7047     	 bx lr
+  45              	.L17:
+  46              	 .align 2
+  47              	.L16:
+  48 0020 00000000 	 .word USB_HostState
+  49 0024 00000000 	 .word USBH_EventCB
+  51              	 .section .text.USBH_SignalPipeEventHandler,"ax",%progbits
+  52              	 .align 1
+  53              	 .global USBH_SignalPipeEventHandler
+  54              	 .thumb
+  55              	 .thumb_func
+  57              	USBH_SignalPipeEventHandler:
+  58              	 
+  59              	 
+  60 0000 084B     	 ldr r3,.L26
+  61 0002 0344     	 add r3,r3,r0
+  62 0004 5A09     	 lsrs r2,r3,#5
+  63 0006 084B     	 ldr r3,.L26+4
+  64 0008 10B5     	 push {r4,lr}
+  65 000a 1424     	 movs r4,#20
+  66 000c 04FB0233 	 mla r3,r4,r2,r3
+  67 0010 5960     	 str r1,[r3,#4]
+  68 0012 064B     	 ldr r3,.L26+8
+  69 0014 1B68     	 ldr r3,[r3]
+  70 0016 23B1     	 cbz r3,.L18
+  71 0018 5B68     	 ldr r3,[r3,#4]
+  72 001a 13B1     	 cbz r3,.L18
+  73 001c BDE81040 	 pop {r4,lr}
+  74 0020 1847     	 bx r3
+  75              	.L18:
+  76 0022 10BD     	 pop {r4,pc}
+  77              	.L27:
+  78              	 .align 2
+  79              	.L26:
+  80 0024 00FBFBAF 	 .word -1342440704
+  81 0028 00000000 	 .word USBHost_Pipe_State
+  82 002c 00000000 	 .word USBH_EventCB
+  84              	 .section .text.USB_Host_ResetDevice,"ax",%progbits
+  85              	 .align 1
+  86              	 .thumb
+  87              	 .thumb_func
+  89              	USB_Host_ResetDevice:
+  90              	 
+  91              	 
+  92              	 
+  93 0000 014B     	 ldr r3,.L29
+  94 0002 0020     	 movs r0,#0
+  95 0004 9B69     	 ldr r3,[r3,#24]
+  96 0006 1847     	 bx r3
+  97              	.L30:
+  98              	 .align 2
+  99              	.L29:
+ 100 0008 00000000 	 .word Driver_USBH0
+ 102              	 .section .text.USBH_PipeEventReset,"ax",%progbits
+ 103              	 .align 1
+ 104              	 .global USBH_PipeEventReset
+ 105              	 .thumb
+ 106              	 .thumb_func
+ 108              	USBH_PipeEventReset:
+ 109              	 
+ 110              	 
+ 111              	 
+ 112 0000 054B     	 ldr r3,.L32
+ 113 0002 0344     	 add r3,r3,r0
+ 114 0004 5A09     	 lsrs r2,r3,#5
+ 115 0006 054B     	 ldr r3,.L32+4
+ 116 0008 1420     	 movs r0,#20
+ 117 000a 00FB0233 	 mla r3,r0,r2,r3
+ 118 000e 5A68     	 ldr r2,[r3,#4]
+ 119 0010 22EA0101 	 bic r1,r2,r1
+ 120 0014 5960     	 str r1,[r3,#4]
+ 121 0016 7047     	 bx lr
+ 122              	.L33:
+ 123              	 .align 2
+ 124              	.L32:
+ 125 0018 00FBFBAF 	 .word -1342440704
+ 126 001c 00000000 	 .word USBHost_Pipe_State
+ 128              	 .section .text.USBH_PipeEventGet,"ax",%progbits
+ 129              	 .align 1
+ 130              	 .global USBH_PipeEventGet
+ 131              	 .thumb
+ 132              	 .thumb_func
+ 134              	USBH_PipeEventGet:
+ 135              	 
+ 136              	 
+ 137              	 
+ 138 0000 044B     	 ldr r3,.L35
+ 139 0002 0344     	 add r3,r3,r0
+ 140 0004 5A09     	 lsrs r2,r3,#5
+ 141 0006 044B     	 ldr r3,.L35+4
+ 142 0008 1421     	 movs r1,#20
+ 143 000a 01FB0233 	 mla r3,r1,r2,r3
+ 144 000e 5868     	 ldr r0,[r3,#4]
+ 145 0010 7047     	 bx lr
+ 146              	.L36:
+ 147 0012 00BF     	 .align 2
+ 148              	.L35:
+ 149 0014 00FBFBAF 	 .word -1342440704
+ 150 0018 00000000 	 .word USBHost_Pipe_State
+ 152              	 .section .text.USBH_PipeGetToggle,"ax",%progbits
+ 153              	 .align 1
+ 154              	 .global USBH_PipeGetToggle
+ 155              	 .thumb
+ 156              	 .thumb_func
+ 158              	USBH_PipeGetToggle:
+ 159              	 
+ 160              	 
+ 161              	 
+ 162 0000 034B     	 ldr r3,.L38
+ 163 0002 0344     	 add r3,r3,r0
+ 164 0004 1422     	 movs r2,#20
+ 165 0006 5B09     	 lsrs r3,r3,#5
+ 166 0008 5343     	 muls r3,r2,r3
+ 167 000a 024A     	 ldr r2,.L38+4
+ 168 000c D058     	 ldr r0,[r2,r3]
+ 169 000e 7047     	 bx lr
+ 170              	.L39:
+ 171              	 .align 2
+ 172              	.L38:
+ 173 0010 00FBFBAF 	 .word -1342440704
+ 174 0014 00000000 	 .word USBHost_Pipe_State
+ 176              	 .section .text.USBH_PipeSetNextToggle,"ax",%progbits
+ 177              	 .align 1
+ 178              	 .global USBH_PipeSetNextToggle
+ 179              	 .thumb
+ 180              	 .thumb_func
+ 182              	USBH_PipeSetNextToggle:
+ 183              	 
+ 184              	 
+ 185 0000 0E4B     	 ldr r3,.L49
+ 186 0002 10B5     	 push {r4,lr}
+ 187 0004 0344     	 add r3,r3,r0
+ 188 0006 0E4C     	 ldr r4,.L49+4
+ 189 0008 69B1     	 cbz r1,.L41
+ 190 000a 1422     	 movs r2,#20
+ 191 000c 5809     	 lsrs r0,r3,#5
+ 192 000e 02FB0040 	 mla r0,r2,r0,r4
+ 193 0012 C268     	 ldr r2,[r0,#12]
+ 194 0014 9142     	 cmp r1,r2
+ 195 0016 06D3     	 bcc .L41
+ 196 0018 B1FBF2F0 	 udiv r0,r1,r2
+ 197 001c 02FB1012 	 mls r2,r2,r0,r1
+ 198 0020 0244     	 add r2,r2,r0
+ 199 0022 D207     	 lsls r2,r2,#31
+ 200 0024 08D5     	 bpl .L40
+ 201              	.L41:
+ 202 0026 1422     	 movs r2,#20
+ 203 0028 5B09     	 lsrs r3,r3,#5
+ 204 002a 5343     	 muls r3,r2,r3
+ 205 002c E258     	 ldr r2,[r4,r3]
+ 206 002e 22F00F02 	 bic r2,r2,#15
+ 207 0032 82F03002 	 eor r2,r2,#48
+ 208 0036 E250     	 str r2,[r4,r3]
+ 209              	.L40:
+ 210 0038 10BD     	 pop {r4,pc}
+ 211              	.L50:
+ 212 003a 00BF     	 .align 2
+ 213              	.L49:
+ 214 003c 00FBFBAF 	 .word -1342440704
+ 215 0040 00000000 	 .word USBHost_Pipe_State
+ 217              	 .section .text.USB_Disable,"ax",%progbits
+ 218              	 .align 1
+ 219              	 .global USB_Disable
+ 220              	 .thumb
+ 221              	 .thumb_func
+ 223              	USB_Disable:
+ 224              	 
+ 225              	 
+ 226 0000 08B5     	 push {r3,lr}
+ 227 0002 034B     	 ldr r3,.L52
+ 228 0004 DB68     	 ldr r3,[r3,#12]
+ 229 0006 9847     	 blx r3
+ 230 0008 024B     	 ldr r3,.L52+4
+ 231 000a 0022     	 movs r2,#0
+ 232 000c 1A70     	 strb r2,[r3]
+ 233 000e 08BD     	 pop {r3,pc}
+ 234              	.L53:
+ 235              	 .align 2
+ 236              	.L52:
+ 237 0010 00000000 	 .word Driver_USBH0
+ 238 0014 00000000 	 .word USB_IsInitialized
+ 240              	 .section .text.USB_Init_Host,"ax",%progbits
+ 241              	 .align 1
+ 242              	 .global USB_Init_Host
+ 243              	 .thumb
+ 244              	 .thumb_func
+ 246              	USB_Init_Host:
+ 247              	 
+ 248              	 
+ 249 0000 0F4B     	 ldr r3,.L55
+ 250 0002 70B5     	 push {r4,r5,r6,lr}
+ 251 0004 1860     	 str r0,[r3]
+ 252 0006 0120     	 movs r0,#1
+ 253 0008 FFF7FEFF 	 bl XMC_SCU_CLOCK_EnableClock
+ 254 000c 0D4B     	 ldr r3,.L55+4
+ 255 000e 0E4C     	 ldr r4,.L55+8
+ 256 0010 0125     	 movs r5,#1
+ 257 0012 1D70     	 strb r5,[r3]
+ 258 0014 0D4B     	 ldr r3,.L55+12
+ 259 0016 0026     	 movs r6,#0
+ 260 0018 1E70     	 strb r6,[r3]
+ 261 001a 0D4B     	 ldr r3,.L55+16
+ 262 001c 4022     	 movs r2,#64
+ 263 001e 1A70     	 strb r2,[r3]
+ 264 0020 E368     	 ldr r3,[r4,#12]
+ 265 0022 9847     	 blx r3
+ 266 0024 0B49     	 ldr r1,.L55+20
+ 267 0026 A368     	 ldr r3,[r4,#8]
+ 268 0028 0B48     	 ldr r0,.L55+24
+ 269 002a 9847     	 blx r3
+ 270 002c 2369     	 ldr r3,[r4,#16]
+ 271 002e 0220     	 movs r0,#2
+ 272 0030 9847     	 blx r3
+ 273 0032 6369     	 ldr r3,[r4,#20]
+ 274 0034 3046     	 mov r0,r6
+ 275 0036 2946     	 mov r1,r5
+ 276 0038 9847     	 blx r3
+ 277 003a 084B     	 ldr r3,.L55+28
+ 278 003c 1D70     	 strb r5,[r3]
+ 279 003e 70BD     	 pop {r4,r5,r6,pc}
+ 280              	.L56:
+ 281              	 .align 2
+ 282              	.L55:
+ 283 0040 00000000 	 .word USBH_EventCB
+ 284 0044 00000000 	 .word USB_HostState
+ 285 0048 00000000 	 .word Driver_USBH0
+ 286 004c 00000000 	 .word USB_Host_ConfigurationNumber
+ 287 0050 00000000 	 .word .LANCHOR0
+ 288 0054 00000000 	 .word USBH_SignalPipeEventHandler
+ 289 0058 00000000 	 .word USBH_SignalPortEventHandler
+ 290 005c 00000000 	 .word USB_IsInitialized
+ 292              	 .section .text.Pipe_SelectPipe,"ax",%progbits
+ 293              	 .align 1
+ 294              	 .global Pipe_SelectPipe
+ 295              	 .thumb
+ 296              	 .thumb_func
+ 298              	Pipe_SelectPipe:
+ 299              	 
+ 300              	 
+ 301              	 
+ 302 0000 014B     	 ldr r3,.L58
+ 303 0002 1860     	 str r0,[r3]
+ 304 0004 7047     	 bx lr
+ 305              	.L59:
+ 306 0006 00BF     	 .align 2
+ 307              	.L58:
+ 308 0008 00000000 	 .word XMC_USB_SelectedPipe
+ 310              	 .section .text.Pipe_SetPipeToken,"ax",%progbits
+ 311              	 .align 1
+ 312              	 .global Pipe_SetPipeToken
+ 313              	 .thumb
+ 314              	 .thumb_func
+ 316              	Pipe_SetPipeToken:
+ 317              	 
+ 318              	 
+ 319              	 
+ 320 0000 7047     	 bx lr
+ 322              	 .section .text.Pipe_GetCurrentPipe,"ax",%progbits
+ 323              	 .align 1
+ 324              	 .global Pipe_GetCurrentPipe
+ 325              	 .thumb
+ 326              	 .thumb_func
+ 328              	Pipe_GetCurrentPipe:
+ 329              	 
+ 330              	 
+ 331              	 
+ 332 0000 014B     	 ldr r3,.L62
+ 333 0002 1878     	 ldrb r0,[r3]
+ 334 0004 7047     	 bx lr
+ 335              	.L63:
+ 336 0006 00BF     	 .align 2
+ 337              	.L62:
+ 338 0008 00000000 	 .word XMC_USB_SelectedPipe
+ 340              	 .section .text.Pipe_ClearError,"ax",%progbits
+ 341              	 .align 1
+ 342              	 .global Pipe_ClearError
+ 343              	 .thumb
+ 344              	 .thumb_func
+ 346              	Pipe_ClearError:
+ 347              	 
+ 348              	 
+ 349              	 
+ 350 0000 7047     	 bx lr
+ 352              	 .section .text.Pipe_Unfreeze,"ax",%progbits
+ 353              	 .align 1
+ 354              	 .global Pipe_Unfreeze
+ 355              	 .thumb
+ 356              	 .thumb_func
+ 358              	Pipe_Unfreeze:
+ 359              	 
+ 360              	 
+ 361              	 
+ 362 0000 7047     	 bx lr
+ 364              	 .section .text.Pipe_WaitUntilReady,"ax",%progbits
+ 365              	 .align 1
+ 366              	 .global Pipe_WaitUntilReady
+ 367              	 .thumb
+ 368              	 .thumb_func
+ 370              	Pipe_WaitUntilReady:
+ 371              	 
+ 372              	 
+ 373              	 
+ 374 0000 0020     	 movs r0,#0
+ 375 0002 7047     	 bx lr
+ 377              	 .section .text.Pipe_Write_8,"ax",%progbits
+ 378              	 .align 1
+ 379              	 .global Pipe_Write_8
+ 380              	 .thumb
+ 381              	 .thumb_func
+ 383              	Pipe_Write_8:
+ 384              	 
+ 385              	 
+ 386              	 
+ 387 0000 7047     	 bx lr
+ 389              	 .section .text.Pipe_ClearSETUP,"ax",%progbits
+ 390              	 .align 1
+ 391              	 .global Pipe_ClearSETUP
+ 392              	 .thumb
+ 393              	 .thumb_func
+ 395              	Pipe_ClearSETUP:
+ 396              	 
+ 397              	 
+ 398              	 
+ 399 0000 7047     	 bx lr
+ 401              	 .section .text.Pipe_Freeze,"ax",%progbits
+ 402              	 .align 1
+ 403              	 .global Pipe_Freeze
+ 404              	 .thumb
+ 405              	 .thumb_func
+ 407              	Pipe_Freeze:
+ 408              	 
+ 409              	 
+ 410              	 
+ 411 0000 7047     	 bx lr
+ 413              	 .section .text.Pipe_ClearIN,"ax",%progbits
+ 414              	 .align 1
+ 415              	 .global Pipe_ClearIN
+ 416              	 .thumb
+ 417              	 .thumb_func
+ 419              	Pipe_ClearIN:
+ 420              	 
+ 421              	 
+ 422              	 
+ 423 0000 7047     	 bx lr
+ 425              	 .section .text.Pipe_ClearOUT,"ax",%progbits
+ 426              	 .align 1
+ 427              	 .global Pipe_ClearOUT
+ 428              	 .thumb
+ 429              	 .thumb_func
+ 431              	Pipe_ClearOUT:
+ 432              	 
+ 433              	 
+ 434              	 
+ 435 0000 7047     	 bx lr
+ 437              	 .section .text.Pipe_IsSETUPSent,"ax",%progbits
+ 438              	 .align 1
+ 439              	 .global Pipe_IsSETUPSent
+ 440              	 .thumb
+ 441              	 .thumb_func
+ 443              	Pipe_IsSETUPSent:
+ 444              	 
+ 445              	 
+ 446              	 
+ 447 0000 0120     	 movs r0,#1
+ 448 0002 7047     	 bx lr
+ 450              	 .section .text.Pipe_IsOUTReady,"ax",%progbits
+ 451              	 .align 1
+ 452              	 .global Pipe_IsOUTReady
+ 453              	 .thumb
+ 454              	 .thumb_func
+ 456              	Pipe_IsOUTReady:
+ 457              	 
+ 458              	 
+ 459              	 
+ 460 0000 0020     	 movs r0,#0
+ 461 0002 7047     	 bx lr
+ 463              	 .section .text.Pipe_BytesInPipe,"ax",%progbits
+ 464              	 .align 1
+ 465              	 .global Pipe_BytesInPipe
+ 466              	 .thumb
+ 467              	 .thumb_func
+ 469              	Pipe_BytesInPipe:
+ 470              	 
+ 471              	 
+ 472              	 
+ 473 0000 044B     	 ldr r3,.L80
+ 474 0002 1B68     	 ldr r3,[r3]
+ 475 0004 23B1     	 cbz r3,.L75
+ 476 0006 DB68     	 ldr r3,[r3,#12]
+ 477 0008 13B1     	 cbz r3,.L75
+ 478 000a 034A     	 ldr r2,.L80+4
+ 479 000c 1068     	 ldr r0,[r2]
+ 480 000e 1847     	 bx r3
+ 481              	.L75:
+ 482 0010 0020     	 movs r0,#0
+ 483 0012 7047     	 bx lr
+ 484              	.L81:
+ 485              	 .align 2
+ 486              	.L80:
+ 487 0014 00000000 	 .word USBH_EventCB
+ 488 0018 00000000 	 .word XMC_USB_SelectedPipe
+ 490              	 .section .text.Pipe_Read_8,"ax",%progbits
+ 491              	 .align 1
+ 492              	 .global Pipe_Read_8
+ 493              	 .thumb
+ 494              	 .thumb_func
+ 496              	Pipe_Read_8:
+ 497              	 
+ 498              	 
+ 499              	 
+ 500 0000 044B     	 ldr r3,.L88
+ 501 0002 1B68     	 ldr r3,[r3]
+ 502 0004 23B1     	 cbz r3,.L83
+ 503 0006 1B69     	 ldr r3,[r3,#16]
+ 504 0008 13B1     	 cbz r3,.L83
+ 505 000a 034A     	 ldr r2,.L88+4
+ 506 000c 1068     	 ldr r0,[r2]
+ 507 000e 1847     	 bx r3
+ 508              	.L83:
+ 509 0010 0020     	 movs r0,#0
+ 510 0012 7047     	 bx lr
+ 511              	.L89:
+ 512              	 .align 2
+ 513              	.L88:
+ 514 0014 00000000 	 .word USBH_EventCB
+ 515 0018 00000000 	 .word XMC_USB_SelectedPipe
+ 517              	 .section .text.Pipe_IsINReceived,"ax",%progbits
+ 518              	 .align 1
+ 519              	 .global Pipe_IsINReceived
+ 520              	 .thumb
+ 521              	 .thumb_func
+ 523              	Pipe_IsINReceived:
+ 524              	 
+ 525              	 
+ 526              	 
+ 527 0000 044B     	 ldr r3,.L96
+ 528 0002 1B68     	 ldr r3,[r3]
+ 529 0004 23B1     	 cbz r3,.L91
+ 530 0006 5B69     	 ldr r3,[r3,#20]
+ 531 0008 13B1     	 cbz r3,.L91
+ 532 000a 034A     	 ldr r2,.L96+4
+ 533 000c 1068     	 ldr r0,[r2]
+ 534 000e 1847     	 bx r3
+ 535              	.L91:
+ 536 0010 0020     	 movs r0,#0
+ 537 0012 7047     	 bx lr
+ 538              	.L97:
+ 539              	 .align 2
+ 540              	.L96:
+ 541 0014 00000000 	 .word USBH_EventCB
+ 542 0018 00000000 	 .word XMC_USB_SelectedPipe
+ 544              	 .section .text.USB_SetHostState,"ax",%progbits
+ 545              	 .align 1
+ 546              	 .global USB_SetHostState
+ 547              	 .thumb
+ 548              	 .thumb_func
+ 550              	USB_SetHostState:
+ 551              	 
+ 552              	 
+ 553              	 
+ 554 0000 014B     	 ldr r3,.L99
+ 555 0002 1870     	 strb r0,[r3]
+ 556 0004 7047     	 bx lr
+ 557              	.L100:
+ 558 0006 00BF     	 .align 2
+ 559              	.L99:
+ 560 0008 00000000 	 .word USB_HostState
+ 562              	 .section .text.USB_GetHostState,"ax",%progbits
+ 563              	 .align 1
+ 564              	 .global USB_GetHostState
+ 565              	 .thumb
+ 566              	 .thumb_func
+ 568              	USB_GetHostState:
+ 569              	 
+ 570              	 
+ 571              	 
+ 572 0000 014B     	 ldr r3,.L102
+ 573 0002 1B78     	 ldrb r3,[r3]
+ 574 0004 0370     	 strb r3,[r0]
+ 575 0006 7047     	 bx lr
+ 576              	.L103:
+ 577              	 .align 2
+ 578              	.L102:
+ 579 0008 00000000 	 .word USB_HostState
+ 581              	 .section .text.USB_Host_GetFrameNumber,"ax",%progbits
+ 582              	 .align 1
+ 583              	 .global USB_Host_GetFrameNumber
+ 584              	 .thumb
+ 585              	 .thumb_func
+ 587              	USB_Host_GetFrameNumber:
+ 588              	 
+ 589              	 
+ 590              	 
+ 591 0000 014B     	 ldr r3,.L105
+ 592 0002 5B6C     	 ldr r3,[r3,#68]
+ 593 0004 1847     	 bx r3
+ 594              	.L106:
+ 595 0006 00BF     	 .align 2
+ 596              	.L105:
+ 597 0008 00000000 	 .word Driver_USBH0
+ 599              	 .section .text.USB_ResetInterface,"ax",%progbits
+ 600              	 .align 1
+ 601              	 .global USB_ResetInterface
+ 602              	 .thumb
+ 603              	 .thumb_func
+ 605              	USB_ResetInterface:
+ 606              	 
+ 607              	 
+ 608              	 
+ 609 0000 FFF7FEBF 	 b USB_Host_ResetDevice
+ 611              	 .section .text.USB_Host_IsBusSuspended,"ax",%progbits
+ 612              	 .align 1
+ 613              	 .global USB_Host_IsBusSuspended
+ 614              	 .thumb
+ 615              	 .thumb_func
+ 617              	USB_Host_IsBusSuspended:
+ 618              	 
+ 619              	 
+ 620              	 
+ 621 0000 0020     	 movs r0,#0
+ 622 0002 7047     	 bx lr
+ 624              	 .section .text.USB_Host_IsBusResetComplete,"ax",%progbits
+ 625              	 .align 1
+ 626              	 .global USB_Host_IsBusResetComplete
+ 627              	 .thumb
+ 628              	 .thumb_func
+ 630              	USB_Host_IsBusResetComplete:
+ 631              	 
+ 632              	 
+ 633              	 
+ 634 0000 0120     	 movs r0,#1
+ 635 0002 7047     	 bx lr
+ 637              	 .section .text.USB_Host_SuspendBus,"ax",%progbits
+ 638              	 .align 1
+ 639              	 .global USB_Host_SuspendBus
+ 640              	 .thumb
+ 641              	 .thumb_func
+ 643              	USB_Host_SuspendBus:
+ 644              	 
+ 645              	 
+ 646              	 
+ 647 0000 034B     	 ldr r3,.L111
+ 648 0002 0122     	 movs r2,#1
+ 649 0004 1A70     	 strb r2,[r3]
+ 650 0006 034B     	 ldr r3,.L111+4
+ 651 0008 0020     	 movs r0,#0
+ 652 000a DB69     	 ldr r3,[r3,#28]
+ 653 000c 1847     	 bx r3
+ 654              	.L112:
+ 655 000e 00BF     	 .align 2
+ 656              	.L111:
+ 657 0010 00000000 	 .word .LANCHOR1
+ 658 0014 00000000 	 .word Driver_USBH0
+ 660              	 .section .text.Pipe_ResetPipe,"ax",%progbits
+ 661              	 .align 1
+ 662              	 .global Pipe_ResetPipe
+ 663              	 .thumb
+ 664              	 .thumb_func
+ 666              	Pipe_ResetPipe:
+ 667              	 
+ 668              	 
+ 669              	 
+ 670 0000 014B     	 ldr r3,.L114
+ 671 0002 0022     	 movs r2,#0
+ 672 0004 1A60     	 str r2,[r3]
+ 673 0006 7047     	 bx lr
+ 674              	.L115:
+ 675              	 .align 2
+ 676              	.L114:
+ 677 0008 00000000 	 .word XMC_USB_SelectedPipe
+ 679              	 .section .text.USB_Host_ResumeBus,"ax",%progbits
+ 680              	 .align 1
+ 681              	 .global USB_Host_ResumeBus
+ 682              	 .thumb
+ 683              	 .thumb_func
+ 685              	USB_Host_ResumeBus:
+ 686              	 
+ 687              	 
+ 688 0000 10B5     	 push {r4,lr}
+ 689 0002 054C     	 ldr r4,.L121
+ 690 0004 2378     	 ldrb r3,[r4]
+ 691 0006 2BB1     	 cbz r3,.L116
+ 692 0008 044B     	 ldr r3,.L121+4
+ 693 000a 0020     	 movs r0,#0
+ 694 000c 1B6A     	 ldr r3,[r3,#32]
+ 695 000e 9847     	 blx r3
+ 696 0010 0023     	 movs r3,#0
+ 697 0012 2370     	 strb r3,[r4]
+ 698              	.L116:
+ 699 0014 10BD     	 pop {r4,pc}
+ 700              	.L122:
+ 701 0016 00BF     	 .align 2
+ 702              	.L121:
+ 703 0018 00000000 	 .word .LANCHOR1
+ 704 001c 00000000 	 .word Driver_USBH0
+ 706              	 .section .text.Pipe_ConfigurePipeTable,"ax",%progbits
+ 707              	 .align 1
+ 708              	 .global Pipe_ConfigurePipeTable
+ 709              	 .thumb
+ 710              	 .thumb_func
+ 712              	Pipe_ConfigurePipeTable:
+ 713              	 
+ 714              	 
+ 715              	 
+ 716 0000 0120     	 movs r0,#1
+ 717 0002 7047     	 bx lr
+ 719              	 .section .text.Pipe_IsStalled,"ax",%progbits
+ 720              	 .align 1
+ 721              	 .global Pipe_IsStalled
+ 722              	 .thumb
+ 723              	 .thumb_func
+ 725              	Pipe_IsStalled:
+ 726              	 
+ 727              	 
+ 728              	 
+ 729 0000 064B     	 ldr r3,.L125
+ 730 0002 1A68     	 ldr r2,[r3]
+ 731 0004 064B     	 ldr r3,.L125+4
+ 732 0006 1344     	 add r3,r3,r2
+ 733 0008 5A09     	 lsrs r2,r3,#5
+ 734 000a 064B     	 ldr r3,.L125+8
+ 735 000c 1421     	 movs r1,#20
+ 736 000e 01FB0233 	 mla r3,r1,r2,r3
+ 737 0012 5868     	 ldr r0,[r3,#4]
+ 738 0014 C0F30010 	 ubfx r0,r0,#4,#1
+ 739 0018 7047     	 bx lr
+ 740              	.L126:
+ 741 001a 00BF     	 .align 2
+ 742              	.L125:
+ 743 001c 00000000 	 .word XMC_USB_SelectedPipe
+ 744 0020 00FBFBAF 	 .word -1342440704
+ 745 0024 00000000 	 .word USBHost_Pipe_State
+ 747              	 .section .text.Pipe_GetBoundEndpointAddress,"ax",%progbits
+ 748              	 .align 1
+ 749              	 .global Pipe_GetBoundEndpointAddress
+ 750              	 .thumb
+ 751              	 .thumb_func
+ 753              	Pipe_GetBoundEndpointAddress:
+ 754              	 
+ 755              	 
+ 756              	 
+ 757 0000 054B     	 ldr r3,.L128
+ 758 0002 1A68     	 ldr r2,[r3]
+ 759 0004 054B     	 ldr r3,.L128+4
+ 760 0006 1344     	 add r3,r3,r2
+ 761 0008 5A09     	 lsrs r2,r3,#5
+ 762 000a 054B     	 ldr r3,.L128+8
+ 763 000c 1421     	 movs r1,#20
+ 764 000e 01FB0233 	 mla r3,r1,r2,r3
+ 765 0012 187C     	 ldrb r0,[r3,#16]
+ 766 0014 7047     	 bx lr
+ 767              	.L129:
+ 768 0016 00BF     	 .align 2
+ 769              	.L128:
+ 770 0018 00000000 	 .word XMC_USB_SelectedPipe
+ 771 001c 00FBFBAF 	 .word -1342440704
+ 772 0020 00000000 	 .word USBHost_Pipe_State
+ 774              	 .section .text.Pipe_ResetToggle,"ax",%progbits
+ 775              	 .align 1
+ 776              	 .global Pipe_ResetToggle
+ 777              	 .thumb
+ 778              	 .thumb_func
+ 780              	Pipe_ResetToggle:
+ 781              	 
+ 782              	 
+ 783              	 
+ 784 0000 054B     	 ldr r3,.L131
+ 785 0002 1A68     	 ldr r2,[r3]
+ 786 0004 054B     	 ldr r3,.L131+4
+ 787 0006 1344     	 add r3,r3,r2
+ 788 0008 5B09     	 lsrs r3,r3,#5
+ 789 000a 1422     	 movs r2,#20
+ 790 000c 5343     	 muls r3,r2,r3
+ 791 000e 044A     	 ldr r2,.L131+8
+ 792 0010 1021     	 movs r1,#16
+ 793 0012 D150     	 str r1,[r2,r3]
+ 794 0014 7047     	 bx lr
+ 795              	.L132:
+ 796 0016 00BF     	 .align 2
+ 797              	.L131:
+ 798 0018 00000000 	 .word XMC_USB_SelectedPipe
+ 799 001c 00FBFBAF 	 .word -1342440704
+ 800 0020 00000000 	 .word USBHost_Pipe_State
+ 802              	 .section .text.Pipe_IsReadWriteAllowed,"ax",%progbits
+ 803              	 .align 1
+ 804              	 .global Pipe_IsReadWriteAllowed
+ 805              	 .thumb
+ 806              	 .thumb_func
+ 808              	Pipe_IsReadWriteAllowed:
+ 809              	 
+ 810              	 
+ 811              	 
+ 812 0000 0120     	 movs r0,#1
+ 813 0002 7047     	 bx lr
+ 815              	 .section .text.USBH_GLUE_StartTimer,"ax",%progbits
+ 816              	 .align 1
+ 817              	 .global USBH_GLUE_StartTimer
+ 818              	 .thumb
+ 819              	 .thumb_func
+ 821              	USBH_GLUE_StartTimer:
+ 822              	 
+ 823              	 
+ 824              	 
+ 825 0000 064B     	 ldr r3,.L135
+ 826 0002 074A     	 ldr r2,.L135+4
+ 827 0004 1860     	 str r0,[r3]
+ 828 0006 074B     	 ldr r3,.L135+8
+ 829 0008 5A60     	 str r2,[r3,#4]
+ 830 000a 074A     	 ldr r2,.L135+12
+ 831 000c FC21     	 movs r1,#252
+ 832 000e 82F82310 	 strb r1,[r2,#35]
+ 833 0012 0022     	 movs r2,#0
+ 834 0014 9A60     	 str r2,[r3,#8]
+ 835 0016 0722     	 movs r2,#7
+ 836 0018 1A60     	 str r2,[r3]
+ 837 001a 7047     	 bx lr
+ 838              	.L136:
+ 839              	 .align 2
+ 840              	.L135:
+ 841 001c 00000000 	 .word usbh_glue_systick_flag
+ 842 0020 BFD40100 	 .word 119999
+ 843 0024 10E000E0 	 .word -536813552
+ 844 0028 00ED00E0 	 .word -536810240
+ 846              	 .section .text.SysTick_Handler,"ax",%progbits
+ 847              	 .align 1
+ 848              	 .global SysTick_Handler
+ 849              	 .thumb
+ 850              	 .thumb_func
+ 852              	SysTick_Handler:
+ 853              	 
+ 854              	 
+ 855              	 
+ 856 0000 064B     	 ldr r3,.L139
+ 857 0002 1A68     	 ldr r2,[r3]
+ 858 0004 013A     	 subs r2,r2,#1
+ 859 0006 1A60     	 str r2,[r3]
+ 860 0008 1B68     	 ldr r3,[r3]
+ 861 000a 0BB9     	 cbnz r3,.L138
+ 862 000c 044A     	 ldr r2,.L139+4
+ 863 000e 1360     	 str r3,[r2]
+ 864              	.L138:
+ 865 0010 044A     	 ldr r2,.L139+8
+ 866 0012 1368     	 ldr r3,[r2]
+ 867 0014 0133     	 adds r3,r3,#1
+ 868 0016 1360     	 str r3,[r2]
+ 869 0018 7047     	 bx lr
+ 870              	.L140:
+ 871 001a 00BF     	 .align 2
+ 872              	.L139:
+ 873 001c 00000000 	 .word usbh_glue_systick_flag
+ 874 0020 10E000E0 	 .word -536813552
+ 875 0024 00000000 	 .word Counter
+ 877              	 .section .text.USBH_GLUE_IsTimerRunning,"ax",%progbits
+ 878              	 .align 1
+ 879              	 .global USBH_GLUE_IsTimerRunning
+ 880              	 .thumb
+ 881              	 .thumb_func
+ 883              	USBH_GLUE_IsTimerRunning:
+ 884              	 
+ 885              	 
+ 886              	 
+ 887 0000 024B     	 ldr r3,.L142
+ 888 0002 1868     	 ldr r0,[r3]
+ 889 0004 0030     	 adds r0,r0,#0
+ 890 0006 18BF     	 it ne
+ 891 0008 0120     	 movne r0,#1
+ 892 000a 7047     	 bx lr
+ 893              	.L143:
+ 894              	 .align 2
+ 895              	.L142:
+ 896 000c 00000000 	 .word usbh_glue_systick_flag
+ 898              	 .section .text.XMC_USBH_osDelay,"ax",%progbits
+ 899              	 .align 1
+ 900              	 .global XMC_USBH_osDelay
+ 901              	 .thumb
+ 902              	 .thumb_func
+ 904              	XMC_USBH_osDelay:
+ 905              	 
+ 906              	 
+ 907 0000 08B5     	 push {r3,lr}
+ 908 0002 FFF7FEFF 	 bl USBH_GLUE_StartTimer
+ 909              	.L145:
+ 910 0006 FFF7FEFF 	 bl USBH_GLUE_IsTimerRunning
+ 911 000a 0028     	 cmp r0,#0
+ 912 000c FBD1     	 bne .L145
+ 913 000e 08BD     	 pop {r3,pc}
+ 915              	 .section .text.USBH_WaitForTransfer,"ax",%progbits
+ 916              	 .align 1
+ 917              	 .global USBH_WaitForTransfer
+ 918              	 .thumb
+ 919              	 .thumb_func
+ 921              	USBH_WaitForTransfer:
+ 922              	 
+ 923              	 
+ 924 0000 144B     	 ldr r3,.L154
+ 925 0002 0344     	 add r3,r3,r0
+ 926 0004 70B5     	 push {r4,r5,r6,lr}
+ 927 0006 0546     	 mov r5,r0
+ 928 0008 5C09     	 lsrs r4,r3,#5
+ 929 000a 41F28936 	 movw r6,#5001
+ 930              	.L148:
+ 931 000e 124A     	 ldr r2,.L154+4
+ 932 0010 1423     	 movs r3,#20
+ 933 0012 03FB0423 	 mla r3,r3,r4,r2
+ 934 0016 5B68     	 ldr r3,[r3,#4]
+ 935 0018 DB07     	 lsls r3,r3,#31
+ 936 001a 14D4     	 bmi .L153
+ 937 001c 0F4B     	 ldr r3,.L154+8
+ 938 001e 1B78     	 ldrb r3,[r3]
+ 939 0020 2BB9     	 cbnz r3,.L149
+ 940 0022 0F4B     	 ldr r3,.L154+12
+ 941 0024 2846     	 mov r0,r5
+ 942 0026 1B6C     	 ldr r3,[r3,#64]
+ 943 0028 9847     	 blx r3
+ 944 002a 0124     	 movs r4,#1
+ 945 002c 0CE0     	 b .L150
+ 946              	.L149:
+ 947 002e 013E     	 subs r6,r6,#1
+ 948 0030 05D1     	 bne .L151
+ 949 0032 0B4B     	 ldr r3,.L154+12
+ 950 0034 2846     	 mov r0,r5
+ 951 0036 1B6C     	 ldr r3,[r3,#64]
+ 952 0038 9847     	 blx r3
+ 953 003a 0424     	 movs r4,#4
+ 954 003c 04E0     	 b .L150
+ 955              	.L151:
+ 956 003e 0120     	 movs r0,#1
+ 957 0040 FFF7FEFF 	 bl XMC_USBH_osDelay
+ 958 0044 E3E7     	 b .L148
+ 959              	.L153:
+ 960 0046 0024     	 movs r4,#0
+ 961              	.L150:
+ 962 0048 2846     	 mov r0,r5
+ 963 004a 0121     	 movs r1,#1
+ 964 004c FFF7FEFF 	 bl USBH_PipeEventReset
+ 965 0050 2046     	 mov r0,r4
+ 966 0052 70BD     	 pop {r4,r5,r6,pc}
+ 967              	.L155:
+ 968              	 .align 2
+ 969              	.L154:
+ 970 0054 00FBFBAF 	 .word -1342440704
+ 971 0058 00000000 	 .word USBHost_Pipe_State
+ 972 005c 00000000 	 .word USB_HostState
+ 973 0060 00000000 	 .word Driver_USBH0
+ 975              	 .section .text.USB_Host_ProcessNextHostState,"ax",%progbits
+ 976              	 .align 1
+ 977              	 .global USB_Host_ProcessNextHostState
+ 978              	 .thumb
+ 979              	 .thumb_func
+ 981              	USB_Host_ProcessNextHostState:
+ 982              	 
+ 983              	 
+ 984 0000 70B5     	 push {r4,r5,r6,lr}
+ 985 0002 4C4C     	 ldr r4,.L191
+ 986 0004 2378     	 ldrb r3,[r4]
+ 987 0006 86B0     	 sub sp,sp,#24
+ 988 0008 092B     	 cmp r3,#9
+ 989 000a 00F29180 	 bhi .L156
+ 990 000e DFE803F0 	 tbb [pc,r3]
+ 991              	.L159:
+ 992 0012 05       	 .byte (.L158-.L159)/2
+ 993 0013 8F       	 .byte (.L156-.L159)/2
+ 994 0014 19       	 .byte (.L160-.L159)/2
+ 995 0015 1C       	 .byte (.L161-.L159)/2
+ 996 0016 22       	 .byte (.L162-.L159)/2
+ 997 0017 27       	 .byte (.L163-.L159)/2
+ 998 0018 31       	 .byte (.L164-.L159)/2
+ 999 0019 43       	 .byte (.L165-.L159)/2
+ 1000 001a 5E       	 .byte (.L166-.L159)/2
+ 1001 001b 6E       	 .byte (.L167-.L159)/2
+ 1002              	 .p2align 1
+ 1003              	.L158:
+ 1004 001c 464E     	 ldr r6,.L191+4
+ 1005 001e 3588     	 ldrh r5,[r6]
+ 1006 0020 002D     	 cmp r5,#0
+ 1007 0022 00F08580 	 beq .L156
+ 1008 0026 0120     	 movs r0,#1
+ 1009 0028 FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1010 002c 0146     	 mov r1,r0
+ 1011 002e 18B1     	 cbz r0,.L169
+ 1012 0030 0023     	 movs r3,#0
+ 1013 0032 2370     	 strb r3,[r4]
+ 1014 0034 0120     	 movs r0,#1
+ 1015 0036 6EE0     	 b .L189
+ 1016              	.L169:
+ 1017 0038 6B1E     	 subs r3,r5,#1
+ 1018 003a 9BB2     	 uxth r3,r3
+ 1019 003c 3380     	 strh r3,[r6]
+ 1020 003e 002B     	 cmp r3,#0
+ 1021 0040 76D1     	 bne .L156
+ 1022 0042 00E0     	 b .L190
+ 1023              	.L160:
+ 1024 0044 0323     	 movs r3,#3
+ 1025              	.L190:
+ 1026 0046 2370     	 strb r3,[r4]
+ 1027 0048 72E0     	 b .L156
+ 1028              	.L161:
+ 1029 004a 4FF47A70 	 mov r0,#1000
+ 1030 004e FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1031 0052 0423     	 movs r3,#4
+ 1032 0054 F7E7     	 b .L190
+ 1033              	.L162:
+ 1034 0056 6420     	 movs r0,#100
+ 1035 0058 FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1036 005c 0523     	 movs r3,#5
+ 1037 005e F2E7     	 b .L190
+ 1038              	.L163:
+ 1039 0060 FFF7FEFF 	 bl USB_Host_ResetDevice
+ 1040 0064 08B1     	 cbz r0,.L171
+ 1041              	.L172:
+ 1042 0066 0021     	 movs r1,#0
+ 1043 0068 54E0     	 b .L178
+ 1044              	.L171:
+ 1045 006a C820     	 movs r0,#200
+ 1046 006c FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1047 0070 0623     	 movs r3,#6
+ 1048 0072 E8E7     	 b .L190
+ 1049              	.L164:
+ 1050 0074 314D     	 ldr r5,.L191+8
+ 1051 0076 0020     	 movs r0,#0
+ 1052 0078 4023     	 movs r3,#64
+ 1053 007a 0293     	 str r3,[sp,#8]
+ 1054 007c 0090     	 str r0,[sp]
+ 1055 007e 0346     	 mov r3,r0
+ 1056 0080 0190     	 str r0,[sp,#4]
+ 1057 0082 0390     	 str r0,[sp,#12]
+ 1058 0084 0121     	 movs r1,#1
+ 1059 0086 0246     	 mov r2,r0
+ 1060 0088 AD6A     	 ldr r5,[r5,#40]
+ 1061 008a A847     	 blx r5
+ 1062 008c 2C4B     	 ldr r3,.L191+12
+ 1063 008e 9860     	 str r0,[r3,#8]
+ 1064 0090 0028     	 cmp r0,#0
+ 1065 0092 3CD0     	 beq .L176
+ 1066 0094 0723     	 movs r3,#7
+ 1067 0096 D6E7     	 b .L190
+ 1068              	.L165:
+ 1069 0098 2A49     	 ldr r1,.L191+16
+ 1070 009a 2B4A     	 ldr r2,.L191+20
+ 1071 009c 0B68     	 ldr r3,[r1]
+ 1072 009e 1360     	 str r3,[r2]
+ 1073 00a0 4B68     	 ldr r3,[r1,#4]
+ 1074 00a2 5360     	 str r3,[r2,#4]
+ 1075 00a4 294B     	 ldr r3,.L191+24
+ 1076 00a6 0022     	 movs r2,#0
+ 1077 00a8 04A8     	 add r0,sp,#16
+ 1078 00aa 1A60     	 str r2,[r3]
+ 1079 00ac FFF7FEFF 	 bl USB_Host_SendControlRequest
+ 1080 00b0 0146     	 mov r1,r0
+ 1081 00b2 78BB     	 cbnz r0,.L178
+ 1082 00b4 264B     	 ldr r3,.L191+28
+ 1083 00b6 9DF81720 	 ldrb r2,[sp,#23]
+ 1084 00ba 1A70     	 strb r2,[r3]
+ 1085 00bc FFF7FEFF 	 bl USB_Host_ResetDevice
+ 1086 00c0 0028     	 cmp r0,#0
+ 1087 00c2 D0D1     	 bne .L172
+ 1088 00c4 C820     	 movs r0,#200
+ 1089 00c6 FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1090 00ca 0823     	 movs r3,#8
+ 1091 00cc BBE7     	 b .L190
+ 1092              	.L166:
+ 1093 00ce 2149     	 ldr r1,.L191+32
+ 1094 00d0 1D4A     	 ldr r2,.L191+20
+ 1095 00d2 0B68     	 ldr r3,[r1]
+ 1096 00d4 1360     	 str r3,[r2]
+ 1097 00d6 0020     	 movs r0,#0
+ 1098 00d8 4B68     	 ldr r3,[r1,#4]
+ 1099 00da 5360     	 str r3,[r2,#4]
+ 1100 00dc FFF7FEFF 	 bl USB_Host_SendControlRequest
+ 1101 00e0 0146     	 mov r1,r0
+ 1102 00e2 B8B9     	 cbnz r0,.L178
+ 1103 00e4 6420     	 movs r0,#100
+ 1104 00e6 FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1105 00ea 0923     	 movs r3,#9
+ 1106 00ec ABE7     	 b .L190
+ 1107              	.L167:
+ 1108 00ee 4022     	 movs r2,#64
+ 1109 00f0 0192     	 str r2,[sp,#4]
+ 1110 00f2 0023     	 movs r3,#0
+ 1111 00f4 124A     	 ldr r2,.L191+12
+ 1112 00f6 114D     	 ldr r5,.L191+8
+ 1113 00f8 0093     	 str r3,[sp]
+ 1114 00fa 0121     	 movs r1,#1
+ 1115 00fc 9068     	 ldr r0,[r2,#8]
+ 1116 00fe ED6A     	 ldr r5,[r5,#44]
+ 1117 0100 0A46     	 mov r2,r1
+ 1118 0102 A847     	 blx r5
+ 1119 0104 0A23     	 movs r3,#10
+ 1120 0106 2370     	 strb r3,[r4]
+ 1121 0108 FFF7FEFF 	 bl EVENT_USB_Host_DeviceEnumerationComplete
+ 1122 010c 10E0     	 b .L156
+ 1123              	.L176:
+ 1124 010e 0146     	 mov r1,r0
+ 1125 0110 0420     	 movs r0,#4
+ 1126 0112 00E0     	 b .L189
+ 1127              	.L178:
+ 1128 0114 0320     	 movs r0,#3
+ 1129              	.L189:
+ 1130 0116 2378     	 ldrb r3,[r4]
+ 1131 0118 012B     	 cmp r3,#1
+ 1132 011a 09D0     	 beq .L156
+ 1133 011c 0E4B     	 ldr r3,.L191+36
+ 1134 011e 1B68     	 ldr r3,[r3]
+ 1135 0120 13B1     	 cbz r3,.L174
+ 1136 0122 9B68     	 ldr r3,[r3,#8]
+ 1137 0124 03B1     	 cbz r3,.L174
+ 1138 0126 9847     	 blx r3
+ 1139              	.L174:
+ 1140 0128 FFF7FEFF 	 bl EVENT_USB_Host_DeviceUnattached
+ 1141 012c FFF7FEFF 	 bl USB_Host_ResetDevice
+ 1142              	.L156:
+ 1143 0130 06B0     	 add sp,sp,#24
+ 1144              	 
+ 1145 0132 70BD     	 pop {r4,r5,r6,pc}
+ 1146              	.L192:
+ 1147              	 .align 2
+ 1148              	.L191:
+ 1149 0134 00000000 	 .word USB_HostState
+ 1150 0138 00000000 	 .word .LANCHOR2
+ 1151 013c 00000000 	 .word Driver_USBH0
+ 1152 0140 00000000 	 .word USBHost_Pipe_State
+ 1153 0144 00000000 	 .word .LANCHOR3
+ 1154 0148 00000000 	 .word USB_ControlRequest
+ 1155 014c 00000000 	 .word XMC_USB_SelectedPipe
+ 1156 0150 00000000 	 .word .LANCHOR0
+ 1157 0154 08000000 	 .word .LANCHOR3+8
+ 1158 0158 00000000 	 .word USBH_EventCB
+ 1160              	 .section .text.USB_Host_SendControlRequest_PRV,"ax",%progbits
+ 1161              	 .align 1
+ 1162              	 .global USB_Host_SendControlRequest_PRV
+ 1163              	 .thumb
+ 1164              	 .thumb_func
+ 1166              	USB_Host_SendControlRequest_PRV:
+ 1167              	 
+ 1168              	 
+ 1169 0000 2DE9F74F 	 push {r0,r1,r2,r4,r5,r6,r7,r8,r9,r10,fp,lr}
+ 1170 0004 DFF8DCB0 	 ldr fp,.L210+8
+ 1171 0008 8146     	 mov r9,r0
+ 1172 000a BBF80660 	 ldrh r6,[fp,#6]
+ 1173 000e FFF7FEFF 	 bl USB_Host_ResumeBus
+ 1174 0012 0120     	 movs r0,#1
+ 1175 0014 FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1176 0018 0028     	 cmp r0,#0
+ 1177 001a 5BD1     	 bne .L194
+ 1178 001c 2F4F     	 ldr r7,.L210
+ 1179 001e DFF8C8A0 	 ldr r10,.L210+12
+ 1180 0022 2F4B     	 ldr r3,.L210+4
+ 1181 0024 B868     	 ldr r0,[r7,#8]
+ 1182 0026 9D6B     	 ldr r5,[r3,#56]
+ 1183 0028 4FF0010C 	 mov ip,#1
+ 1184 002c 8AF800C0 	 strb ip,[r10]
+ 1185 0030 6146     	 mov r1,ip
+ 1186 0032 5A46     	 mov r2,fp
+ 1187 0034 0823     	 movs r3,#8
+ 1188 0036 CDF804C0 	 str ip,[sp,#4]
+ 1189 003a A847     	 blx r5
+ 1190 003c B868     	 ldr r0,[r7,#8]
+ 1191 003e FFF7FEFF 	 bl USBH_WaitForTransfer
+ 1192 0042 D046     	 mov r8,r10
+ 1193 0044 3C46     	 mov r4,r7
+ 1194 0046 DDF804C0 	 ldr ip,[sp,#4]
+ 1195 004a 0028     	 cmp r0,#0
+ 1196 004c 42D1     	 bne .L194
+ 1197 004e 6046     	 mov r0,ip
+ 1198 0050 FFF7FEFF 	 bl XMC_USBH_osDelay
+ 1199 0054 0028     	 cmp r0,#0
+ 1200 0056 3DD1     	 bne .L194
+ 1201 0058 9BF90030 	 ldrsb r3,[fp]
+ 1202 005c 002B     	 cmp r3,#0
+ 1203 005e 1BDA     	 bge .L195
+ 1204 0060 B9F1000F 	 cmp r9,#0
+ 1205 0064 01D1     	 bne .L196
+ 1206              	.L200:
+ 1207 0066 2221     	 movs r1,#34
+ 1208 0068 1AE0     	 b .L209
+ 1209              	.L196:
+ 1210 006a 2323     	 movs r3,#35
+ 1211 006c 8AF80030 	 strb r3,[r10]
+ 1212              	.L197:
+ 1213 0070 002E     	 cmp r6,#0
+ 1214 0072 F8D0     	 beq .L200
+ 1215 0074 FFF7FEFF 	 bl Pipe_BytesInPipe
+ 1216 0078 98F80010 	 ldrb r1,[r8]
+ 1217 007c 0028     	 cmp r0,#0
+ 1218 007e 4A46     	 mov r2,r9
+ 1219 0080 A068     	 ldr r0,[r4,#8]
+ 1220 0082 4FF00803 	 mov r3,#8
+ 1221 0086 08BF     	 it eq
+ 1222 0088 0026     	 moveq r6,#0
+ 1223 008a A847     	 blx r5
+ 1224 008c A068     	 ldr r0,[r4,#8]
+ 1225 008e FFF7FEFF 	 bl USBH_WaitForTransfer
+ 1226 0092 0028     	 cmp r0,#0
+ 1227 0094 ECD0     	 beq .L197
+ 1228 0096 1DE0     	 b .L194
+ 1229              	.L195:
+ 1230 0098 B9F1000F 	 cmp r9,#0
+ 1231 009c 0CD1     	 bne .L201
+ 1232              	.L202:
+ 1233 009e 2321     	 movs r1,#35
+ 1234              	.L209:
+ 1235 00a0 0022     	 movs r2,#0
+ 1236 00a2 88F80010 	 strb r1,[r8]
+ 1237 00a6 A068     	 ldr r0,[r4,#8]
+ 1238 00a8 1346     	 mov r3,r2
+ 1239 00aa A847     	 blx r5
+ 1240 00ac A068     	 ldr r0,[r4,#8]
+ 1241 00ae 03B0     	 add sp,sp,#12
+ 1242              	 
+ 1243 00b0 BDE8F04F 	 pop {r4,r5,r6,r7,r8,r9,r10,fp,lr}
+ 1244 00b4 FFF7FEBF 	 b USBH_WaitForTransfer
+ 1245              	.L201:
+ 1246 00b8 002E     	 cmp r6,#0
+ 1247 00ba F0D0     	 beq .L202
+ 1248 00bc 2221     	 movs r1,#34
+ 1249 00be 8AF80010 	 strb r1,[r10]
+ 1250 00c2 B868     	 ldr r0,[r7,#8]
+ 1251 00c4 4A46     	 mov r2,r9
+ 1252 00c6 3346     	 mov r3,r6
+ 1253 00c8 A847     	 blx r5
+ 1254 00ca B868     	 ldr r0,[r7,#8]
+ 1255 00cc FFF7FEFF 	 bl USBH_WaitForTransfer
+ 1256 00d0 0028     	 cmp r0,#0
+ 1257 00d2 E4D0     	 beq .L202
+ 1258              	.L194:
+ 1259 00d4 03B0     	 add sp,sp,#12
+ 1260              	 
+ 1261 00d6 BDE8F08F 	 pop {r4,r5,r6,r7,r8,r9,r10,fp,pc}
+ 1262              	.L211:
+ 1263 00da 00BF     	 .align 2
+ 1264              	.L210:
+ 1265 00dc 00000000 	 .word USBHost_Pipe_State
+ 1266 00e0 00000000 	 .word Driver_USBH0
+ 1267 00e4 00000000 	 .word USB_ControlRequest
+ 1268 00e8 00000000 	 .word XMC_USB_PipeSetup
+ 1270              	 .section .text.USB0_0_IRQHandler,"ax",%progbits
+ 1271              	 .align 1
+ 1272              	 .global USB0_0_IRQHandler
+ 1273              	 .thumb
+ 1274              	 .thumb_func
+ 1276              	USB0_0_IRQHandler:
+ 1277              	 
+ 1278              	 
+ 1279 0000 08B5     	 push {r3,lr}
+ 1280 0002 FFF7FEFF 	 bl XMC_USBH_GetInterruptStatus
+ 1281 0006 BDE80840 	 pop {r3,lr}
+ 1282 000a FFF7FEBF 	 b XMC_USBH_HandleIrq
+ 1284              	 .comm usbh_glue_systick_flag,4,4
+ 1285              	 .comm USBH_EventCB,4,4
+ 1286              	 .comm XMC_USB_PipeSetup,1,1
+ 1287              	 .comm XMC_USB_SelectedPipe,4,4
+ 1288              	 .comm USBHost_Pipe_State,280,4
+ 1289              	 .global USB_Host_ControlPipeSize
+ 1290              	 .section .rodata
+ 1291              	 .set .LANCHOR3,.+0
+ 1292              	.LC0:
+ 1293 0000 80       	 .byte -128
+ 1294 0001 06       	 .byte 6
+ 1295 0002 0001     	 .2byte 256
+ 1296 0004 0000     	 .2byte 0
+ 1297 0006 0800     	 .2byte 8
+ 1298              	.LC1:
+ 1299 0008 00       	 .byte 0
+ 1300 0009 05       	 .byte 5
+ 1301 000a 0100     	 .2byte 1
+ 1302 000c 0000     	 .2byte 0
+ 1303 000e 0000     	 .2byte 0
+ 1304              	 .section .data.USB_Host_ControlPipeSize,"aw",%progbits
+ 1305              	 .set .LANCHOR0,.+0
+ 1308              	USB_Host_ControlPipeSize:
+ 1309 0000 40       	 .byte 64
+ 1310              	 .section .bss.USB_Is_Suspend,"aw",%nobits
+ 1311              	 .set .LANCHOR1,.+0
+ 1314              	USB_Is_Suspend:
+ 1315 0000 00       	 .space 1
+ 1316              	 .section .bss.WaitMSRemaining.8348,"aw",%nobits
+ 1317              	 .align 1
+ 1318              	 .set .LANCHOR2,.+0
+ 1321              	WaitMSRemaining.8348:
+ 1322 0000 0000     	 .space 2
+ 1323              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 USB_Glue.c
+    {standard input}:17     .text.USBH_SignalPortEventHandler:00000000 $t
+    {standard input}:22     .text.USBH_SignalPortEventHandler:00000000 USBH_SignalPortEventHandler
+    {standard input}:48     .text.USBH_SignalPortEventHandler:00000020 $d
+                            *COM*:00000004 USBH_EventCB
+    {standard input}:52     .text.USBH_SignalPipeEventHandler:00000000 $t
+    {standard input}:57     .text.USBH_SignalPipeEventHandler:00000000 USBH_SignalPipeEventHandler
+    {standard input}:80     .text.USBH_SignalPipeEventHandler:00000024 $d
+                            *COM*:00000118 USBHost_Pipe_State
+    {standard input}:85     .text.USB_Host_ResetDevice:00000000 $t
+    {standard input}:89     .text.USB_Host_ResetDevice:00000000 USB_Host_ResetDevice
+    {standard input}:100    .text.USB_Host_ResetDevice:00000008 $d
+    {standard input}:103    .text.USBH_PipeEventReset:00000000 $t
+    {standard input}:108    .text.USBH_PipeEventReset:00000000 USBH_PipeEventReset
+    {standard input}:125    .text.USBH_PipeEventReset:00000018 $d
+    {standard input}:129    .text.USBH_PipeEventGet:00000000 $t
+    {standard input}:134    .text.USBH_PipeEventGet:00000000 USBH_PipeEventGet
+    {standard input}:149    .text.USBH_PipeEventGet:00000014 $d
+    {standard input}:153    .text.USBH_PipeGetToggle:00000000 $t
+    {standard input}:158    .text.USBH_PipeGetToggle:00000000 USBH_PipeGetToggle
+    {standard input}:173    .text.USBH_PipeGetToggle:00000010 $d
+    {standard input}:177    .text.USBH_PipeSetNextToggle:00000000 $t
+    {standard input}:182    .text.USBH_PipeSetNextToggle:00000000 USBH_PipeSetNextToggle
+    {standard input}:214    .text.USBH_PipeSetNextToggle:0000003c $d
+    {standard input}:218    .text.USB_Disable:00000000 $t
+    {standard input}:223    .text.USB_Disable:00000000 USB_Disable
+    {standard input}:237    .text.USB_Disable:00000010 $d
+    {standard input}:241    .text.USB_Init_Host:00000000 $t
+    {standard input}:246    .text.USB_Init_Host:00000000 USB_Init_Host
+    {standard input}:283    .text.USB_Init_Host:00000040 $d
+    {standard input}:293    .text.Pipe_SelectPipe:00000000 $t
+    {standard input}:298    .text.Pipe_SelectPipe:00000000 Pipe_SelectPipe
+    {standard input}:308    .text.Pipe_SelectPipe:00000008 $d
+                            *COM*:00000004 XMC_USB_SelectedPipe
+    {standard input}:311    .text.Pipe_SetPipeToken:00000000 $t
+    {standard input}:316    .text.Pipe_SetPipeToken:00000000 Pipe_SetPipeToken
+    {standard input}:323    .text.Pipe_GetCurrentPipe:00000000 $t
+    {standard input}:328    .text.Pipe_GetCurrentPipe:00000000 Pipe_GetCurrentPipe
+    {standard input}:338    .text.Pipe_GetCurrentPipe:00000008 $d
+    {standard input}:341    .text.Pipe_ClearError:00000000 $t
+    {standard input}:346    .text.Pipe_ClearError:00000000 Pipe_ClearError
+    {standard input}:353    .text.Pipe_Unfreeze:00000000 $t
+    {standard input}:358    .text.Pipe_Unfreeze:00000000 Pipe_Unfreeze
+    {standard input}:365    .text.Pipe_WaitUntilReady:00000000 $t
+    {standard input}:370    .text.Pipe_WaitUntilReady:00000000 Pipe_WaitUntilReady
+    {standard input}:378    .text.Pipe_Write_8:00000000 $t
+    {standard input}:383    .text.Pipe_Write_8:00000000 Pipe_Write_8
+    {standard input}:390    .text.Pipe_ClearSETUP:00000000 $t
+    {standard input}:395    .text.Pipe_ClearSETUP:00000000 Pipe_ClearSETUP
+    {standard input}:402    .text.Pipe_Freeze:00000000 $t
+    {standard input}:407    .text.Pipe_Freeze:00000000 Pipe_Freeze
+    {standard input}:414    .text.Pipe_ClearIN:00000000 $t
+    {standard input}:419    .text.Pipe_ClearIN:00000000 Pipe_ClearIN
+    {standard input}:426    .text.Pipe_ClearOUT:00000000 $t
+    {standard input}:431    .text.Pipe_ClearOUT:00000000 Pipe_ClearOUT
+    {standard input}:438    .text.Pipe_IsSETUPSent:00000000 $t
+    {standard input}:443    .text.Pipe_IsSETUPSent:00000000 Pipe_IsSETUPSent
+    {standard input}:451    .text.Pipe_IsOUTReady:00000000 $t
+    {standard input}:456    .text.Pipe_IsOUTReady:00000000 Pipe_IsOUTReady
+    {standard input}:464    .text.Pipe_BytesInPipe:00000000 $t
+    {standard input}:469    .text.Pipe_BytesInPipe:00000000 Pipe_BytesInPipe
+    {standard input}:487    .text.Pipe_BytesInPipe:00000014 $d
+    {standard input}:491    .text.Pipe_Read_8:00000000 $t
+    {standard input}:496    .text.Pipe_Read_8:00000000 Pipe_Read_8
+    {standard input}:514    .text.Pipe_Read_8:00000014 $d
+    {standard input}:518    .text.Pipe_IsINReceived:00000000 $t
+    {standard input}:523    .text.Pipe_IsINReceived:00000000 Pipe_IsINReceived
+    {standard input}:541    .text.Pipe_IsINReceived:00000014 $d
+    {standard input}:545    .text.USB_SetHostState:00000000 $t
+    {standard input}:550    .text.USB_SetHostState:00000000 USB_SetHostState
+    {standard input}:560    .text.USB_SetHostState:00000008 $d
+    {standard input}:563    .text.USB_GetHostState:00000000 $t
+    {standard input}:568    .text.USB_GetHostState:00000000 USB_GetHostState
+    {standard input}:579    .text.USB_GetHostState:00000008 $d
+    {standard input}:582    .text.USB_Host_GetFrameNumber:00000000 $t
+    {standard input}:587    .text.USB_Host_GetFrameNumber:00000000 USB_Host_GetFrameNumber
+    {standard input}:597    .text.USB_Host_GetFrameNumber:00000008 $d
+    {standard input}:600    .text.USB_ResetInterface:00000000 $t
+    {standard input}:605    .text.USB_ResetInterface:00000000 USB_ResetInterface
+    {standard input}:612    .text.USB_Host_IsBusSuspended:00000000 $t
+    {standard input}:617    .text.USB_Host_IsBusSuspended:00000000 USB_Host_IsBusSuspended
+    {standard input}:625    .text.USB_Host_IsBusResetComplete:00000000 $t
+    {standard input}:630    .text.USB_Host_IsBusResetComplete:00000000 USB_Host_IsBusResetComplete
+    {standard input}:638    .text.USB_Host_SuspendBus:00000000 $t
+    {standard input}:643    .text.USB_Host_SuspendBus:00000000 USB_Host_SuspendBus
+    {standard input}:657    .text.USB_Host_SuspendBus:00000010 $d
+    {standard input}:661    .text.Pipe_ResetPipe:00000000 $t
+    {standard input}:666    .text.Pipe_ResetPipe:00000000 Pipe_ResetPipe
+    {standard input}:677    .text.Pipe_ResetPipe:00000008 $d
+    {standard input}:680    .text.USB_Host_ResumeBus:00000000 $t
+    {standard input}:685    .text.USB_Host_ResumeBus:00000000 USB_Host_ResumeBus
+    {standard input}:703    .text.USB_Host_ResumeBus:00000018 $d
+    {standard input}:707    .text.Pipe_ConfigurePipeTable:00000000 $t
+    {standard input}:712    .text.Pipe_ConfigurePipeTable:00000000 Pipe_ConfigurePipeTable
+    {standard input}:720    .text.Pipe_IsStalled:00000000 $t
+    {standard input}:725    .text.Pipe_IsStalled:00000000 Pipe_IsStalled
+    {standard input}:743    .text.Pipe_IsStalled:0000001c $d
+    {standard input}:748    .text.Pipe_GetBoundEndpointAddress:00000000 $t
+    {standard input}:753    .text.Pipe_GetBoundEndpointAddress:00000000 Pipe_GetBoundEndpointAddress
+    {standard input}:770    .text.Pipe_GetBoundEndpointAddress:00000018 $d
+    {standard input}:775    .text.Pipe_ResetToggle:00000000 $t
+    {standard input}:780    .text.Pipe_ResetToggle:00000000 Pipe_ResetToggle
+    {standard input}:798    .text.Pipe_ResetToggle:00000018 $d
+    {standard input}:803    .text.Pipe_IsReadWriteAllowed:00000000 $t
+    {standard input}:808    .text.Pipe_IsReadWriteAllowed:00000000 Pipe_IsReadWriteAllowed
+    {standard input}:816    .text.USBH_GLUE_StartTimer:00000000 $t
+    {standard input}:821    .text.USBH_GLUE_StartTimer:00000000 USBH_GLUE_StartTimer
+    {standard input}:841    .text.USBH_GLUE_StartTimer:0000001c $d
+                            *COM*:00000004 usbh_glue_systick_flag
+    {standard input}:847    .text.SysTick_Handler:00000000 $t
+    {standard input}:852    .text.SysTick_Handler:00000000 SysTick_Handler
+    {standard input}:873    .text.SysTick_Handler:0000001c $d
+    {standard input}:878    .text.USBH_GLUE_IsTimerRunning:00000000 $t
+    {standard input}:883    .text.USBH_GLUE_IsTimerRunning:00000000 USBH_GLUE_IsTimerRunning
+    {standard input}:896    .text.USBH_GLUE_IsTimerRunning:0000000c $d
+    {standard input}:899    .text.XMC_USBH_osDelay:00000000 $t
+    {standard input}:904    .text.XMC_USBH_osDelay:00000000 XMC_USBH_osDelay
+    {standard input}:916    .text.USBH_WaitForTransfer:00000000 $t
+    {standard input}:921    .text.USBH_WaitForTransfer:00000000 USBH_WaitForTransfer
+    {standard input}:970    .text.USBH_WaitForTransfer:00000054 $d
+    {standard input}:976    .text.USB_Host_ProcessNextHostState:00000000 $t
+    {standard input}:981    .text.USB_Host_ProcessNextHostState:00000000 USB_Host_ProcessNextHostState
+    {standard input}:992    .text.USB_Host_ProcessNextHostState:00000012 $d
+    {standard input}:1002   .text.USB_Host_ProcessNextHostState:0000001c $t
+    {standard input}:1149   .text.USB_Host_ProcessNextHostState:00000134 $d
+    {standard input}:1161   .text.USB_Host_SendControlRequest_PRV:00000000 $t
+    {standard input}:1166   .text.USB_Host_SendControlRequest_PRV:00000000 USB_Host_SendControlRequest_PRV
+    {standard input}:1265   .text.USB_Host_SendControlRequest_PRV:000000dc $d
+                            *COM*:00000001 XMC_USB_PipeSetup
+    {standard input}:1271   .text.USB0_0_IRQHandler:00000000 $t
+    {standard input}:1276   .text.USB0_0_IRQHandler:00000000 USB0_0_IRQHandler
+    {standard input}:1308   .data.USB_Host_ControlPipeSize:00000000 USB_Host_ControlPipeSize
+    {standard input}:1314   .bss.USB_Is_Suspend:00000000 USB_Is_Suspend
+    {standard input}:1315   .bss.USB_Is_Suspend:00000000 $d
+    {standard input}:1317   .bss.WaitMSRemaining.8348:00000000 $d
+    {standard input}:1321   .bss.WaitMSRemaining.8348:00000000 WaitMSRemaining.8348
+
+UNDEFINED SYMBOLS
+USB_HostState
+Driver_USBH0
+USB_IsInitialized
+XMC_SCU_CLOCK_EnableClock
+USB_Host_ConfigurationNumber
+Counter
+USB_Host_SendControlRequest
+EVENT_USB_Host_DeviceEnumerationComplete
+EVENT_USB_Host_DeviceUnattached
+USB_ControlRequest
+XMC_USBH_GetInterruptStatus
+XMC_USBH_HandleIrq

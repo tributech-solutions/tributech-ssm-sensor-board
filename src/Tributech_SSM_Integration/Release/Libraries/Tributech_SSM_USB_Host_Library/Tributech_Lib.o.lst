@@ -1,0 +1,699 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "Tributech_Lib.c"
+  16              	 .section .text.to_upper_case,"ax",%progbits
+  17              	 .align 1
+  18              	 .global to_upper_case
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	to_upper_case:
+  23              	 
+  24              	 
+  25 0000 70B5     	 push {r4,r5,r6,lr}
+  26 0002 0446     	 mov r4,r0
+  27 0004 0026     	 movs r6,#0
+  28              	.L2:
+  29 0006 2046     	 mov r0,r4
+  30 0008 FFF7FEFF 	 bl strlen
+  31 000c B5B2     	 uxth r5,r6
+  32 000e 8542     	 cmp r5,r0
+  33 0010 0CD2     	 bcs .L7
+  34 0012 074A     	 ldr r2,.L8
+  35 0014 635D     	 ldrb r3,[r4,r5]
+  36 0016 1268     	 ldr r2,[r2]
+  37 0018 1A44     	 add r2,r2,r3
+  38 001a 0136     	 adds r6,r6,#1
+  39 001c 5278     	 ldrb r2,[r2,#1]
+  40 001e 02F00302 	 and r2,r2,#3
+  41 0022 022A     	 cmp r2,#2
+  42 0024 08BF     	 it eq
+  43 0026 203B     	 subeq r3,r3,#32
+  44 0028 6355     	 strb r3,[r4,r5]
+  45 002a ECE7     	 b .L2
+  46              	.L7:
+  47 002c 2046     	 mov r0,r4
+  48 002e 70BD     	 pop {r4,r5,r6,pc}
+  49              	.L9:
+  50              	 .align 2
+  51              	.L8:
+  52 0030 00000000 	 .word __ctype_ptr__
+  54              	 .section .text.to_lower_case,"ax",%progbits
+  55              	 .align 1
+  56              	 .global to_lower_case
+  57              	 .thumb
+  58              	 .thumb_func
+  60              	to_lower_case:
+  61              	 
+  62              	 
+  63 0000 70B5     	 push {r4,r5,r6,lr}
+  64 0002 0446     	 mov r4,r0
+  65 0004 0026     	 movs r6,#0
+  66              	.L11:
+  67 0006 2046     	 mov r0,r4
+  68 0008 FFF7FEFF 	 bl strlen
+  69 000c B5B2     	 uxth r5,r6
+  70 000e 8542     	 cmp r5,r0
+  71 0010 0CD2     	 bcs .L15
+  72 0012 074A     	 ldr r2,.L16
+  73 0014 635D     	 ldrb r3,[r4,r5]
+  74 0016 1268     	 ldr r2,[r2]
+  75 0018 1A44     	 add r2,r2,r3
+  76 001a 0136     	 adds r6,r6,#1
+  77 001c 5278     	 ldrb r2,[r2,#1]
+  78 001e 02F00302 	 and r2,r2,#3
+  79 0022 012A     	 cmp r2,#1
+  80 0024 08BF     	 it eq
+  81 0026 2033     	 addeq r3,r3,#32
+  82 0028 6355     	 strb r3,[r4,r5]
+  83 002a ECE7     	 b .L11
+  84              	.L15:
+  85 002c 2046     	 mov r0,r4
+  86 002e 70BD     	 pop {r4,r5,r6,pc}
+  87              	.L17:
+  88              	 .align 2
+  89              	.L16:
+  90 0030 00000000 	 .word __ctype_ptr__
+  92              	 .section .text.increase_transaction_nr,"ax",%progbits
+  93              	 .align 1
+  94              	 .global increase_transaction_nr
+  95              	 .thumb
+  96              	 .thumb_func
+  98              	increase_transaction_nr:
+  99              	 
+ 100              	 
+ 101 0000 10B5     	 push {r4,lr}
+ 102 0002 0A4C     	 ldr r4,.L22
+ 103 0004 0A4A     	 ldr r2,.L22+4
+ 104 0006 2368     	 ldr r3,[r4]
+ 105 0008 0A48     	 ldr r0,.L22+8
+ 106 000a 0133     	 adds r3,r3,#1
+ 107 000c 9342     	 cmp r3,r2
+ 108 000e 88BF     	 it hi
+ 109 0010 0023     	 movhi r3,#0
+ 110 0012 0021     	 movs r1,#0
+ 111 0014 0722     	 movs r2,#7
+ 112 0016 2360     	 str r3,[r4]
+ 113 0018 FFF7FEFF 	 bl memset
+ 114 001c 2268     	 ldr r2,[r4]
+ 115 001e 0548     	 ldr r0,.L22+8
+ 116 0020 0549     	 ldr r1,.L22+12
+ 117 0022 BDE81040 	 pop {r4,lr}
+ 118 0026 FFF7FEBF 	 b sprintf
+ 119              	.L23:
+ 120 002a 00BF     	 .align 2
+ 121              	.L22:
+ 122 002c 00000000 	 .word transaction_nr_dec
+ 123 0030 3F420F00 	 .word 999999
+ 124 0034 00000000 	 .word transaction_nr_string
+ 125 0038 00000000 	 .word .LC0
+ 127              	 .section .text.get_time,"ax",%progbits
+ 128              	 .align 1
+ 129              	 .global get_time
+ 130              	 .thumb
+ 131              	 .thumb_func
+ 133              	get_time:
+ 134              	 
+ 135              	 
+ 136 0000 07B5     	 push {r0,r1,r2,lr}
+ 137 0002 01A8     	 add r0,sp,#4
+ 138 0004 FFF7FEFF 	 bl RTC_Time
+ 139 0008 0198     	 ldr r0,[sp,#4]
+ 140 000a 03B0     	 add sp,sp,#12
+ 141              	 
+ 142 000c 5DF804FB 	 ldr pc,[sp],#4
+ 144              	 .global __aeabi_llsl
+ 145              	 .section .text.get_unique_chip_id,"ax",%progbits
+ 146              	 .align 1
+ 147              	 .global get_unique_chip_id
+ 148              	 .thumb
+ 149              	 .thumb_func
+ 151              	get_unique_chip_id:
+ 152              	 
+ 153              	 
+ 154 0000 2DE9F743 	 push {r0,r1,r2,r4,r5,r6,r7,r8,r9,lr}
+ 155 0004 8146     	 mov r9,r0
+ 156 0006 0D46     	 mov r5,r1
+ 157 0008 0024     	 movs r4,#0
+ 158 000a 0026     	 movs r6,#0
+ 159 000c 0027     	 movs r7,#0
+ 160              	.L26:
+ 161 000e 114B     	 ldr r3,.L28
+ 162 0010 2344     	 add r3,r3,r4
+ 163 0012 E21D     	 adds r2,r4,#7
+ 164 0014 93F80780 	 ldrb r8,[r3,#7]
+ 165 0018 D200     	 lsls r2,r2,#3
+ 166 001a 02F0F802 	 and r2,r2,#248
+ 167 001e 4046     	 mov r0,r8
+ 168 0020 0021     	 movs r1,#0
+ 169 0022 FFF7FEFF 	 bl __aeabi_llsl
+ 170 0026 3618     	 adds r6,r6,r0
+ 171 0028 4F41     	 adcs r7,r7,r1
+ 172 002a 4246     	 mov r2,r8
+ 173 002c 0A49     	 ldr r1,.L28+4
+ 174 002e 01A8     	 add r0,sp,#4
+ 175 0030 FFF7FEFF 	 bl sprintf
+ 176 0034 2846     	 mov r0,r5
+ 177 0036 01A9     	 add r1,sp,#4
+ 178 0038 FFF7FEFF 	 bl strcat
+ 179 003c 013C     	 subs r4,r4,#1
+ 180 003e 14F1080F 	 cmn r4,#8
+ 181 0042 0546     	 mov r5,r0
+ 182 0044 E3D1     	 bne .L26
+ 183 0046 0120     	 movs r0,#1
+ 184 0048 C9E90067 	 strd r6,[r9]
+ 185 004c 03B0     	 add sp,sp,#12
+ 186              	 
+ 187 004e BDE8F083 	 pop {r4,r5,r6,r7,r8,r9,pc}
+ 188              	.L29:
+ 189 0052 00BF     	 .align 2
+ 190              	.L28:
+ 191 0054 00000000 	 .word g_chipid
+ 192 0058 04000000 	 .word .LC1
+ 194              	 .section .text.get_internal_ValueMetaDataId_hex,"ax",%progbits
+ 195              	 .align 1
+ 196              	 .global get_internal_ValueMetaDataId_hex
+ 197              	 .thumb
+ 198              	 .thumb_func
+ 200              	get_internal_ValueMetaDataId_hex:
+ 201              	 
+ 202              	 
+ 203 0000 38B5     	 push {r3,r4,r5,lr}
+ 204 0002 1022     	 movs r2,#16
+ 205 0004 0C46     	 mov r4,r1
+ 206 0006 0546     	 mov r5,r0
+ 207 0008 0846     	 mov r0,r1
+ 208 000a 0021     	 movs r1,#0
+ 209 000c FFF7FEFF 	 bl memset
+ 210 0010 044B     	 ldr r3,.L31
+ 211 0012 03CB     	 ldmia r3!,{r0,r1}
+ 212 0014 2060     	 str r0,[r4]
+ 213 0016 6160     	 str r1,[r4,#4]
+ 214 0018 2B68     	 ldr r3,[r5]
+ 215 001a A360     	 str r3,[r4,#8]
+ 216 001c 6B68     	 ldr r3,[r5,#4]
+ 217 001e E360     	 str r3,[r4,#12]
+ 218 0020 0120     	 movs r0,#1
+ 219 0022 38BD     	 pop {r3,r4,r5,pc}
+ 220              	.L32:
+ 221              	 .align 2
+ 222              	.L31:
+ 223 0024 00000000 	 .word device_id_hex
+ 225              	 .section .text.parse_response,"ax",%progbits
+ 226              	 .align 1
+ 227              	 .global parse_response
+ 228              	 .thumb
+ 229              	 .thumb_func
+ 231              	parse_response:
+ 232              	 
+ 233              	 
+ 234 0000 13B5     	 push {r0,r1,r4,lr}
+ 235 0002 0446     	 mov r4,r0
+ 236 0004 1021     	 movs r1,#16
+ 237 0006 4020     	 movs r0,#64
+ 238 0008 FFF7FEFF 	 bl calloc
+ 239 000c 094A     	 ldr r2,.L34
+ 240 000e 0346     	 mov r3,r0
+ 241 0010 1060     	 str r0,[r2]
+ 242 0012 0948     	 ldr r0,.L34+4
+ 243 0014 4FF0FF32 	 mov r2,#-1
+ 244 0018 0021     	 movs r1,#0
+ 245 001a 8260     	 str r2,[r0,#8]
+ 246 001c 4022     	 movs r2,#64
+ 247 001e 0160     	 str r1,[r0]
+ 248 0020 4160     	 str r1,[r0,#4]
+ 249 0022 0092     	 str r2,[sp]
+ 250 0024 054A     	 ldr r2,.L34+8
+ 251 0026 1168     	 ldr r1,[r2]
+ 252 0028 2246     	 mov r2,r4
+ 253 002a FFF7FEFF 	 bl jsmn_parse
+ 254 002e 80B2     	 uxth r0,r0
+ 255 0030 02B0     	 add sp,sp,#8
+ 256              	 
+ 257 0032 10BD     	 pop {r4,pc}
+ 258              	.L35:
+ 259              	 .align 2
+ 260              	.L34:
+ 261 0034 00000000 	 .word t
+ 262 0038 00000000 	 .word p
+ 263 003c 00000000 	 .word recv_command
+ 265              	 .section .text.get_string_from_64bit,"ax",%progbits
+ 266              	 .align 1
+ 267              	 .global get_string_from_64bit
+ 268              	 .thumb
+ 269              	 .thumb_func
+ 271              	get_string_from_64bit:
+ 272              	 
+ 273              	 
+ 274 0000 73B5     	 push {r0,r1,r4,r5,r6,lr}
+ 275 0002 0546     	 mov r5,r0
+ 276 0004 0E46     	 mov r6,r1
+ 277 0006 00F10804 	 add r4,r0,#8
+ 278              	.L37:
+ 279 000a 0023     	 movs r3,#0
+ 280 000c 14F8012D 	 ldrb r2,[r4,#-1]!
+ 281 0010 0849     	 ldr r1,.L39
+ 282 0012 ADF80430 	 strh r3,[sp,#4]
+ 283 0016 01A8     	 add r0,sp,#4
+ 284 0018 8DF80630 	 strb r3,[sp,#6]
+ 285 001c FFF7FEFF 	 bl sprintf
+ 286 0020 3046     	 mov r0,r6
+ 287 0022 01A9     	 add r1,sp,#4
+ 288 0024 FFF7FEFF 	 bl strcat
+ 289 0028 AC42     	 cmp r4,r5
+ 290 002a 0646     	 mov r6,r0
+ 291 002c EDD1     	 bne .L37
+ 292 002e 02B0     	 add sp,sp,#8
+ 293              	 
+ 294 0030 70BD     	 pop {r4,r5,r6,pc}
+ 295              	.L40:
+ 296 0032 00BF     	 .align 2
+ 297              	.L39:
+ 298 0034 04000000 	 .word .LC1
+ 300              	 .section .text.transform_ValueMetaDataId_hex_to_string,"ax",%progbits
+ 301              	 .align 1
+ 302              	 .global transform_ValueMetaDataId_hex_to_string
+ 303              	 .thumb
+ 304              	 .thumb_func
+ 306              	transform_ValueMetaDataId_hex_to_string:
+ 307              	 
+ 308              	 
+ 309 0000 73B5     	 push {r0,r1,r4,r5,r6,lr}
+ 310 0002 0546     	 mov r5,r0
+ 311 0004 0C46     	 mov r4,r1
+ 312 0006 0846     	 mov r0,r1
+ 313 0008 2522     	 movs r2,#37
+ 314 000a 0021     	 movs r1,#0
+ 315 000c FFF7FEFF 	 bl memset
+ 316 0010 EA78     	 ldrb r2,[r5,#3]
+ 317 0012 3D49     	 ldr r1,.L44
+ 318 0014 01A8     	 add r0,sp,#4
+ 319 0016 FFF7FEFF 	 bl sprintf
+ 320 001a 01A9     	 add r1,sp,#4
+ 321 001c 2046     	 mov r0,r4
+ 322 001e FFF7FEFF 	 bl strcat
+ 323 0022 AA78     	 ldrb r2,[r5,#2]
+ 324 0024 3849     	 ldr r1,.L44
+ 325 0026 01A8     	 add r0,sp,#4
+ 326 0028 FFF7FEFF 	 bl sprintf
+ 327 002c 01A9     	 add r1,sp,#4
+ 328 002e 2046     	 mov r0,r4
+ 329 0030 FFF7FEFF 	 bl strcat
+ 330 0034 6A78     	 ldrb r2,[r5,#1]
+ 331 0036 3449     	 ldr r1,.L44
+ 332 0038 01A8     	 add r0,sp,#4
+ 333 003a FFF7FEFF 	 bl sprintf
+ 334 003e 01A9     	 add r1,sp,#4
+ 335 0040 2046     	 mov r0,r4
+ 336 0042 FFF7FEFF 	 bl strcat
+ 337 0046 2A78     	 ldrb r2,[r5]
+ 338 0048 2F49     	 ldr r1,.L44
+ 339 004a 01A8     	 add r0,sp,#4
+ 340 004c FFF7FEFF 	 bl sprintf
+ 341 0050 01A9     	 add r1,sp,#4
+ 342 0052 2046     	 mov r0,r4
+ 343 0054 FFF7FEFF 	 bl strcat
+ 344 0058 2C49     	 ldr r1,.L44+4
+ 345 005a 2046     	 mov r0,r4
+ 346 005c FFF7FEFF 	 bl strcat
+ 347 0060 6A79     	 ldrb r2,[r5,#5]
+ 348 0062 2949     	 ldr r1,.L44
+ 349 0064 01A8     	 add r0,sp,#4
+ 350 0066 FFF7FEFF 	 bl sprintf
+ 351 006a 01A9     	 add r1,sp,#4
+ 352 006c 2046     	 mov r0,r4
+ 353 006e FFF7FEFF 	 bl strcat
+ 354 0072 2A79     	 ldrb r2,[r5,#4]
+ 355 0074 2449     	 ldr r1,.L44
+ 356 0076 01A8     	 add r0,sp,#4
+ 357 0078 FFF7FEFF 	 bl sprintf
+ 358 007c 01A9     	 add r1,sp,#4
+ 359 007e 2046     	 mov r0,r4
+ 360 0080 FFF7FEFF 	 bl strcat
+ 361 0084 2149     	 ldr r1,.L44+4
+ 362 0086 2046     	 mov r0,r4
+ 363 0088 FFF7FEFF 	 bl strcat
+ 364 008c EA79     	 ldrb r2,[r5,#7]
+ 365 008e 1E49     	 ldr r1,.L44
+ 366 0090 01A8     	 add r0,sp,#4
+ 367 0092 FFF7FEFF 	 bl sprintf
+ 368 0096 01A9     	 add r1,sp,#4
+ 369 0098 2046     	 mov r0,r4
+ 370 009a FFF7FEFF 	 bl strcat
+ 371 009e AA79     	 ldrb r2,[r5,#6]
+ 372 00a0 1949     	 ldr r1,.L44
+ 373 00a2 01A8     	 add r0,sp,#4
+ 374 00a4 FFF7FEFF 	 bl sprintf
+ 375 00a8 01A9     	 add r1,sp,#4
+ 376 00aa 2046     	 mov r0,r4
+ 377 00ac FFF7FEFF 	 bl strcat
+ 378 00b0 1649     	 ldr r1,.L44+4
+ 379 00b2 2046     	 mov r0,r4
+ 380 00b4 FFF7FEFF 	 bl strcat
+ 381 00b8 2E46     	 mov r6,r5
+ 382 00ba 2A7A     	 ldrb r2,[r5,#8]
+ 383 00bc 1249     	 ldr r1,.L44
+ 384 00be 01A8     	 add r0,sp,#4
+ 385 00c0 FFF7FEFF 	 bl sprintf
+ 386 00c4 01A9     	 add r1,sp,#4
+ 387 00c6 2046     	 mov r0,r4
+ 388 00c8 FFF7FEFF 	 bl strcat
+ 389 00cc 16F8092F 	 ldrb r2,[r6,#9]!
+ 390 00d0 0D49     	 ldr r1,.L44
+ 391 00d2 01A8     	 add r0,sp,#4
+ 392 00d4 FFF7FEFF 	 bl sprintf
+ 393 00d8 01A9     	 add r1,sp,#4
+ 394 00da 2046     	 mov r0,r4
+ 395 00dc FFF7FEFF 	 bl strcat
+ 396 00e0 2046     	 mov r0,r4
+ 397 00e2 0A49     	 ldr r1,.L44+4
+ 398 00e4 FFF7FEFF 	 bl strcat
+ 399 00e8 0F35     	 adds r5,r5,#15
+ 400              	.L42:
+ 401 00ea 16F8012F 	 ldrb r2,[r6,#1]!
+ 402 00ee 0649     	 ldr r1,.L44
+ 403 00f0 01A8     	 add r0,sp,#4
+ 404 00f2 FFF7FEFF 	 bl sprintf
+ 405 00f6 2046     	 mov r0,r4
+ 406 00f8 01A9     	 add r1,sp,#4
+ 407 00fa FFF7FEFF 	 bl strcat
+ 408 00fe AE42     	 cmp r6,r5
+ 409 0100 F3D1     	 bne .L42
+ 410 0102 0120     	 movs r0,#1
+ 411 0104 02B0     	 add sp,sp,#8
+ 412              	 
+ 413 0106 70BD     	 pop {r4,r5,r6,pc}
+ 414              	.L45:
+ 415              	 .align 2
+ 416              	.L44:
+ 417 0108 04000000 	 .word .LC1
+ 418 010c 09000000 	 .word .LC2
+ 420              	 .section .text.get_value_meta_data_id,"ax",%progbits
+ 421              	 .align 1
+ 422              	 .global get_value_meta_data_id
+ 423              	 .thumb
+ 424              	 .thumb_func
+ 426              	get_value_meta_data_id:
+ 427              	 
+ 428              	 
+ 429 0000 10B5     	 push {r4,lr}
+ 430 0002 88B0     	 sub sp,sp,#32
+ 431 0004 CDE90023 	 strd r2,[sp]
+ 432 0008 0446     	 mov r4,r0
+ 433 000a 1122     	 movs r2,#17
+ 434 000c 03A8     	 add r0,sp,#12
+ 435 000e 0021     	 movs r1,#0
+ 436 0010 FFF7FEFF 	 bl memset
+ 437 0014 0749     	 ldr r1,.L47
+ 438 0016 0848     	 ldr r0,.L47+4
+ 439 0018 FFF7FEFF 	 bl get_unique_chip_id
+ 440 001c 03A9     	 add r1,sp,#12
+ 441 001e 6846     	 mov r0,sp
+ 442 0020 FFF7FEFF 	 bl get_internal_ValueMetaDataId_hex
+ 443 0024 03A8     	 add r0,sp,#12
+ 444 0026 2146     	 mov r1,r4
+ 445 0028 FFF7FEFF 	 bl transform_ValueMetaDataId_hex_to_string
+ 446 002c 0120     	 movs r0,#1
+ 447 002e 08B0     	 add sp,sp,#32
+ 448              	 
+ 449 0030 10BD     	 pop {r4,pc}
+ 450              	.L48:
+ 451 0032 00BF     	 .align 2
+ 452              	.L47:
+ 453 0034 00000000 	 .word device_id_string
+ 454 0038 00000000 	 .word device_id_hex
+ 456              	 .section .text.decode_error_code,"ax",%progbits
+ 457              	 .align 1
+ 458              	 .global decode_error_code
+ 459              	 .thumb
+ 460              	 .thumb_func
+ 462              	decode_error_code:
+ 463              	 
+ 464              	 
+ 465              	 
+ 466 0000 0C30     	 adds r0,r0,#12
+ 467 0002 0C28     	 cmp r0,#12
+ 468 0004 2CD8     	 bhi .L50
+ 469 0006 DFE800F0 	 tbb [pc,r0]
+ 470              	.L52:
+ 471 000a 28       	 .byte (.L51-.L52)/2
+ 472 000b 25       	 .byte (.L53-.L52)/2
+ 473 000c 22       	 .byte (.L54-.L52)/2
+ 474 000d 1F       	 .byte (.L55-.L52)/2
+ 475 000e 1C       	 .byte (.L56-.L52)/2
+ 476 000f 19       	 .byte (.L57-.L52)/2
+ 477 0010 16       	 .byte (.L58-.L52)/2
+ 478 0011 13       	 .byte (.L59-.L52)/2
+ 479 0012 10       	 .byte (.L60-.L52)/2
+ 480 0013 0D       	 .byte (.L61-.L52)/2
+ 481 0014 0A       	 .byte (.L62-.L52)/2
+ 482 0015 2B       	 .byte (.L50-.L52)/2
+ 483 0016 07       	 .byte (.L64-.L52)/2
+ 484 0017 00       	 .p2align 1
+ 485              	.L64:
+ 486 0018 1348     	 ldr r0,.L66
+ 487 001a 1449     	 ldr r1,.L66+4
+ 488 001c 22E0     	 b .L65
+ 489              	.L62:
+ 490 001e 1248     	 ldr r0,.L66
+ 491 0020 1349     	 ldr r1,.L66+8
+ 492 0022 1FE0     	 b .L65
+ 493              	.L61:
+ 494 0024 1048     	 ldr r0,.L66
+ 495 0026 1349     	 ldr r1,.L66+12
+ 496 0028 1CE0     	 b .L65
+ 497              	.L60:
+ 498 002a 0F48     	 ldr r0,.L66
+ 499 002c 1249     	 ldr r1,.L66+16
+ 500 002e 19E0     	 b .L65
+ 501              	.L59:
+ 502 0030 0D48     	 ldr r0,.L66
+ 503 0032 1249     	 ldr r1,.L66+20
+ 504 0034 16E0     	 b .L65
+ 505              	.L58:
+ 506 0036 0C48     	 ldr r0,.L66
+ 507 0038 1149     	 ldr r1,.L66+24
+ 508 003a 13E0     	 b .L65
+ 509              	.L57:
+ 510 003c 0A48     	 ldr r0,.L66
+ 511 003e 1149     	 ldr r1,.L66+28
+ 512 0040 10E0     	 b .L65
+ 513              	.L56:
+ 514 0042 0948     	 ldr r0,.L66
+ 515 0044 1049     	 ldr r1,.L66+32
+ 516 0046 0DE0     	 b .L65
+ 517              	.L55:
+ 518 0048 0748     	 ldr r0,.L66
+ 519 004a 1049     	 ldr r1,.L66+36
+ 520 004c 0AE0     	 b .L65
+ 521              	.L54:
+ 522 004e 0648     	 ldr r0,.L66
+ 523 0050 0F49     	 ldr r1,.L66+40
+ 524 0052 07E0     	 b .L65
+ 525              	.L53:
+ 526 0054 0448     	 ldr r0,.L66
+ 527 0056 0F49     	 ldr r1,.L66+44
+ 528 0058 04E0     	 b .L65
+ 529              	.L51:
+ 530 005a 0348     	 ldr r0,.L66
+ 531 005c 0E49     	 ldr r1,.L66+48
+ 532 005e 01E0     	 b .L65
+ 533              	.L50:
+ 534 0060 0148     	 ldr r0,.L66
+ 535 0062 0E49     	 ldr r1,.L66+52
+ 536              	.L65:
+ 537 0064 FFF7FEBF 	 b strcpy
+ 538              	.L67:
+ 539              	 .align 2
+ 540              	.L66:
+ 541 0068 00000000 	 .word error_code_string
+ 542 006c 0B000000 	 .word .LC3
+ 543 0070 26000000 	 .word .LC5
+ 544 0074 44000000 	 .word .LC6
+ 545 0078 56000000 	 .word .LC7
+ 546 007c 75000000 	 .word .LC8
+ 547 0080 99000000 	 .word .LC9
+ 548 0084 B6000000 	 .word .LC10
+ 549 0088 CF000000 	 .word .LC11
+ 550 008c EE000000 	 .word .LC12
+ 551 0090 07010000 	 .word .LC13
+ 552 0094 15010000 	 .word .LC14
+ 553 0098 3A010000 	 .word .LC15
+ 554 009c 13000000 	 .word .LC4
+ 556              	 .comm error_code_string,50,1
+ 557              	 .comm transaction_nr_string,7,1
+ 558              	 .comm transaction_nr_dec,4,4
+ 559              	 .comm device_id_string,20,1
+ 560              	 .comm device_id_hex,8,8
+ 561              	 .comm t,4,4
+ 562              	 .comm p,12,4
+ 563              	 .comm RxBuffer,1024,1
+ 564              	 .comm request_send,1,1
+ 565              	 .comm recv_command_length,2,2
+ 566              	 .comm recv_command,4,4
+ 567              	 .comm send_buffer,4,4
+ 568              	 .comm uart_data_count,4,4
+ 569              	 .comm Rxlen,4,4
+ 570              	 .comm RxPtr,4,4
+ 571              	 .comm ReceivedByte,1,1
+ 572              	 .comm USBHostState,1,1
+ 573              	 .section .rodata.str1.1,"aMS",%progbits,1
+ 574              	.LC0:
+ 575 0000 256C7500 	 .ascii "%lu\000"
+ 576              	.LC1:
+ 577 0004 25303278 	 .ascii "%02x\000"
+ 577      00
+ 578              	.LC2:
+ 579 0009 2D00     	 .ascii "-\000"
+ 580              	.LC3:
+ 581 000b 73756363 	 .ascii "success\000"
+ 581      65737300 
+ 582              	.LC4:
+ 583 0013 756E6B6E 	 .ascii "unknown error code\000"
+ 583      6F776E20 
+ 583      6572726F 
+ 583      7220636F 
+ 583      646500
+ 584              	.LC5:
+ 585 0026 7472616E 	 .ascii "transaction still in progress\000"
+ 585      73616374 
+ 585      696F6E20 
+ 585      7374696C 
+ 585      6C20696E 
+ 586              	.LC6:
+ 587 0044 696E7661 	 .ascii "invalid operation\000"
+ 587      6C696420 
+ 587      6F706572 
+ 587      6174696F 
+ 587      6E00
+ 588              	.LC7:
+ 589 0056 6D617820 	 .ascii "max merkle tree depth exceeded\000"
+ 589      6D65726B 
+ 589      6C652074 
+ 589      72656520 
+ 589      64657074 
+ 590              	.LC8:
+ 591 0075 6D617820 	 .ascii "max size of a single value exceeded\000"
+ 591      73697A65 
+ 591      206F6620 
+ 591      61207369 
+ 591      6E676C65 
+ 592              	.LC9:
+ 593 0099 6D617820 	 .ascii "max count of values exceeded\000"
+ 593      636F756E 
+ 593      74206F66 
+ 593      2076616C 
+ 593      75657320 
+ 594              	.LC10:
+ 595 00b6 696E7661 	 .ascii "invalid timestamp format\000"
+ 595      6C696420 
+ 595      74696D65 
+ 595      7374616D 
+ 595      7020666F 
+ 596              	.LC11:
+ 597 00cf 696E7661 	 .ascii "invalid ValueMetaDataId format\000"
+ 597      6C696420 
+ 597      56616C75 
+ 597      654D6574 
+ 597      61446174 
+ 598              	.LC12:
+ 599 00ee 696E7661 	 .ascii "invalid endpoints format\000"
+ 599      6C696420 
+ 599      656E6470 
+ 599      6F696E74 
+ 599      7320666F 
+ 600              	.LC13:
+ 601 0107 70617273 	 .ascii "parsing error\000"
+ 601      696E6720 
+ 601      6572726F 
+ 601      7200
+ 602              	.LC14:
+ 603 0115 6379636C 	 .ascii "cycle time too fast -> delay sending\000"
+ 603      65207469 
+ 603      6D652074 
+ 603      6F6F2066 
+ 603      61737420 
+ 604              	.LC15:
+ 605 013a 53534D20 	 .ascii "SSM not ready\000"
+ 605      6E6F7420 
+ 605      72656164 
+ 605      7900
+ 606              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 Tributech_Lib.c
+    {standard input}:17     .text.to_upper_case:00000000 $t
+    {standard input}:22     .text.to_upper_case:00000000 to_upper_case
+    {standard input}:52     .text.to_upper_case:00000030 $d
+    {standard input}:55     .text.to_lower_case:00000000 $t
+    {standard input}:60     .text.to_lower_case:00000000 to_lower_case
+    {standard input}:90     .text.to_lower_case:00000030 $d
+    {standard input}:93     .text.increase_transaction_nr:00000000 $t
+    {standard input}:98     .text.increase_transaction_nr:00000000 increase_transaction_nr
+    {standard input}:122    .text.increase_transaction_nr:0000002c $d
+                            *COM*:00000004 transaction_nr_dec
+                            *COM*:00000007 transaction_nr_string
+    {standard input}:128    .text.get_time:00000000 $t
+    {standard input}:133    .text.get_time:00000000 get_time
+    {standard input}:146    .text.get_unique_chip_id:00000000 $t
+    {standard input}:151    .text.get_unique_chip_id:00000000 get_unique_chip_id
+    {standard input}:191    .text.get_unique_chip_id:00000054 $d
+    {standard input}:195    .text.get_internal_ValueMetaDataId_hex:00000000 $t
+    {standard input}:200    .text.get_internal_ValueMetaDataId_hex:00000000 get_internal_ValueMetaDataId_hex
+    {standard input}:223    .text.get_internal_ValueMetaDataId_hex:00000024 $d
+                            *COM*:00000008 device_id_hex
+    {standard input}:226    .text.parse_response:00000000 $t
+    {standard input}:231    .text.parse_response:00000000 parse_response
+    {standard input}:261    .text.parse_response:00000034 $d
+                            *COM*:00000004 t
+                            *COM*:0000000c p
+                            *COM*:00000004 recv_command
+    {standard input}:266    .text.get_string_from_64bit:00000000 $t
+    {standard input}:271    .text.get_string_from_64bit:00000000 get_string_from_64bit
+    {standard input}:298    .text.get_string_from_64bit:00000034 $d
+    {standard input}:301    .text.transform_ValueMetaDataId_hex_to_string:00000000 $t
+    {standard input}:306    .text.transform_ValueMetaDataId_hex_to_string:00000000 transform_ValueMetaDataId_hex_to_string
+    {standard input}:417    .text.transform_ValueMetaDataId_hex_to_string:00000108 $d
+    {standard input}:421    .text.get_value_meta_data_id:00000000 $t
+    {standard input}:426    .text.get_value_meta_data_id:00000000 get_value_meta_data_id
+    {standard input}:453    .text.get_value_meta_data_id:00000034 $d
+                            *COM*:00000014 device_id_string
+    {standard input}:457    .text.decode_error_code:00000000 $t
+    {standard input}:462    .text.decode_error_code:00000000 decode_error_code
+    {standard input}:471    .text.decode_error_code:0000000a $d
+    {standard input}:541    .text.decode_error_code:00000068 $d
+                            *COM*:00000032 error_code_string
+                            *COM*:00000400 RxBuffer
+                            *COM*:00000001 request_send
+                            *COM*:00000002 recv_command_length
+                            *COM*:00000004 send_buffer
+                            *COM*:00000004 uart_data_count
+                            *COM*:00000004 Rxlen
+                            *COM*:00000004 RxPtr
+                            *COM*:00000001 ReceivedByte
+                            *COM*:00000001 USBHostState
+    {standard input}:484    .text.decode_error_code:00000017 $d
+    {standard input}:484    .text.decode_error_code:00000018 $t
+
+UNDEFINED SYMBOLS
+strlen
+__ctype_ptr__
+memset
+sprintf
+RTC_Time
+__aeabi_llsl
+strcat
+g_chipid
+calloc
+jsmn_parse
+strcpy

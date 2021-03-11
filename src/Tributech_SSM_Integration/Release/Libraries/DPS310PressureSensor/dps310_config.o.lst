@@ -1,0 +1,112 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "dps310_config.c"
+  16              	 .global registerBlocks
+  17              	 .global registers
+  18              	 .global config_registers
+  19              	 .section .data.config_registers,"aw",%progbits
+  22              	config_registers:
+  23 0000 07       	 .byte 7
+  24 0001 70       	 .byte 112
+  25 0002 04       	 .byte 4
+  26 0003 07       	 .byte 7
+  27 0004 07       	 .byte 7
+  28 0005 00       	 .byte 0
+  29 0006 06       	 .byte 6
+  30 0007 70       	 .byte 112
+  31 0008 04       	 .byte 4
+  32 0009 06       	 .byte 6
+  33 000a 07       	 .byte 7
+  34 000b 00       	 .byte 0
+  35 000c 08       	 .byte 8
+  36 000d 07       	 .byte 7
+  37 000e 00       	 .byte 0
+  38 000f 09       	 .byte 9
+  39 0010 02       	 .byte 2
+  40 0011 01       	 .byte 1
+  41 0012 08       	 .byte 8
+  42 0013 20       	 .byte 32
+  43 0014 05       	 .byte 5
+  44 0015 08       	 .byte 8
+  45 0016 10       	 .byte 16
+  46 0017 04       	 .byte 4
+  47 0018 0A       	 .byte 10
+  48 0019 04       	 .byte 4
+  49 001a 02       	 .byte 2
+  50 001b 0A       	 .byte 10
+  51 001c 02       	 .byte 2
+  52 001d 01       	 .byte 1
+  53 001e 0A       	 .byte 10
+  54 001f 01       	 .byte 1
+  55 0020 00       	 .byte 0
+  56 0021 00000000 	 .space 15
+  56      00000000 
+  56      00000000 
+  56      000000
+  57              	 .section .data.registerBlocks,"aw",%progbits
+  60              	registerBlocks:
+  61 0000 00       	 .byte 0
+  62 0001 03       	 .byte 3
+  63 0002 03       	 .byte 3
+  64 0003 03       	 .byte 3
+  65              	 .section .data.registers,"aw",%progbits
+  68              	registers:
+  69 0000 0D       	 .byte 13
+  70 0001 0F       	 .byte 15
+  71 0002 00       	 .byte 0
+  72 0003 0D       	 .byte 13
+  73 0004 F0       	 .byte -16
+  74 0005 04       	 .byte 4
+  75 0006 07       	 .byte 7
+  76 0007 80       	 .byte -128
+  77 0008 07       	 .byte 7
+  78 0009 28       	 .byte 40
+  79 000a 80       	 .byte -128
+  80 000b 07       	 .byte 7
+  81 000c 09       	 .byte 9
+  82 000d 08       	 .byte 8
+  83 000e 03       	 .byte 3
+  84 000f 09       	 .byte 9
+  85 0010 04       	 .byte 4
+  86 0011 02       	 .byte 2
+  87 0012 0C       	 .byte 12
+  88 0013 80       	 .byte -128
+  89 0014 07       	 .byte 7
+  90 0015 0B       	 .byte 11
+  91 0016 01       	 .byte 1
+  92 0017 00       	 .byte 0
+  93 0018 0B       	 .byte 11
+  94 0019 02       	 .byte 2
+  95 001a 01       	 .byte 1
+  96 001b 09       	 .byte 9
+  97 001c 80       	 .byte -128
+  98 001d 07       	 .byte 7
+  99 001e 09       	 .byte 9
+ 100 001f 70       	 .byte 112
+ 101 0020 04       	 .byte 4
+ 102 0021 00000000 	 .space 15
+ 102      00000000 
+ 102      00000000 
+ 102      000000
+ 103              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 dps310_config.c
+    {standard input}:60     .data.registerBlocks:00000000 registerBlocks
+    {standard input}:68     .data.registers:00000000 registers
+    {standard input}:22     .data.config_registers:00000000 config_registers
+    {standard input}:56     .data.config_registers:00000021 $d
+    {standard input}:102    .data.registers:00000021 $d
+
+NO UNDEFINED SYMBOLS

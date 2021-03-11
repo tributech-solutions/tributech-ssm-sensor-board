@@ -1,0 +1,400 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "USB_Host.c"
+  16              	 .section .text.CDC_USB_PortCb,"ax",%progbits
+  17              	 .align 1
+  18              	 .global CDC_USB_PortCb
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	CDC_USB_PortCb:
+  23              	 
+  24              	 
+  25 0000 8A07     	 lsls r2,r1,#30
+  26 0002 70B5     	 push {r4,r5,r6,lr}
+  27 0004 0E46     	 mov r6,r1
+  28 0006 13D5     	 bpl .L2
+  29 0008 0C4B     	 ldr r3,.L11
+  30 000a 0D4D     	 ldr r5,.L11+4
+  31 000c 4FF40072 	 mov r2,#512
+  32 0010 5A60     	 str r2,[r3,#4]
+  33 0012 0C4B     	 ldr r3,.L11+8
+  34 0014 A868     	 ldr r0,[r5,#8]
+  35 0016 1C6B     	 ldr r4,[r3,#48]
+  36 0018 A047     	 blx r4
+  37 001a E869     	 ldr r0,[r5,#28]
+  38 001c A047     	 blx r4
+  39 001e 286B     	 ldr r0,[r5,#48]
+  40 0020 A047     	 blx r4
+  41 0022 686C     	 ldr r0,[r5,#68]
+  42 0024 A047     	 blx r4
+  43 0026 084A     	 ldr r2,.L11+12
+  44 0028 0023     	 movs r3,#0
+  45 002a 1360     	 str r3,[r2]
+  46 002c 074A     	 ldr r2,.L11+16
+  47 002e 1360     	 str r3,[r2]
+  48              	.L2:
+  49 0030 7306     	 lsls r3,r6,#25
+  50 0032 42BF     	 ittt mi
+  51 0034 064B     	 ldrmi r3,.L11+20
+  52 0036 0122     	 movmi r2,#1
+  53 0038 1A60     	 strmi r2,[r3]
+  54 003a 70BD     	 pop {r4,r5,r6,pc}
+  55              	.L12:
+  56              	 .align 2
+  57              	.L11:
+  58 003c 00850248 	 .word 1208124672
+  59 0040 00000000 	 .word USBHost_Pipe_State
+  60 0044 00000000 	 .word Driver_USBH0
+  61 0048 00000000 	 .word USBH_VCOM_RX_cur_index
+  62 004c 00000000 	 .word USBH_VCOM_RX_prev_index
+  63 0050 00000000 	 .word .LANCHOR0
+  65              	 .section .text.usb_host_init,"ax",%progbits
+  66              	 .align 1
+  67              	 .global usb_host_init
+  68              	 .thumb
+  69              	 .thumb_func
+  71              	usb_host_init:
+  72              	 
+  73              	 
+  74 0000 10B5     	 push {r4,lr}
+  75 0002 0121     	 movs r1,#1
+  76 0004 4FF4FA70 	 mov r0,#500
+  77 0008 FFF7FEFF 	 bl calloc
+  78 000c 0A4B     	 ldr r3,.L14
+  79 000e 0B4C     	 ldr r4,.L14+4
+  80 0010 1860     	 str r0,[r3]
+  81 0012 0121     	 movs r1,#1
+  82 0014 4FF48060 	 mov r0,#1024
+  83 0018 FFF7FEFF 	 bl calloc
+  84 001c 084B     	 ldr r3,.L14+8
+  85 001e 1860     	 str r0,[r3]
+  86 0020 0848     	 ldr r0,.L14+12
+  87 0022 FFF7FEFF 	 bl USB_Init_Host
+  88 0026 2046     	 mov r0,r4
+  89 0028 0921     	 movs r1,#9
+  90 002a 8022     	 movs r2,#128
+  91 002c FFF7FEFF 	 bl XMC_GPIO_SetMode
+  92 0030 4FF40073 	 mov r3,#512
+  93 0034 6360     	 str r3,[r4,#4]
+  94 0036 10BD     	 pop {r4,pc}
+  95              	.L15:
+  96              	 .align 2
+  97              	.L14:
+  98 0038 00000000 	 .word send_buffer
+  99 003c 00850248 	 .word 1208124672
+ 100 0040 00000000 	 .word recv_command
+ 101 0044 00000000 	 .word .LANCHOR1
+ 103              	 .section .text.receive_response,"ax",%progbits
+ 104              	 .align 1
+ 105              	 .global receive_response
+ 106              	 .thumb
+ 107              	 .thumb_func
+ 109              	receive_response:
+ 110              	 
+ 111              	 
+ 112 0000 F8B5     	 push {r3,r4,r5,r6,r7,lr}
+ 113 0002 2B4C     	 ldr r4,.L40
+ 114 0004 2B4D     	 ldr r5,.L40+4
+ 115 0006 0023     	 movs r3,#0
+ 116 0008 2360     	 str r3,[r4]
+ 117 000a 2B4B     	 ldr r3,.L40+8
+ 118 000c 2B60     	 str r3,[r5]
+ 119              	.L25:
+ 120 000e 2B4E     	 ldr r6,.L40+12
+ 121 0010 FF23     	 movs r3,#255
+ 122 0012 3046     	 mov r0,r6
+ 123 0014 3370     	 strb r3,[r6]
+ 124 0016 FFF7FEFF 	 bl USBVCH_ReceiveByte
+ 125 001a 3278     	 ldrb r2,[r6]
+ 126 001c 53B2     	 sxtb r3,r2
+ 127 001e 591C     	 adds r1,r3,#1
+ 128 0020 04D1     	 bne .L17
+ 129              	.L22:
+ 130 0022 96F90030 	 ldrsb r3,[r6]
+ 131 0026 0A2B     	 cmp r3,#10
+ 132 0028 F1D1     	 bne .L25
+ 133 002a 12E0     	 b .L39
+ 134              	.L17:
+ 135 002c 0A2B     	 cmp r3,#10
+ 136 002e 01D0     	 beq .L20
+ 137 0030 0D2B     	 cmp r3,#13
+ 138 0032 02D1     	 bne .L21
+ 139              	.L20:
+ 140 0034 2368     	 ldr r3,[r4]
+ 141 0036 002B     	 cmp r3,#0
+ 142 0038 F3D0     	 beq .L22
+ 143              	.L21:
+ 144 003a 2B68     	 ldr r3,[r5]
+ 145 003c 1A70     	 strb r2,[r3]
+ 146 003e 2368     	 ldr r3,[r4]
+ 147 0040 2A68     	 ldr r2,[r5]
+ 148 0042 0133     	 adds r3,r3,#1
+ 149 0044 0132     	 adds r2,r2,#1
+ 150 0046 B3F5806F 	 cmp r3,#1024
+ 151 004a 2360     	 str r3,[r4]
+ 152 004c 2A60     	 str r2,[r5]
+ 153 004e E8D1     	 bne .L22
+ 154 0050 14E0     	 b .L23
+ 155              	.L39:
+ 156 0052 2368     	 ldr r3,[r4]
+ 157 0054 002B     	 cmp r3,#0
+ 158 0056 DAD0     	 beq .L25
+ 159 0058 194B     	 ldr r3,.L40+16
+ 160 005a 174E     	 ldr r6,.L40+8
+ 161 005c 1868     	 ldr r0,[r3]
+ 162 005e 3146     	 mov r1,r6
+ 163 0060 FFF7FEFF 	 bl strcmp
+ 164 0064 C7B2     	 uxtb r7,r0
+ 165 0066 4FB9     	 cbnz r7,.L23
+ 166 0068 3046     	 mov r0,r6
+ 167 006a 3946     	 mov r1,r7
+ 168 006c 4FF48062 	 mov r2,#1024
+ 169 0070 FFF7FEFF 	 bl memset
+ 170 0074 0E4B     	 ldr r3,.L40
+ 171 0076 2E60     	 str r6,[r5]
+ 172 0078 1F60     	 str r7,[r3]
+ 173 007a C8E7     	 b .L25
+ 174              	.L23:
+ 175 007c 2368     	 ldr r3,[r4]
+ 176 007e ABB1     	 cbz r3,.L26
+ 177 0080 104C     	 ldr r4,.L40+20
+ 178 0082 114D     	 ldr r5,.L40+24
+ 179 0084 2068     	 ldr r0,[r4]
+ 180 0086 2B80     	 strh r3,[r5]
+ 181 0088 0021     	 movs r1,#0
+ 182 008a 4FF48062 	 mov r2,#1024
+ 183 008e FFF7FEFF 	 bl memset
+ 184 0092 074B     	 ldr r3,.L40
+ 185 0094 2068     	 ldr r0,[r4]
+ 186 0096 1A68     	 ldr r2,[r3]
+ 187 0098 0749     	 ldr r1,.L40+8
+ 188 009a FFF7FEFF 	 bl memcpy
+ 189 009e 2988     	 ldrh r1,[r5]
+ 190 00a0 2068     	 ldr r0,[r4]
+ 191 00a2 0239     	 subs r1,r1,#2
+ 192 00a4 FFF7FEFF 	 bl UART_Transmit
+ 193 00a8 0020     	 movs r0,#0
+ 194 00aa F8BD     	 pop {r3,r4,r5,r6,r7,pc}
+ 195              	.L26:
+ 196 00ac 0120     	 movs r0,#1
+ 197 00ae F8BD     	 pop {r3,r4,r5,r6,r7,pc}
+ 198              	.L41:
+ 199              	 .align 2
+ 200              	.L40:
+ 201 00b0 00000000 	 .word Rxlen
+ 202 00b4 00000000 	 .word RxPtr
+ 203 00b8 00000000 	 .word RxBuffer
+ 204 00bc 00000000 	 .word ReceivedByte
+ 205 00c0 00000000 	 .word send_buffer
+ 206 00c4 00000000 	 .word recv_command
+ 207 00c8 00000000 	 .word recv_command_length
+ 209              	 .section .text.usb_host_communication,"ax",%progbits
+ 210              	 .align 1
+ 211              	 .global usb_host_communication
+ 212              	 .thumb
+ 213              	 .thumb_func
+ 215              	usb_host_communication:
+ 216              	 
+ 217              	 
+ 218 0000 10B5     	 push {r4,lr}
+ 219 0002 0D4C     	 ldr r4,.L48
+ 220 0004 2368     	 ldr r3,[r4]
+ 221 0006 33B1     	 cbz r3,.L43
+ 222 0008 1420     	 movs r0,#20
+ 223 000a FFF7FEFF 	 bl XMC_USBH_osDelay
+ 224 000e FFF7FEFF 	 bl XMC_USBH_TurnOffResumeBit
+ 225 0012 0023     	 movs r3,#0
+ 226 0014 2360     	 str r3,[r4]
+ 227              	.L43:
+ 228 0016 094C     	 ldr r4,.L48+4
+ 229 0018 2046     	 mov r0,r4
+ 230 001a FFF7FEFF 	 bl USB_GetHostState
+ 231 001e 2378     	 ldrb r3,[r4]
+ 232 0020 0B2B     	 cmp r3,#11
+ 233 0022 02BF     	 ittt eq
+ 234 0024 064B     	 ldreq r3,.L48+8
+ 235 0026 4FF00072 	 moveq r2,#33554432
+ 236 002a 5A60     	 streq r2,[r3,#4]
+ 237 002c FFF7FEFF 	 bl USBVCH_Process
+ 238 0030 BDE81040 	 pop {r4,lr}
+ 239 0034 FFF7FEBF 	 b USB_USBTask
+ 240              	.L49:
+ 241              	 .align 2
+ 242              	.L48:
+ 243 0038 00000000 	 .word .LANCHOR0
+ 244 003c 00000000 	 .word USBHostState
+ 245 0040 00850248 	 .word 1208124672
+ 247              	 .section .text.CDC_TransferCompletion_Handle,"ax",%progbits
+ 248              	 .align 1
+ 249              	 .global CDC_TransferCompletion_Handle
+ 250              	 .thumb
+ 251              	 .thumb_func
+ 253              	CDC_TransferCompletion_Handle:
+ 254              	 
+ 255              	 
+ 256              	 
+ 257 0000 7047     	 bx lr
+ 259              	 .section .text.ClockSetup,"ax",%progbits
+ 260              	 .align 1
+ 261              	 .global ClockSetup
+ 262              	 .thumb
+ 263              	 .thumb_func
+ 265              	ClockSetup:
+ 266              	 
+ 267              	 
+ 268 0000 08B5     	 push {r3,lr}
+ 269 0002 0948     	 ldr r0,.L52
+ 270 0004 FFF7FEFF 	 bl XMC_SCU_CLOCK_Init
+ 271 0008 0020     	 movs r0,#0
+ 272 000a FFF7FEFF 	 bl XMC_SCU_HIB_SetRtcClockSource
+ 273 000e 0020     	 movs r0,#0
+ 274 0010 FFF7FEFF 	 bl XMC_SCU_CLOCK_SetUsbClockSource
+ 275 0014 0420     	 movs r0,#4
+ 276 0016 FFF7FEFF 	 bl XMC_SCU_CLOCK_SetUsbClockDivider
+ 277 001a 0120     	 movs r0,#1
+ 278 001c 2021     	 movs r1,#32
+ 279 001e BDE80840 	 pop {r3,lr}
+ 280 0022 FFF7FEBF 	 b XMC_SCU_CLOCK_StartUsbPll
+ 281              	.L53:
+ 282 0026 00BF     	 .align 2
+ 283              	.L52:
+ 284 0028 00000000 	 .word .LANCHOR2
+ 286              	 .global USBH_RemoteWkUp_Detected
+ 287              	 .global USBVCH_CB
+ 288              	 .global CLOCK_XMC4_0_CONFIG
+ 289              	 .comm Counter,4,4
+ 290              	 .comm error_code_string,50,1
+ 291              	 .comm transaction_nr_string,7,1
+ 292              	 .comm transaction_nr_dec,4,4
+ 293              	 .comm device_id_string,20,1
+ 294              	 .comm device_id_hex,8,8
+ 295              	 .comm t,4,4
+ 296              	 .comm p,12,4
+ 297              	 .comm RxBuffer,1024,1
+ 298              	 .comm request_send,1,1
+ 299              	 .comm recv_command_length,2,2
+ 300              	 .comm recv_command,4,4
+ 301              	 .comm send_buffer,4,4
+ 302              	 .comm uart_data_count,4,4
+ 303              	 .comm Rxlen,4,4
+ 304              	 .comm RxPtr,4,4
+ 305              	 .comm ReceivedByte,1,1
+ 306              	 .comm USBHostState,1,1
+ 307              	 .section .data.USBVCH_CB,"aw",%progbits
+ 308              	 .align 2
+ 309              	 .set .LANCHOR1,.+0
+ 312              	USBVCH_CB:
+ 313 0000 00000000 	 .word CDC_USB_PortCb
+ 314 0004 00000000 	 .word USBH_VCOM_Rx_Data_Handler
+ 315 0008 00000000 	 .space 4
+ 316 000c 00000000 	 .word USBVCH_Pipe_BytesInPipe
+ 317 0010 00000000 	 .word USBVCH_Pipe_Read_8
+ 318 0014 00000000 	 .word USBVCH_Pipe_IsINReceived
+ 319              	 .section .rodata.CLOCK_XMC4_0_CONFIG,"a",%progbits
+ 320              	 .align 2
+ 321              	 .set .LANCHOR2,.+0
+ 324              	CLOCK_XMC4_0_CONFIG:
+ 325 0000 50       	 .byte 80
+ 326 0001 02       	 .byte 2
+ 327 0002 04       	 .byte 4
+ 328 0003 01       	 .byte 1
+ 329 0004 0000     	 .short 0
+ 330 0006 01       	 .byte 1
+ 331 0007 00       	 .byte 0
+ 332 0008 00       	 .byte 0
+ 333 0009 00       	 .byte 0
+ 334 000a 0000     	 .space 2
+ 335 000c 00000100 	 .word 65536
+ 336 0010 01       	 .byte 1
+ 337 0011 01       	 .byte 1
+ 338 0012 00       	 .space 1
+ 339 0013 01       	 .byte 1
+ 340              	 .section .bss.USBH_RemoteWkUp_Detected,"aw",%nobits
+ 341              	 .align 2
+ 342              	 .set .LANCHOR0,.+0
+ 345              	USBH_RemoteWkUp_Detected:
+ 346 0000 00000000 	 .space 4
+ 347              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 USB_Host.c
+    {standard input}:17     .text.CDC_USB_PortCb:00000000 $t
+    {standard input}:22     .text.CDC_USB_PortCb:00000000 CDC_USB_PortCb
+    {standard input}:58     .text.CDC_USB_PortCb:0000003c $d
+    {standard input}:66     .text.usb_host_init:00000000 $t
+    {standard input}:71     .text.usb_host_init:00000000 usb_host_init
+    {standard input}:98     .text.usb_host_init:00000038 $d
+                            *COM*:00000004 send_buffer
+                            *COM*:00000004 recv_command
+    {standard input}:104    .text.receive_response:00000000 $t
+    {standard input}:109    .text.receive_response:00000000 receive_response
+    {standard input}:201    .text.receive_response:000000b0 $d
+                            *COM*:00000004 Rxlen
+                            *COM*:00000004 RxPtr
+                            *COM*:00000400 RxBuffer
+                            *COM*:00000001 ReceivedByte
+                            *COM*:00000002 recv_command_length
+    {standard input}:210    .text.usb_host_communication:00000000 $t
+    {standard input}:215    .text.usb_host_communication:00000000 usb_host_communication
+    {standard input}:243    .text.usb_host_communication:00000038 $d
+                            *COM*:00000001 USBHostState
+    {standard input}:248    .text.CDC_TransferCompletion_Handle:00000000 $t
+    {standard input}:253    .text.CDC_TransferCompletion_Handle:00000000 CDC_TransferCompletion_Handle
+    {standard input}:260    .text.ClockSetup:00000000 $t
+    {standard input}:265    .text.ClockSetup:00000000 ClockSetup
+    {standard input}:284    .text.ClockSetup:00000028 $d
+    {standard input}:345    .bss.USBH_RemoteWkUp_Detected:00000000 USBH_RemoteWkUp_Detected
+    {standard input}:312    .data.USBVCH_CB:00000000 USBVCH_CB
+    {standard input}:324    .rodata.CLOCK_XMC4_0_CONFIG:00000000 CLOCK_XMC4_0_CONFIG
+                            *COM*:00000004 Counter
+                            *COM*:00000032 error_code_string
+                            *COM*:00000007 transaction_nr_string
+                            *COM*:00000004 transaction_nr_dec
+                            *COM*:00000014 device_id_string
+                            *COM*:00000008 device_id_hex
+                            *COM*:00000004 t
+                            *COM*:0000000c p
+                            *COM*:00000001 request_send
+                            *COM*:00000004 uart_data_count
+    {standard input}:308    .data.USBVCH_CB:00000000 $d
+    {standard input}:320    .rodata.CLOCK_XMC4_0_CONFIG:00000000 $d
+    {standard input}:341    .bss.USBH_RemoteWkUp_Detected:00000000 $d
+
+UNDEFINED SYMBOLS
+USBHost_Pipe_State
+Driver_USBH0
+USBH_VCOM_RX_cur_index
+USBH_VCOM_RX_prev_index
+calloc
+USB_Init_Host
+XMC_GPIO_SetMode
+USBVCH_ReceiveByte
+strcmp
+memset
+memcpy
+UART_Transmit
+XMC_USBH_osDelay
+XMC_USBH_TurnOffResumeBit
+USB_GetHostState
+USBVCH_Process
+USB_USBTask
+XMC_SCU_CLOCK_Init
+XMC_SCU_HIB_SetRtcClockSource
+XMC_SCU_CLOCK_SetUsbClockSource
+XMC_SCU_CLOCK_SetUsbClockDivider
+XMC_SCU_CLOCK_StartUsbPll
+USBH_VCOM_Rx_Data_Handler
+USBVCH_Pipe_BytesInPipe
+USBVCH_Pipe_Read_8
+USBVCH_Pipe_IsINReceived

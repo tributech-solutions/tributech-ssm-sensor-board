@@ -1,0 +1,64 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "watchdog.c"
+  16              	 .section .text.WATCHDOG_GetAppVersion,"ax",%progbits
+  17              	 .align 1
+  18              	 .global WATCHDOG_GetAppVersion
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	WATCHDOG_GetAppVersion:
+  23              	 
+  24              	 
+  25              	 
+  26 0000 0023     	 movs r3,#0
+  27 0002 1846     	 mov r0,r3
+  28 0004 0422     	 movs r2,#4
+  29 0006 62F30700 	 bfi r0,r2,#0,#8
+  30 000a 63F30F20 	 bfi r0,r3,#8,#8
+  31 000e 0E23     	 movs r3,#14
+  32 0010 63F31740 	 bfi r0,r3,#16,#8
+  33 0014 82B0     	 sub sp,sp,#8
+  34 0016 02B0     	 add sp,sp,#8
+  35              	 
+  36 0018 7047     	 bx lr
+  38              	 .section .text.WATCHDOG_Init,"ax",%progbits
+  39              	 .align 1
+  40              	 .global WATCHDOG_Init
+  41              	 .thumb
+  42              	 .thumb_func
+  44              	WATCHDOG_Init:
+  45              	 
+  46              	 
+  47 0000 0379     	 ldrb r3,[r0,#4]
+  48 0002 10B5     	 push {r4,lr}
+  49 0004 0446     	 mov r4,r0
+  50 0006 23B9     	 cbnz r3,.L3
+  51 0008 0068     	 ldr r0,[r0]
+  52 000a FFF7FEFF 	 bl XMC_WDT_Init
+  53 000e 0123     	 movs r3,#1
+  54 0010 2371     	 strb r3,[r4,#4]
+  55              	.L3:
+  56 0012 0020     	 movs r0,#0
+  57 0014 10BD     	 pop {r4,pc}
+  59              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 watchdog.c
+    {standard input}:17     .text.WATCHDOG_GetAppVersion:00000000 $t
+    {standard input}:22     .text.WATCHDOG_GetAppVersion:00000000 WATCHDOG_GetAppVersion
+    {standard input}:39     .text.WATCHDOG_Init:00000000 $t
+    {standard input}:44     .text.WATCHDOG_Init:00000000 WATCHDOG_Init
+
+UNDEFINED SYMBOLS
+XMC_WDT_Init

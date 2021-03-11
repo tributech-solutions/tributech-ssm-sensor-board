@@ -1,0 +1,76 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "xmc4_eru.c"
+  16              	 .section .text.XMC_ERU_Enable,"ax",%progbits
+  17              	 .align 1
+  18              	 .global XMC_ERU_Enable
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	XMC_ERU_Enable:
+  23              	 
+  24              	 
+  25 0000 08B5     	 push {r3,lr}
+  26 0002 074B     	 ldr r3,.L4
+  27 0004 9842     	 cmp r0,r3
+  28 0006 09D1     	 bne .L1
+  29 0008 4FF48030 	 mov r0,#65536
+  30 000c FFF7FEFF 	 bl XMC_SCU_CLOCK_UngatePeripheralClock
+  31 0010 4FF48030 	 mov r0,#65536
+  32 0014 BDE80840 	 pop {r3,lr}
+  33 0018 FFF7FEBF 	 b XMC_SCU_RESET_DeassertPeripheralReset
+  34              	.L1:
+  35 001c 08BD     	 pop {r3,pc}
+  36              	.L5:
+  37 001e 00BF     	 .align 2
+  38              	.L4:
+  39 0020 00400440 	 .word 1074020352
+  41              	 .section .text.XMC_ERU_Disable,"ax",%progbits
+  42              	 .align 1
+  43              	 .global XMC_ERU_Disable
+  44              	 .thumb
+  45              	 .thumb_func
+  47              	XMC_ERU_Disable:
+  48              	 
+  49              	 
+  50 0000 08B5     	 push {r3,lr}
+  51 0002 074B     	 ldr r3,.L8
+  52 0004 9842     	 cmp r0,r3
+  53 0006 09D1     	 bne .L6
+  54 0008 4FF48030 	 mov r0,#65536
+  55 000c FFF7FEFF 	 bl XMC_SCU_RESET_AssertPeripheralReset
+  56 0010 4FF48030 	 mov r0,#65536
+  57 0014 BDE80840 	 pop {r3,lr}
+  58 0018 FFF7FEBF 	 b XMC_SCU_CLOCK_GatePeripheralClock
+  59              	.L6:
+  60 001c 08BD     	 pop {r3,pc}
+  61              	.L9:
+  62 001e 00BF     	 .align 2
+  63              	.L8:
+  64 0020 00400440 	 .word 1074020352
+  66              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc4_eru.c
+    {standard input}:17     .text.XMC_ERU_Enable:00000000 $t
+    {standard input}:22     .text.XMC_ERU_Enable:00000000 XMC_ERU_Enable
+    {standard input}:39     .text.XMC_ERU_Enable:00000020 $d
+    {standard input}:42     .text.XMC_ERU_Disable:00000000 $t
+    {standard input}:47     .text.XMC_ERU_Disable:00000000 XMC_ERU_Disable
+    {standard input}:64     .text.XMC_ERU_Disable:00000020 $d
+
+UNDEFINED SYMBOLS
+XMC_SCU_CLOCK_UngatePeripheralClock
+XMC_SCU_RESET_DeassertPeripheralReset
+XMC_SCU_RESET_AssertPeripheralReset
+XMC_SCU_CLOCK_GatePeripheralClock

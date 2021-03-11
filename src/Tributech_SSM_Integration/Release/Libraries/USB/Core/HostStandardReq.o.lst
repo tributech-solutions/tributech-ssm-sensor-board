@@ -1,0 +1,297 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "HostStandardReq.c"
+  16              	 .section .text.USB_Host_SendControlRequest,"ax",%progbits
+  17              	 .align 1
+  18              	 .global USB_Host_SendControlRequest
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	USB_Host_SendControlRequest:
+  23              	 
+  24              	 
+  25 0000 38B5     	 push {r3,r4,r5,lr}
+  26 0002 0446     	 mov r4,r0
+  27 0004 FFF7FEFF 	 bl USB_Host_IsBusSuspended
+  28 0008 0546     	 mov r5,r0
+  29 000a 2046     	 mov r0,r4
+  30 000c FFF7FEFF 	 bl USB_Host_SendControlRequest_PRV
+  31 0010 0446     	 mov r4,r0
+  32 0012 FFF7FEFF 	 bl Pipe_Freeze
+  33 0016 0DB1     	 cbz r5,.L2
+  34 0018 FFF7FEFF 	 bl USB_Host_SuspendBus
+  35              	.L2:
+  36 001c 0020     	 movs r0,#0
+  37 001e FFF7FEFF 	 bl Pipe_ResetPipe
+  38 0022 2046     	 mov r0,r4
+  39 0024 38BD     	 pop {r3,r4,r5,pc}
+  41              	 .section .text.USB_Host_SetDeviceConfiguration,"ax",%progbits
+  42              	 .align 1
+  43              	 .global USB_Host_SetDeviceConfiguration
+  44              	 .thumb
+  45              	 .thumb_func
+  47              	USB_Host_SetDeviceConfiguration:
+  48              	 
+  49              	 
+  50 0000 38B5     	 push {r3,r4,r5,lr}
+  51 0002 0D4B     	 ldr r3,.L11
+  52 0004 0024     	 movs r4,#0
+  53 0006 0922     	 movs r2,#9
+  54 0008 5880     	 strh r0,[r3,#2]
+  55 000a 0546     	 mov r5,r0
+  56 000c 2046     	 mov r0,r4
+  57 000e 1C70     	 strb r4,[r3]
+  58 0010 5A70     	 strb r2,[r3,#1]
+  59 0012 1C71     	 strb r4,[r3,#4]
+  60 0014 5C71     	 strb r4,[r3,#5]
+  61 0016 9C71     	 strb r4,[r3,#6]
+  62 0018 DC71     	 strb r4,[r3,#7]
+  63 001a FFF7FEFF 	 bl Pipe_SelectPipe
+  64 001e 2046     	 mov r0,r4
+  65 0020 FFF7FEFF 	 bl USB_Host_SendControlRequest
+  66 0024 38B9     	 cbnz r0,.L8
+  67 0026 054B     	 ldr r3,.L11+4
+  68 0028 A542     	 cmp r5,r4
+  69 002a 1D70     	 strb r5,[r3]
+  70 002c 044B     	 ldr r3,.L11+8
+  71 002e 14BF     	 ite ne
+  72 0030 0B22     	 movne r2,#11
+  73 0032 0A22     	 moveq r2,#10
+  74 0034 1A70     	 strb r2,[r3]
+  75              	.L8:
+  76 0036 38BD     	 pop {r3,r4,r5,pc}
+  77              	.L12:
+  78              	 .align 2
+  79              	.L11:
+  80 0038 00000000 	 .word USB_ControlRequest
+  81 003c 00000000 	 .word USB_Host_ConfigurationNumber
+  82 0040 00000000 	 .word USB_HostState
+  84              	 .section .text.USB_Host_GetDeviceConfiguration,"ax",%progbits
+  85              	 .align 1
+  86              	 .global USB_Host_GetDeviceConfiguration
+  87              	 .thumb
+  88              	 .thumb_func
+  90              	USB_Host_GetDeviceConfiguration:
+  91              	 
+  92              	 
+  93 0000 10B5     	 push {r4,lr}
+  94 0002 0749     	 ldr r1,.L14
+  95 0004 074A     	 ldr r2,.L14+4
+  96 0006 0B68     	 ldr r3,[r1]
+  97 0008 1360     	 str r3,[r2]
+  98 000a 0446     	 mov r4,r0
+  99 000c 4B68     	 ldr r3,[r1,#4]
+ 100 000e 5360     	 str r3,[r2,#4]
+ 101 0010 0020     	 movs r0,#0
+ 102 0012 FFF7FEFF 	 bl Pipe_SelectPipe
+ 103 0016 2046     	 mov r0,r4
+ 104 0018 BDE81040 	 pop {r4,lr}
+ 105 001c FFF7FEBF 	 b USB_Host_SendControlRequest
+ 106              	.L15:
+ 107              	 .align 2
+ 108              	.L14:
+ 109 0020 00000000 	 .word .LANCHOR0
+ 110 0024 00000000 	 .word USB_ControlRequest
+ 112              	 .section .text.USB_Host_GetDescriptor,"ax",%progbits
+ 113              	 .align 1
+ 114              	 .global USB_Host_GetDescriptor
+ 115              	 .thumb
+ 116              	 .thumb_func
+ 118              	USB_Host_GetDescriptor:
+ 119              	 
+ 120              	 
+ 121 0000 38B5     	 push {r3,r4,r5,lr}
+ 122 0002 0A4C     	 ldr r4,.L17
+ 123 0004 1546     	 mov r5,r2
+ 124 0006 8022     	 movs r2,#128
+ 125 0008 2270     	 strb r2,[r4]
+ 126 000a 41EA0021 	 orr r1,r1,r0,lsl#8
+ 127 000e 0622     	 movs r2,#6
+ 128 0010 0020     	 movs r0,#0
+ 129 0012 2071     	 strb r0,[r4,#4]
+ 130 0014 6071     	 strb r0,[r4,#5]
+ 131 0016 6270     	 strb r2,[r4,#1]
+ 132 0018 6180     	 strh r1,[r4,#2]
+ 133 001a E380     	 strh r3,[r4,#6]
+ 134 001c FFF7FEFF 	 bl Pipe_SelectPipe
+ 135 0020 2846     	 mov r0,r5
+ 136 0022 BDE83840 	 pop {r3,r4,r5,lr}
+ 137 0026 FFF7FEBF 	 b USB_Host_SendControlRequest
+ 138              	.L18:
+ 139 002a 00BF     	 .align 2
+ 140              	.L17:
+ 141 002c 00000000 	 .word USB_ControlRequest
+ 143              	 .section .text.USB_Host_GetDeviceStatus,"ax",%progbits
+ 144              	 .align 1
+ 145              	 .global USB_Host_GetDeviceStatus
+ 146              	 .thumb
+ 147              	 .thumb_func
+ 149              	USB_Host_GetDeviceStatus:
+ 150              	 
+ 151              	 
+ 152 0000 10B5     	 push {r4,lr}
+ 153 0002 094B     	 ldr r3,.L20
+ 154 0004 0446     	 mov r4,r0
+ 155 0006 8022     	 movs r2,#128
+ 156 0008 0020     	 movs r0,#0
+ 157 000a 5870     	 strb r0,[r3,#1]
+ 158 000c 9870     	 strb r0,[r3,#2]
+ 159 000e D870     	 strb r0,[r3,#3]
+ 160 0010 1871     	 strb r0,[r3,#4]
+ 161 0012 5871     	 strb r0,[r3,#5]
+ 162 0014 9871     	 strb r0,[r3,#6]
+ 163 0016 D871     	 strb r0,[r3,#7]
+ 164 0018 1A70     	 strb r2,[r3]
+ 165 001a FFF7FEFF 	 bl Pipe_SelectPipe
+ 166 001e 2046     	 mov r0,r4
+ 167 0020 BDE81040 	 pop {r4,lr}
+ 168 0024 FFF7FEBF 	 b USB_Host_SendControlRequest
+ 169              	.L21:
+ 170              	 .align 2
+ 171              	.L20:
+ 172 0028 00000000 	 .word USB_ControlRequest
+ 174              	 .section .text.USB_Host_ClearEndpointStall,"ax",%progbits
+ 175              	 .align 1
+ 176              	 .global USB_Host_ClearEndpointStall
+ 177              	 .thumb
+ 178              	 .thumb_func
+ 180              	USB_Host_ClearEndpointStall:
+ 181              	 
+ 182              	 
+ 183 0000 10B5     	 push {r4,lr}
+ 184 0002 094B     	 ldr r3,.L23
+ 185 0004 0024     	 movs r4,#0
+ 186 0006 0222     	 movs r2,#2
+ 187 0008 1A70     	 strb r2,[r3]
+ 188 000a 9880     	 strh r0,[r3,#4]
+ 189 000c 0122     	 movs r2,#1
+ 190 000e 2046     	 mov r0,r4
+ 191 0010 9C70     	 strb r4,[r3,#2]
+ 192 0012 DC70     	 strb r4,[r3,#3]
+ 193 0014 9C71     	 strb r4,[r3,#6]
+ 194 0016 DC71     	 strb r4,[r3,#7]
+ 195 0018 5A70     	 strb r2,[r3,#1]
+ 196 001a FFF7FEFF 	 bl Pipe_SelectPipe
+ 197 001e 2046     	 mov r0,r4
+ 198 0020 BDE81040 	 pop {r4,lr}
+ 199 0024 FFF7FEBF 	 b USB_Host_SendControlRequest
+ 200              	.L24:
+ 201              	 .align 2
+ 202              	.L23:
+ 203 0028 00000000 	 .word USB_ControlRequest
+ 205              	 .section .text.USB_Host_SetInterfaceAltSetting,"ax",%progbits
+ 206              	 .align 1
+ 207              	 .global USB_Host_SetInterfaceAltSetting
+ 208              	 .thumb
+ 209              	 .thumb_func
+ 211              	USB_Host_SetInterfaceAltSetting:
+ 212              	 
+ 213              	 
+ 214 0000 10B5     	 push {r4,lr}
+ 215 0002 094B     	 ldr r3,.L26
+ 216 0004 0024     	 movs r4,#0
+ 217 0006 0122     	 movs r2,#1
+ 218 0008 1A70     	 strb r2,[r3]
+ 219 000a 9880     	 strh r0,[r3,#4]
+ 220 000c 0B22     	 movs r2,#11
+ 221 000e 2046     	 mov r0,r4
+ 222 0010 9C71     	 strb r4,[r3,#6]
+ 223 0012 DC71     	 strb r4,[r3,#7]
+ 224 0014 5A70     	 strb r2,[r3,#1]
+ 225 0016 5980     	 strh r1,[r3,#2]
+ 226 0018 FFF7FEFF 	 bl Pipe_SelectPipe
+ 227 001c 2046     	 mov r0,r4
+ 228 001e BDE81040 	 pop {r4,lr}
+ 229 0022 FFF7FEBF 	 b USB_Host_SendControlRequest
+ 230              	.L27:
+ 231 0026 00BF     	 .align 2
+ 232              	.L26:
+ 233 0028 00000000 	 .word USB_ControlRequest
+ 235              	 .section .text.USB_Host_GetInterfaceAltSetting,"ax",%progbits
+ 236              	 .align 1
+ 237              	 .global USB_Host_GetInterfaceAltSetting
+ 238              	 .thumb
+ 239              	 .thumb_func
+ 241              	USB_Host_GetInterfaceAltSetting:
+ 242              	 
+ 243              	 
+ 244 0000 10B5     	 push {r4,lr}
+ 245 0002 0A4B     	 ldr r3,.L29
+ 246 0004 8122     	 movs r2,#129
+ 247 0006 1A70     	 strb r2,[r3]
+ 248 0008 0A22     	 movs r2,#10
+ 249 000a 5A70     	 strb r2,[r3,#1]
+ 250 000c 0022     	 movs r2,#0
+ 251 000e 0C46     	 mov r4,r1
+ 252 0010 9880     	 strh r0,[r3,#4]
+ 253 0012 0121     	 movs r1,#1
+ 254 0014 1046     	 mov r0,r2
+ 255 0016 9A70     	 strb r2,[r3,#2]
+ 256 0018 DA70     	 strb r2,[r3,#3]
+ 257 001a 9971     	 strb r1,[r3,#6]
+ 258 001c DA71     	 strb r2,[r3,#7]
+ 259 001e FFF7FEFF 	 bl Pipe_SelectPipe
+ 260 0022 2046     	 mov r0,r4
+ 261 0024 BDE81040 	 pop {r4,lr}
+ 262 0028 FFF7FEBF 	 b USB_Host_SendControlRequest
+ 263              	.L30:
+ 264              	 .align 2
+ 265              	.L29:
+ 266 002c 00000000 	 .word USB_ControlRequest
+ 268              	 .comm USB_Host_ConfigurationNumber,1,1
+ 269              	 .section .rodata
+ 270              	 .set .LANCHOR0,.+0
+ 271              	.LC0:
+ 272 0000 80       	 .byte -128
+ 273 0001 08       	 .byte 8
+ 274 0002 0000     	 .2byte 0
+ 275 0004 0000     	 .2byte 0
+ 276 0006 0100     	 .2byte 1
+ 277              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 HostStandardReq.c
+    {standard input}:17     .text.USB_Host_SendControlRequest:00000000 $t
+    {standard input}:22     .text.USB_Host_SendControlRequest:00000000 USB_Host_SendControlRequest
+    {standard input}:42     .text.USB_Host_SetDeviceConfiguration:00000000 $t
+    {standard input}:47     .text.USB_Host_SetDeviceConfiguration:00000000 USB_Host_SetDeviceConfiguration
+    {standard input}:80     .text.USB_Host_SetDeviceConfiguration:00000038 $d
+                            *COM*:00000001 USB_Host_ConfigurationNumber
+    {standard input}:85     .text.USB_Host_GetDeviceConfiguration:00000000 $t
+    {standard input}:90     .text.USB_Host_GetDeviceConfiguration:00000000 USB_Host_GetDeviceConfiguration
+    {standard input}:109    .text.USB_Host_GetDeviceConfiguration:00000020 $d
+    {standard input}:113    .text.USB_Host_GetDescriptor:00000000 $t
+    {standard input}:118    .text.USB_Host_GetDescriptor:00000000 USB_Host_GetDescriptor
+    {standard input}:141    .text.USB_Host_GetDescriptor:0000002c $d
+    {standard input}:144    .text.USB_Host_GetDeviceStatus:00000000 $t
+    {standard input}:149    .text.USB_Host_GetDeviceStatus:00000000 USB_Host_GetDeviceStatus
+    {standard input}:172    .text.USB_Host_GetDeviceStatus:00000028 $d
+    {standard input}:175    .text.USB_Host_ClearEndpointStall:00000000 $t
+    {standard input}:180    .text.USB_Host_ClearEndpointStall:00000000 USB_Host_ClearEndpointStall
+    {standard input}:203    .text.USB_Host_ClearEndpointStall:00000028 $d
+    {standard input}:206    .text.USB_Host_SetInterfaceAltSetting:00000000 $t
+    {standard input}:211    .text.USB_Host_SetInterfaceAltSetting:00000000 USB_Host_SetInterfaceAltSetting
+    {standard input}:233    .text.USB_Host_SetInterfaceAltSetting:00000028 $d
+    {standard input}:236    .text.USB_Host_GetInterfaceAltSetting:00000000 $t
+    {standard input}:241    .text.USB_Host_GetInterfaceAltSetting:00000000 USB_Host_GetInterfaceAltSetting
+    {standard input}:266    .text.USB_Host_GetInterfaceAltSetting:0000002c $d
+
+UNDEFINED SYMBOLS
+USB_Host_IsBusSuspended
+USB_Host_SendControlRequest_PRV
+Pipe_Freeze
+USB_Host_SuspendBus
+Pipe_ResetPipe
+Pipe_SelectPipe
+USB_ControlRequest
+USB_HostState

@@ -1,0 +1,421 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "Tributech_SSM_API.c"
+  16              	 .section .text.get_id,"ax",%progbits
+  17              	 .align 1
+  18              	 .global get_id
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	get_id:
+  23              	 
+  24              	 
+  25 0000 2DE9F84F 	 push {r3,r4,r5,r6,r7,r8,r9,r10,fp,lr}
+  26 0004 374C     	 ldr r4,.L10
+  27 0006 384F     	 ldr r7,.L10+4
+  28 0008 2068     	 ldr r0,[r4]
+  29 000a 4FF4FA72 	 mov r2,#500
+  30 000e 0021     	 movs r1,#0
+  31 0010 FFF7FEFF 	 bl memset
+  32 0014 2068     	 ldr r0,[r4]
+  33 0016 3549     	 ldr r1,.L10+8
+  34 0018 FFF7FEFF 	 bl strcpy
+  35 001c 3449     	 ldr r1,.L10+12
+  36 001e 2068     	 ldr r0,[r4]
+  37 0020 FFF7FEFF 	 bl strcat
+  38 0024 2468     	 ldr r4,[r4]
+  39 0026 2046     	 mov r0,r4
+  40 0028 FFF7FEFF 	 bl strlen
+  41 002c 0022     	 movs r2,#0
+  42 002e C1B2     	 uxtb r1,r0
+  43 0030 2046     	 mov r0,r4
+  44 0032 FFF7FEFF 	 bl USBVCH_SendData
+  45 0036 0021     	 movs r1,#0
+  46 0038 4FF48062 	 mov r2,#1024
+  47 003c 3868     	 ldr r0,[r7]
+  48 003e FFF7FEFF 	 bl memset
+  49 0042 FFF7FEFF 	 bl receive_response
+  50 0046 0546     	 mov r5,r0
+  51 0048 0028     	 cmp r0,#0
+  52 004a 47D1     	 bne .L2
+  53 004c 3868     	 ldr r0,[r7]
+  54 004e FFF7FEFF 	 bl strlen
+  55 0052 80B2     	 uxth r0,r0
+  56 0054 FFF7FEFF 	 bl parse_response
+  57 0058 2C46     	 mov r4,r5
+  58 005a 8046     	 mov r8,r0
+  59              	.L3:
+  60 005c A3B2     	 uxth r3,r4
+  61 005e 4345     	 cmp r3,r8
+  62 0060 DFF89490 	 ldr r9,.L10+20
+  63 0064 36D2     	 bcs .L9
+  64 0066 23B2     	 sxth r3,r4
+  65 0068 1B01     	 lsls r3,r3,#4
+  66 006a D9F80010 	 ldr r1,[r9]
+  67 006e CA18     	 adds r2,r1,r3
+  68 0070 CB5C     	 ldrb r3,[r1,r3]
+  69 0072 032B     	 cmp r3,#3
+  70 0074 2BD1     	 bne .L4
+  71 0076 D2F804B0 	 ldr fp,[r2,#4]
+  72 007a 9668     	 ldr r6,[r2,#8]
+  73 007c CBEB0606 	 rsb r6,fp,r6
+  74 0080 F6B2     	 uxtb r6,r6
+  75 0082 0121     	 movs r1,#1
+  76 0084 701C     	 adds r0,r6,#1
+  77 0086 FFF7FEFF 	 bl calloc
+  78 008a 3968     	 ldr r1,[r7]
+  79 008c 3246     	 mov r2,r6
+  80 008e 5944     	 add r1,r1,fp
+  81 0090 8246     	 mov r10,r0
+  82 0092 FFF7FEFF 	 bl memcpy
+  83 0096 5046     	 mov r0,r10
+  84 0098 FFF7FEFF 	 bl to_lower_case
+  85 009c 1549     	 ldr r1,.L10+16
+  86 009e FFF7FEFF 	 bl strcmp
+  87 00a2 0146     	 mov r1,r0
+  88 00a4 80B9     	 cbnz r0,.L5
+  89 00a6 0134     	 adds r4,r4,#1
+  90 00a8 E4B2     	 uxtb r4,r4
+  91 00aa 2301     	 lsls r3,r4,#4
+  92 00ac D9F80020 	 ldr r2,[r9]
+  93 00b0 D618     	 adds r6,r2,r3
+  94 00b2 D35C     	 ldrb r3,[r2,r3]
+  95 00b4 042B     	 cmp r3,#4
+  96 00b6 07D1     	 bne .L5
+  97 00b8 0B4B     	 ldr r3,.L10+4
+  98 00ba 1868     	 ldr r0,[r3]
+  99 00bc 7368     	 ldr r3,[r6,#4]
+ 100 00be 0A46     	 mov r2,r1
+ 101 00c0 1844     	 add r0,r0,r3
+ 102 00c2 FFF7FEFF 	 bl strtol
+ 103 00c6 85B2     	 uxth r5,r0
+ 104              	.L5:
+ 105 00c8 5046     	 mov r0,r10
+ 106 00ca FFF7FEFF 	 bl free
+ 107              	.L4:
+ 108 00ce 0134     	 adds r4,r4,#1
+ 109 00d0 E4B2     	 uxtb r4,r4
+ 110 00d2 C3E7     	 b .L3
+ 111              	.L9:
+ 112 00d4 D9F80000 	 ldr r0,[r9]
+ 113 00d8 FFF7FEFF 	 bl free
+ 114              	.L2:
+ 115 00dc A8B2     	 uxth r0,r5
+ 116 00de BDE8F88F 	 pop {r3,r4,r5,r6,r7,r8,r9,r10,fp,pc}
+ 117              	.L11:
+ 118 00e2 00BF     	 .align 2
+ 119              	.L10:
+ 120 00e4 00000000 	 .word send_buffer
+ 121 00e8 00000000 	 .word recv_command
+ 122 00ec 00000000 	 .word .LC0
+ 123 00f0 2F000000 	 .word .LC1
+ 124 00f4 32000000 	 .word .LC2
+ 125 00f8 00000000 	 .word t
+ 127              	 .section .text.provide_values,"ax",%progbits
+ 128              	 .align 1
+ 129              	 .global provide_values
+ 130              	 .thumb
+ 131              	 .thumb_func
+ 133              	provide_values:
+ 134              	 
+ 135              	 
+ 136 0000 2DE9F04F 	 push {r4,r5,r6,r7,r8,r9,r10,fp,lr}
+ 137 0004 85B0     	 sub sp,sp,#20
+ 138 0006 04AC     	 add r4,sp,#16
+ 139 0008 64E90423 	 strd r2,[r4,#-16]!
+ 140 000c 0746     	 mov r7,r0
+ 141 000e FFF7FEFF 	 bl increase_transaction_nr
+ 142 0012 0121     	 movs r1,#1
+ 143 0014 3220     	 movs r0,#50
+ 144 0016 FFF7FEFF 	 bl calloc
+ 145 001a 0546     	 mov r5,r0
+ 146 001c 2946     	 mov r1,r5
+ 147 001e 2046     	 mov r0,r4
+ 148 0020 FFF7FEFF 	 bl get_string_from_64bit
+ 149 0024 BDF83C10 	 ldrh r1,[sp,#60]
+ 150 0028 0E98     	 ldr r0,[sp,#56]
+ 151 002a 5E4C     	 ldr r4,.L25
+ 152 002c 03AA     	 add r2,sp,#12
+ 153 002e FFF7FEFF 	 bl base64_encode
+ 154 0032 4FF4FA72 	 mov r2,#500
+ 155 0036 0646     	 mov r6,r0
+ 156 0038 0021     	 movs r1,#0
+ 157 003a 2068     	 ldr r0,[r4]
+ 158 003c FFF7FEFF 	 bl memset
+ 159 0040 2068     	 ldr r0,[r4]
+ 160 0042 5949     	 ldr r1,.L25+4
+ 161 0044 FFF7FEFF 	 bl strcpy
+ 162 0048 2068     	 ldr r0,[r4]
+ 163 004a 5849     	 ldr r1,.L25+8
+ 164 004c FFF7FEFF 	 bl strcat
+ 165 0050 2068     	 ldr r0,[r4]
+ 166 0052 5749     	 ldr r1,.L25+12
+ 167 0054 FFF7FEFF 	 bl strcat
+ 168 0058 3946     	 mov r1,r7
+ 169 005a 2068     	 ldr r0,[r4]
+ 170 005c FFF7FEFF 	 bl strcat
+ 171 0060 2068     	 ldr r0,[r4]
+ 172 0062 5449     	 ldr r1,.L25+16
+ 173 0064 FFF7FEFF 	 bl strcat
+ 174 0068 2946     	 mov r1,r5
+ 175 006a 2068     	 ldr r0,[r4]
+ 176 006c FFF7FEFF 	 bl strcat
+ 177 0070 2068     	 ldr r0,[r4]
+ 178 0072 5149     	 ldr r1,.L25+20
+ 179 0074 FFF7FEFF 	 bl strcat
+ 180 0078 2068     	 ldr r0,[r4]
+ 181 007a 3146     	 mov r1,r6
+ 182 007c FFF7FEFF 	 bl strcat
+ 183 0080 4E49     	 ldr r1,.L25+24
+ 184 0082 2068     	 ldr r0,[r4]
+ 185 0084 FFF7FEFF 	 bl strcat
+ 186 0088 2768     	 ldr r7,[r4]
+ 187 008a 3846     	 mov r0,r7
+ 188 008c FFF7FEFF 	 bl strlen
+ 189 0090 0146     	 mov r1,r0
+ 190 0092 3846     	 mov r0,r7
+ 191 0094 FFF7FEFF 	 bl UART_Transmit
+ 192 0098 2846     	 mov r0,r5
+ 193 009a FFF7FEFF 	 bl free
+ 194 009e 3046     	 mov r0,r6
+ 195 00a0 FFF7FEFF 	 bl free
+ 196 00a4 2568     	 ldr r5,[r4]
+ 197 00a6 2846     	 mov r0,r5
+ 198 00a8 FFF7FEFF 	 bl strlen
+ 199 00ac 0023     	 movs r3,#0
+ 200 00ae C4B2     	 uxtb r4,r0
+ 201 00b0 ADF80E30 	 strh r3,[sp,#14]
+ 202              	.L14:
+ 203 00b4 2846     	 mov r0,r5
+ 204 00b6 2146     	 mov r1,r4
+ 205 00b8 0DF10E02 	 add r2,sp,#14
+ 206 00bc FFF7FEFF 	 bl USBVCH_SendData
+ 207 00c0 BDF80E00 	 ldrh r0,[sp,#14]
+ 208 00c4 241A     	 subs r4,r4,r0
+ 209 00c6 E4B2     	 uxtb r4,r4
+ 210 00c8 0544     	 add r5,r5,r0
+ 211 00ca 0028     	 cmp r0,#0
+ 212 00cc 67D0     	 beq .L13
+ 213 00ce 002C     	 cmp r4,#0
+ 214 00d0 F0D1     	 bne .L14
+ 215 00d2 3B4F     	 ldr r7,.L25+28
+ 216 00d4 2146     	 mov r1,r4
+ 217 00d6 4FF48062 	 mov r2,#1024
+ 218 00da 3868     	 ldr r0,[r7]
+ 219 00dc FFF7FEFF 	 bl memset
+ 220 00e0 FFF7FEFF 	 bl receive_response
+ 221 00e4 0546     	 mov r5,r0
+ 222 00e6 0028     	 cmp r0,#0
+ 223 00e8 58D1     	 bne .L15
+ 224 00ea 3868     	 ldr r0,[r7]
+ 225 00ec FFF7FEFF 	 bl strlen
+ 226 00f0 80B2     	 uxth r0,r0
+ 227 00f2 FFF7FEFF 	 bl parse_response
+ 228 00f6 8046     	 mov r8,r0
+ 229              	.L16:
+ 230 00f8 4445     	 cmp r4,r8
+ 231 00fa DFF8D890 	 ldr r9,.L25+48
+ 232 00fe 49D2     	 bcs .L24
+ 233 0100 2301     	 lsls r3,r4,#4
+ 234 0102 D9F80010 	 ldr r1,[r9]
+ 235 0106 CA18     	 adds r2,r1,r3
+ 236 0108 CB5C     	 ldrb r3,[r1,r3]
+ 237 010a 032B     	 cmp r3,#3
+ 238 010c 3FD1     	 bne .L17
+ 239 010e D2F804B0 	 ldr fp,[r2,#4]
+ 240 0112 9668     	 ldr r6,[r2,#8]
+ 241 0114 CBEB0606 	 rsb r6,fp,r6
+ 242 0118 F6B2     	 uxtb r6,r6
+ 243 011a 0121     	 movs r1,#1
+ 244 011c 701C     	 adds r0,r6,#1
+ 245 011e FFF7FEFF 	 bl calloc
+ 246 0122 3968     	 ldr r1,[r7]
+ 247 0124 3246     	 mov r2,r6
+ 248 0126 5944     	 add r1,r1,fp
+ 249 0128 8246     	 mov r10,r0
+ 250 012a FFF7FEFF 	 bl memcpy
+ 251 012e 5046     	 mov r0,r10
+ 252 0130 FFF7FEFF 	 bl to_lower_case
+ 253 0134 2349     	 ldr r1,.L25+32
+ 254 0136 FFF7FEFF 	 bl strcmp
+ 255 013a 0146     	 mov r1,r0
+ 256 013c 20BB     	 cbnz r0,.L18
+ 257 013e 0134     	 adds r4,r4,#1
+ 258 0140 E4B2     	 uxtb r4,r4
+ 259 0142 2301     	 lsls r3,r4,#4
+ 260 0144 D9F80020 	 ldr r2,[r9]
+ 261 0148 D65C     	 ldrb r6,[r2,r3]
+ 262 014a 042E     	 cmp r6,#4
+ 263 014c 02EB030E 	 add lr,r2,r3
+ 264 0150 1AD1     	 bne .L18
+ 265 0152 1B4B     	 ldr r3,.L25+28
+ 266 0154 1868     	 ldr r0,[r3]
+ 267 0156 DEF80430 	 ldr r3,[lr,#4]
+ 268 015a 0A46     	 mov r2,r1
+ 269 015c 1844     	 add r0,r0,r3
+ 270 015e FFF7FEFF 	 bl strtol
+ 271 0162 85B2     	 uxth r5,r0
+ 272 0164 28B2     	 sxth r0,r5
+ 273 0166 FFF7FEFF 	 bl decode_error_code
+ 274 016a 3146     	 mov r1,r6
+ 275 016c 1648     	 ldr r0,.L25+36
+ 276 016e FFF7FEFF 	 bl UART_Transmit
+ 277 0172 1648     	 ldr r0,.L25+40
+ 278 0174 FFF7FEFF 	 bl strlen
+ 279 0178 0146     	 mov r1,r0
+ 280 017a 1448     	 ldr r0,.L25+40
+ 281 017c FFF7FEFF 	 bl UART_Transmit
+ 282 0180 1348     	 ldr r0,.L25+44
+ 283 0182 0221     	 movs r1,#2
+ 284 0184 FFF7FEFF 	 bl UART_Transmit
+ 285              	.L18:
+ 286 0188 5046     	 mov r0,r10
+ 287 018a FFF7FEFF 	 bl free
+ 288              	.L17:
+ 289 018e 0134     	 adds r4,r4,#1
+ 290 0190 E4B2     	 uxtb r4,r4
+ 291 0192 B1E7     	 b .L16
+ 292              	.L24:
+ 293 0194 D9F80000 	 ldr r0,[r9]
+ 294 0198 FFF7FEFF 	 bl free
+ 295              	.L15:
+ 296 019c A8B2     	 uxth r0,r5
+ 297              	.L13:
+ 298 019e 05B0     	 add sp,sp,#20
+ 299              	 
+ 300 01a0 BDE8F08F 	 pop {r4,r5,r6,r7,r8,r9,r10,fp,pc}
+ 301              	.L26:
+ 302              	 .align 2
+ 303              	.L25:
+ 304 01a4 00000000 	 .word send_buffer
+ 305 01a8 3C000000 	 .word .LC3
+ 306 01ac 00000000 	 .word transaction_nr_string
+ 307 01b0 4F000000 	 .word .LC4
+ 308 01b4 84000000 	 .word .LC5
+ 309 01b8 9F000000 	 .word .LC6
+ 310 01bc AC000000 	 .word .LC7
+ 311 01c0 00000000 	 .word recv_command
+ 312 01c4 32000000 	 .word .LC2
+ 313 01c8 B3000000 	 .word .LC8
+ 314 01cc 00000000 	 .word error_code_string
+ 315 01d0 2F000000 	 .word .LC1
+ 316 01d4 00000000 	 .word t
+ 318              	 .comm error_code_string,50,1
+ 319              	 .comm transaction_nr_string,7,1
+ 320              	 .comm transaction_nr_dec,4,4
+ 321              	 .comm device_id_string,20,1
+ 322              	 .comm device_id_hex,8,8
+ 323              	 .comm t,4,4
+ 324              	 .comm p,12,4
+ 325              	 .comm RxBuffer,1024,1
+ 326              	 .comm request_send,1,1
+ 327              	 .comm recv_command_length,2,2
+ 328              	 .comm recv_command,4,4
+ 329              	 .comm send_buffer,4,4
+ 330              	 .comm uart_data_count,4,4
+ 331              	 .comm Rxlen,4,4
+ 332              	 .comm RxPtr,4,4
+ 333              	 .comm ReceivedByte,1,1
+ 334              	 .comm USBHostState,1,1
+ 335              	 .section .rodata.str1.1,"aMS",%progbits,1
+ 336              	.LC0:
+ 337 0000 7B225472 	 .ascii "{\"TransactionNr\": 10000, \"Operation\": \"GetId\""
+ 337      616E7361 
+ 337      6374696F 
+ 337      6E4E7222 
+ 337      3A203130 
+ 338 002d 7D00     	 .ascii "}\000"
+ 339              	.LC1:
+ 340 002f 0D0A00   	 .ascii "\015\012\000"
+ 341              	.LC2:
+ 342 0032 6572726F 	 .ascii "errorcode\000"
+ 342      72636F64 
+ 342      6500
+ 343              	.LC3:
+ 344 003c 7B225472 	 .ascii "{\"TransactionNr\": \000"
+ 344      616E7361 
+ 344      6374696F 
+ 344      6E4E7222 
+ 344      3A2000
+ 345              	.LC4:
+ 346 004f 2C20224F 	 .ascii ", \"Operation\": \"ProvideValues\", \"ValueMetaData"
+ 346      70657261 
+ 346      74696F6E 
+ 346      223A2022 
+ 346      50726F76 
+ 347 007d 4964223A 	 .ascii "Id\": \"\000"
+ 347      202200
+ 348              	.LC5:
+ 349 0084 222C2256 	 .ascii "\",\"Values\":[{\"Timestamp\": \000"
+ 349      616C7565 
+ 349      73223A5B 
+ 349      7B225469 
+ 349      6D657374 
+ 350              	.LC6:
+ 351 009f 2C202256 	 .ascii ", \"Value\": \"\000"
+ 351      616C7565 
+ 351      223A2022 
+ 351      00
+ 352              	.LC7:
+ 353 00ac 227D5D7D 	 .ascii "\"}]}\015\012\000"
+ 353      0D0A00
+ 354              	.LC8:
+ 355 00b3 202D3E20 	 .ascii " -> \000"
+ 355      00
+ 356              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 Tributech_SSM_API.c
+    {standard input}:17     .text.get_id:00000000 $t
+    {standard input}:22     .text.get_id:00000000 get_id
+    {standard input}:120    .text.get_id:000000e4 $d
+                            *COM*:00000004 send_buffer
+                            *COM*:00000004 recv_command
+                            *COM*:00000004 t
+    {standard input}:128    .text.provide_values:00000000 $t
+    {standard input}:133    .text.provide_values:00000000 provide_values
+    {standard input}:304    .text.provide_values:000001a4 $d
+                            *COM*:00000007 transaction_nr_string
+                            *COM*:00000032 error_code_string
+                            *COM*:00000004 transaction_nr_dec
+                            *COM*:00000014 device_id_string
+                            *COM*:00000008 device_id_hex
+                            *COM*:0000000c p
+                            *COM*:00000400 RxBuffer
+                            *COM*:00000001 request_send
+                            *COM*:00000002 recv_command_length
+                            *COM*:00000004 uart_data_count
+                            *COM*:00000004 Rxlen
+                            *COM*:00000004 RxPtr
+                            *COM*:00000001 ReceivedByte
+                            *COM*:00000001 USBHostState
+
+UNDEFINED SYMBOLS
+memset
+strcpy
+strcat
+strlen
+USBVCH_SendData
+receive_response
+parse_response
+calloc
+memcpy
+to_lower_case
+strcmp
+strtol
+free
+increase_transaction_nr
+get_string_from_64bit
+base64_encode
+UART_Transmit
+decode_error_code

@@ -1,0 +1,230 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "xmc_common.c"
+  16              	 .section .text.XMC_LIST_Init,"ax",%progbits
+  17              	 .align 1
+  18              	 .global XMC_LIST_Init
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	XMC_LIST_Init:
+  23              	 
+  24              	 
+  25              	 
+  26 0000 0023     	 movs r3,#0
+  27 0002 0360     	 str r3,[r0]
+  28 0004 7047     	 bx lr
+  30              	 .section .text.XMC_LIST_GetHead,"ax",%progbits
+  31              	 .align 1
+  32              	 .global XMC_LIST_GetHead
+  33              	 .thumb
+  34              	 .thumb_func
+  36              	XMC_LIST_GetHead:
+  37              	 
+  38              	 
+  39              	 
+  40 0000 0068     	 ldr r0,[r0]
+  41 0002 7047     	 bx lr
+  43              	 .section .text.XMC_LIST_GetTail,"ax",%progbits
+  44              	 .align 1
+  45              	 .global XMC_LIST_GetTail
+  46              	 .thumb
+  47              	 .thumb_func
+  49              	XMC_LIST_GetTail:
+  50              	 
+  51              	 
+  52              	 
+  53 0000 0068     	 ldr r0,[r0]
+  54 0002 00B9     	 cbnz r0,.L5
+  55 0004 7047     	 bx lr
+  56              	.L5:
+  57 0006 0368     	 ldr r3,[r0]
+  58 0008 0BB1     	 cbz r3,.L11
+  59 000a 1846     	 mov r0,r3
+  60 000c FBE7     	 b .L5
+  61              	.L11:
+  62 000e 7047     	 bx lr
+  64              	 .section .text.XMC_LIST_Add,"ax",%progbits
+  65              	 .align 1
+  66              	 .global XMC_LIST_Add
+  67              	 .thumb
+  68              	 .thumb_func
+  70              	XMC_LIST_Add:
+  71              	 
+  72              	 
+  73 0000 38B5     	 push {r3,r4,r5,lr}
+  74 0002 0023     	 movs r3,#0
+  75 0004 0B60     	 str r3,[r1]
+  76 0006 0546     	 mov r5,r0
+  77 0008 0C46     	 mov r4,r1
+  78 000a FFF7FEFF 	 bl XMC_LIST_GetTail
+  79 000e 08B9     	 cbnz r0,.L13
+  80 0010 2C60     	 str r4,[r5]
+  81 0012 38BD     	 pop {r3,r4,r5,pc}
+  82              	.L13:
+  83 0014 0460     	 str r4,[r0]
+  84 0016 38BD     	 pop {r3,r4,r5,pc}
+  86              	 .section .text.XMC_LIST_Remove,"ax",%progbits
+  87              	 .align 1
+  88              	 .global XMC_LIST_Remove
+  89              	 .thumb
+  90              	 .thumb_func
+  92              	XMC_LIST_Remove:
+  93              	 
+  94              	 
+  95 0000 0368     	 ldr r3,[r0]
+  96 0002 10B5     	 push {r4,lr}
+  97 0004 7BB1     	 cbz r3,.L15
+  98 0006 0022     	 movs r2,#0
+  99              	.L20:
+ 100 0008 8B42     	 cmp r3,r1
+ 101 000a 07D1     	 bne .L17
+ 102 000c 0B68     	 ldr r3,[r1]
+ 103 000e 0AB9     	 cbnz r2,.L18
+ 104 0010 0360     	 str r3,[r0]
+ 105 0012 00E0     	 b .L19
+ 106              	.L18:
+ 107 0014 1360     	 str r3,[r2]
+ 108              	.L19:
+ 109 0016 0023     	 movs r3,#0
+ 110 0018 0B60     	 str r3,[r1]
+ 111 001a 10BD     	 pop {r4,pc}
+ 112              	.L17:
+ 113 001c 1C68     	 ldr r4,[r3]
+ 114 001e 1A46     	 mov r2,r3
+ 115 0020 0CB1     	 cbz r4,.L15
+ 116 0022 2346     	 mov r3,r4
+ 117 0024 F0E7     	 b .L20
+ 118              	.L15:
+ 119 0026 10BD     	 pop {r4,pc}
+ 121              	 .section .text.XMC_LIST_Insert,"ax",%progbits
+ 122              	 .align 1
+ 123              	 .global XMC_LIST_Insert
+ 124              	 .thumb
+ 125              	 .thumb_func
+ 127              	XMC_LIST_Insert:
+ 128              	 
+ 129              	 
+ 130              	 
+ 131 0000 19B9     	 cbnz r1,.L26
+ 132 0002 0368     	 ldr r3,[r0]
+ 133 0004 1360     	 str r3,[r2]
+ 134 0006 0260     	 str r2,[r0]
+ 135 0008 7047     	 bx lr
+ 136              	.L26:
+ 137 000a 0B68     	 ldr r3,[r1]
+ 138 000c 1360     	 str r3,[r2]
+ 139 000e 0A60     	 str r2,[r1]
+ 140 0010 7047     	 bx lr
+ 142              	 .section .text.XMC_PRIOARRAY_Init,"ax",%progbits
+ 143              	 .align 1
+ 144              	 .global XMC_PRIOARRAY_Init
+ 145              	 .thumb
+ 146              	 .thumb_func
+ 148              	XMC_PRIOARRAY_Init:
+ 149              	 
+ 150              	 
+ 151 0000 90E80600 	 ldmia r0,{r1,r2}
+ 152 0004 0C23     	 movs r3,#12
+ 153 0006 4B43     	 muls r3,r1,r3
+ 154 0008 D018     	 adds r0,r2,r3
+ 155 000a 10B5     	 push {r4,lr}
+ 156 000c 4C1C     	 adds r4,r1,#1
+ 157 000e 8460     	 str r4,[r0,#8]
+ 158 0010 4FF0FF34 	 mov r4,#-1
+ 159 0014 4460     	 str r4,[r0,#4]
+ 160 0016 6FF00040 	 mvn r0,#-2147483648
+ 161 001a D050     	 str r0,[r2,r3]
+ 162 001c 0C33     	 adds r3,r3,#12
+ 163 001e D018     	 adds r0,r2,r3
+ 164 0020 4160     	 str r1,[r0,#4]
+ 165 0022 4FF00041 	 mov r1,#-2147483648
+ 166 0026 8460     	 str r4,[r0,#8]
+ 167 0028 D150     	 str r1,[r2,r3]
+ 168 002a 10BD     	 pop {r4,pc}
+ 170              	 .section .text.XMC_PRIOARRAY_Add,"ax",%progbits
+ 171              	 .align 1
+ 172              	 .global XMC_PRIOARRAY_Add
+ 173              	 .thumb
+ 174              	 .thumb_func
+ 176              	XMC_PRIOARRAY_Add:
+ 177              	 
+ 178              	 
+ 179 0000 09C8     	 ldmia r0,{r0,r3}
+ 180 0002 F0B5     	 push {r4,r5,r6,r7,lr}
+ 181 0004 0C24     	 movs r4,#12
+ 182 0006 04FB0030 	 mla r0,r4,r0,r3
+ 183 000a 8668     	 ldr r6,[r0,#8]
+ 184              	.L30:
+ 185 000c 0C25     	 movs r5,#12
+ 186 000e 05FB06F0 	 mul r0,r5,r6
+ 187 0012 1C18     	 adds r4,r3,r0
+ 188 0014 1858     	 ldr r0,[r3,r0]
+ 189 0016 9042     	 cmp r0,r2
+ 190 0018 01DD     	 ble .L32
+ 191 001a A668     	 ldr r6,[r4,#8]
+ 192 001c F6E7     	 b .L30
+ 193              	.L32:
+ 194 001e 05FB01F7 	 mul r7,r5,r1
+ 195 0022 6068     	 ldr r0,[r4,#4]
+ 196 0024 03EB070E 	 add lr,r3,r7
+ 197 0028 CEF80860 	 str r6,[lr,#8]
+ 198 002c CEF80400 	 str r0,[lr,#4]
+ 199 0030 DA51     	 str r2,[r3,r7]
+ 200 0032 05FB0033 	 mla r3,r5,r0,r3
+ 201 0036 9960     	 str r1,[r3,#8]
+ 202 0038 6160     	 str r1,[r4,#4]
+ 203 003a F0BD     	 pop {r4,r5,r6,r7,pc}
+ 205              	 .section .text.XMC_PRIOARRAY_Remove,"ax",%progbits
+ 206              	 .align 1
+ 207              	 .global XMC_PRIOARRAY_Remove
+ 208              	 .thumb
+ 209              	 .thumb_func
+ 211              	XMC_PRIOARRAY_Remove:
+ 212              	 
+ 213              	 
+ 214 0000 4268     	 ldr r2,[r0,#4]
+ 215 0002 0C20     	 movs r0,#12
+ 216 0004 00FB0121 	 mla r1,r0,r1,r2
+ 217 0008 10B5     	 push {r4,lr}
+ 218 000a 8B68     	 ldr r3,[r1,#8]
+ 219 000c 4968     	 ldr r1,[r1,#4]
+ 220 000e 00FB0124 	 mla r4,r0,r1,r2
+ 221 0012 A360     	 str r3,[r4,#8]
+ 222 0014 00FB0323 	 mla r3,r0,r3,r2
+ 223 0018 5960     	 str r1,[r3,#4]
+ 224 001a 10BD     	 pop {r4,pc}
+ 226              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_common.c
+    {standard input}:17     .text.XMC_LIST_Init:00000000 $t
+    {standard input}:22     .text.XMC_LIST_Init:00000000 XMC_LIST_Init
+    {standard input}:31     .text.XMC_LIST_GetHead:00000000 $t
+    {standard input}:36     .text.XMC_LIST_GetHead:00000000 XMC_LIST_GetHead
+    {standard input}:44     .text.XMC_LIST_GetTail:00000000 $t
+    {standard input}:49     .text.XMC_LIST_GetTail:00000000 XMC_LIST_GetTail
+    {standard input}:65     .text.XMC_LIST_Add:00000000 $t
+    {standard input}:70     .text.XMC_LIST_Add:00000000 XMC_LIST_Add
+    {standard input}:87     .text.XMC_LIST_Remove:00000000 $t
+    {standard input}:92     .text.XMC_LIST_Remove:00000000 XMC_LIST_Remove
+    {standard input}:122    .text.XMC_LIST_Insert:00000000 $t
+    {standard input}:127    .text.XMC_LIST_Insert:00000000 XMC_LIST_Insert
+    {standard input}:143    .text.XMC_PRIOARRAY_Init:00000000 $t
+    {standard input}:148    .text.XMC_PRIOARRAY_Init:00000000 XMC_PRIOARRAY_Init
+    {standard input}:171    .text.XMC_PRIOARRAY_Add:00000000 $t
+    {standard input}:176    .text.XMC_PRIOARRAY_Add:00000000 XMC_PRIOARRAY_Add
+    {standard input}:206    .text.XMC_PRIOARRAY_Remove:00000000 $t
+    {standard input}:211    .text.XMC_PRIOARRAY_Remove:00000000 XMC_PRIOARRAY_Remove
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,316 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "i2c_master_conf.c"
+  16              	 .section .text.I2C_MASTER_0_disable_io,"ax",%progbits
+  17              	 .align 1
+  18              	 .thumb
+  19              	 .thumb_func
+  21              	I2C_MASTER_0_disable_io:
+  22              	 
+  23              	 
+  24 0000 08B5     	 push {r3,lr}
+  25 0002 0648     	 ldr r0,.L2
+  26 0004 0F21     	 movs r1,#15
+  27 0006 0022     	 movs r2,#0
+  28 0008 FFF7FEFF 	 bl XMC_GPIO_SetMode
+  29 000c 0448     	 ldr r0,.L2+4
+  30 000e 0D21     	 movs r1,#13
+  31 0010 0022     	 movs r2,#0
+  32 0012 BDE80840 	 pop {r3,lr}
+  33 0016 FFF7FEBF 	 b XMC_GPIO_SetMode
+  34              	.L3:
+  35 001a 00BF     	 .align 2
+  36              	.L2:
+  37 001c 00830248 	 .word 1208124160
+  38 0020 00800248 	 .word 1208123392
+  40              	 .section .text.I2C_MASTER_0_enable_io,"ax",%progbits
+  41              	 .align 1
+  42              	 .thumb
+  43              	 .thumb_func
+  45              	I2C_MASTER_0_enable_io:
+  46              	 
+  47              	 
+  48 0000 08B5     	 push {r3,lr}
+  49 0002 0648     	 ldr r0,.L5
+  50 0004 0F21     	 movs r1,#15
+  51 0006 D022     	 movs r2,#208
+  52 0008 FFF7FEFF 	 bl XMC_GPIO_SetMode
+  53 000c 0448     	 ldr r0,.L5+4
+  54 000e 0D21     	 movs r1,#13
+  55 0010 D022     	 movs r2,#208
+  56 0012 BDE80840 	 pop {r3,lr}
+  57 0016 FFF7FEBF 	 b XMC_GPIO_SetMode
+  58              	.L6:
+  59 001a 00BF     	 .align 2
+  60              	.L5:
+  61 001c 00830248 	 .word 1208124160
+  62 0020 00800248 	 .word 1208123392
+  64              	 .section .text.NVIC_EncodePriority.constprop.1,"ax",%progbits
+  65              	 .align 1
+  66              	 .thumb
+  67              	 .thumb_func
+  69              	NVIC_EncodePriority.constprop.1:
+  70              	 
+  71              	 
+  72              	 
+  73 0000 00F00700 	 and r0,r0,#7
+  74 0004 C0F10702 	 rsb r2,r0,#7
+  75 0008 062A     	 cmp r2,#6
+  76 000a 28BF     	 it cs
+  77 000c 0622     	 movcs r2,#6
+  78 000e 00B1     	 cbz r0,.L8
+  79 0010 0138     	 subs r0,r0,#1
+  80              	.L8:
+  81 0012 0123     	 movs r3,#1
+  82 0014 9340     	 lsls r3,r3,r2
+  83 0016 013B     	 subs r3,r3,#1
+  84 0018 03FA00F0 	 lsl r0,r3,r0
+  85 001c 7047     	 bx lr
+  87              	 .section .text.I2C_MASTER_0_init,"ax",%progbits
+  88              	 .align 1
+  89              	 .global I2C_MASTER_0_init
+  90              	 .thumb
+  91              	 .thumb_func
+  93              	I2C_MASTER_0_init:
+  94              	 
+  95              	 
+  96 0000 38B5     	 push {r3,r4,r5,lr}
+  97 0002 324C     	 ldr r4,.L12
+  98 0004 3249     	 ldr r1,.L12+4
+  99 0006 334D     	 ldr r5,.L12+8
+ 100 0008 2046     	 mov r0,r4
+ 101 000a FFF7FEFF 	 bl XMC_I2C_CH_Init
+ 102 000e E369     	 ldr r3,[r4,#28]
+ 103 0010 23F00703 	 bic r3,r3,#7
+ 104 0014 E361     	 str r3,[r4,#28]
+ 105 0016 236A     	 ldr r3,[r4,#32]
+ 106 0018 23F00703 	 bic r3,r3,#7
+ 107 001c 43F00103 	 orr r3,r3,#1
+ 108 0020 2362     	 str r3,[r4,#32]
+ 109 0022 2046     	 mov r0,r4
+ 110 0024 0123     	 movs r3,#1
+ 111 0026 2021     	 movs r1,#32
+ 112 0028 0522     	 movs r2,#5
+ 113 002a FFF7FEFF 	 bl XMC_USIC_CH_TXFIFO_Configure
+ 114 002e 2046     	 mov r0,r4
+ 115 0030 1021     	 movs r1,#16
+ 116 0032 0122     	 movs r2,#1
+ 117 0034 FFF7FEFF 	 bl XMC_USIC_CH_TXFIFO_SetInterruptNodePointer
+ 118 0038 D4F80831 	 ldr r3,[r4,#264]
+ 119 003c C4F80831 	 str r3,[r4,#264]
+ 120 0040 2046     	 mov r0,r4
+ 121 0042 1F23     	 movs r3,#31
+ 122 0044 0021     	 movs r1,#0
+ 123 0046 0522     	 movs r2,#5
+ 124 0048 FFF7FEFF 	 bl XMC_USIC_CH_RXFIFO_Configure
+ 125 004c 2046     	 mov r0,r4
+ 126 004e 1021     	 movs r1,#16
+ 127 0050 0022     	 movs r2,#0
+ 128 0052 FFF7FEFF 	 bl XMC_USIC_CH_RXFIFO_SetInterruptNodePointer
+ 129 0056 2046     	 mov r0,r4
+ 130 0058 1321     	 movs r1,#19
+ 131 005a 0022     	 movs r2,#0
+ 132 005c FFF7FEFF 	 bl XMC_USIC_CH_RXFIFO_SetInterruptNodePointer
+ 133 0060 D4F80C31 	 ldr r3,[r4,#268]
+ 134 0064 43F0C043 	 orr r3,r3,#1610612736
+ 135 0068 C4F80C31 	 str r3,[r4,#268]
+ 136 006c 2046     	 mov r0,r4
+ 137 006e 1021     	 movs r1,#16
+ 138 0070 0222     	 movs r2,#2
+ 139 0072 FFF7FEFF 	 bl XMC_USIC_CH_SetInterruptNodePointer
+ 140 0076 236C     	 ldr r3,[r4,#64]
+ 141 0078 1748     	 ldr r0,.L12+12
+ 142 007a 184A     	 ldr r2,.L12+16
+ 143 007c 23F00F03 	 bic r3,r3,#15
+ 144 0080 43F00403 	 orr r3,r3,#4
+ 145 0084 2364     	 str r3,[r4,#64]
+ 146 0086 0F21     	 movs r1,#15
+ 147 0088 FFF7FEFF 	 bl XMC_GPIO_Init
+ 148 008c 0D21     	 movs r1,#13
+ 149 008e 144A     	 ldr r2,.L12+20
+ 150 0090 1448     	 ldr r0,.L12+24
+ 151 0092 154C     	 ldr r4,.L12+28
+ 152 0094 FFF7FEFF 	 bl XMC_GPIO_Init
+ 153 0098 E868     	 ldr r0,[r5,#12]
+ 154 009a C0F30220 	 ubfx r0,r0,#8,#3
+ 155 009e FFF7FEFF 	 bl NVIC_EncodePriority.constprop.1
+ 156 00a2 8000     	 lsls r0,r0,#2
+ 157 00a4 C0B2     	 uxtb r0,r0
+ 158 00a6 84F85B03 	 strb r0,[r4,#859]
+ 159 00aa 4FF00063 	 mov r3,#134217728
+ 160 00ae A360     	 str r3,[r4,#8]
+ 161 00b0 E868     	 ldr r0,[r5,#12]
+ 162 00b2 C0F30220 	 ubfx r0,r0,#8,#3
+ 163 00b6 FFF7FEFF 	 bl NVIC_EncodePriority.constprop.1
+ 164 00ba 8000     	 lsls r0,r0,#2
+ 165 00bc C0B2     	 uxtb r0,r0
+ 166 00be 84F85A03 	 strb r0,[r4,#858]
+ 167 00c2 4FF08063 	 mov r3,#67108864
+ 168 00c6 A360     	 str r3,[r4,#8]
+ 169 00c8 38BD     	 pop {r3,r4,r5,pc}
+ 170              	.L13:
+ 171 00ca 00BF     	 .align 2
+ 172              	.L12:
+ 173 00cc 00020248 	 .word 1208091136
+ 174 00d0 00000000 	 .word .LANCHOR0
+ 175 00d4 00ED00E0 	 .word -536810240
+ 176 00d8 00830248 	 .word 1208124160
+ 177 00dc 00000000 	 .word .LANCHOR1
+ 178 00e0 00000000 	 .word .LANCHOR2
+ 179 00e4 00800248 	 .word 1208123392
+ 180 00e8 00E100E0 	 .word -536813312
+ 182              	 .section .text.USIC1_1_IRQHandler,"ax",%progbits
+ 183              	 .align 1
+ 184              	 .global USIC1_1_IRQHandler
+ 185              	 .thumb
+ 186              	 .thumb_func
+ 188              	USIC1_1_IRQHandler:
+ 189              	 
+ 190              	 
+ 191              	 
+ 192 0000 0148     	 ldr r0,.L15
+ 193 0002 FFF7FEBF 	 b I2C_MASTER_TransmitHandler
+ 194              	.L16:
+ 195 0006 00BF     	 .align 2
+ 196              	.L15:
+ 197 0008 00000000 	 .word .LANCHOR3
+ 199              	 .section .text.USIC1_0_IRQHandler,"ax",%progbits
+ 200              	 .align 1
+ 201              	 .global USIC1_0_IRQHandler
+ 202              	 .thumb
+ 203              	 .thumb_func
+ 205              	USIC1_0_IRQHandler:
+ 206              	 
+ 207              	 
+ 208              	 
+ 209 0000 0148     	 ldr r0,.L18
+ 210 0002 FFF7FEBF 	 b I2C_MASTER_ReceiveHandler
+ 211              	.L19:
+ 212 0006 00BF     	 .align 2
+ 213              	.L18:
+ 214 0008 00000000 	 .word .LANCHOR3
+ 216              	 .global I2C_MASTER_0
+ 217              	 .global I2C_MASTER_0_runtime
+ 218              	 .global I2C_MASTER_0_config
+ 219              	 .global I2C_MASTER_0_channel_config
+ 220              	 .section .rodata.I2C_MASTER_0_config,"a",%progbits
+ 221              	 .align 2
+ 224              	I2C_MASTER_0_config:
+ 225 0000 00000000 	 .word I2C_MASTER_0_channel_config
+ 226 0004 00000000 	 .word I2C_MASTER_0_init
+ 227 0008 00000000 	 .word I2C_MASTER_0_enable_io
+ 228 000c 00000000 	 .word I2C_MASTER_0_disable_io
+ 229 0010 00000000 	 .word 0
+ 230 0014 00000000 	 .word 0
+ 231 0018 00000000 	 .word 0
+ 232 001c 00000000 	 .word 0
+ 233 0020 00000000 	 .word 0
+ 234 0024 00       	 .byte 0
+ 235 0025 00       	 .byte 0
+ 236 0026 05       	 .byte 5
+ 237 0027 05       	 .byte 5
+ 238 0028 5B       	 .byte 91
+ 239 0029 5A       	 .byte 90
+ 240 002a 0000     	 .space 2
+ 241              	 .section .rodata.I2C_MASTER_0_sda_pin_config,"a",%progbits
+ 242              	 .align 2
+ 243              	 .set .LANCHOR1,.+0
+ 246              	I2C_MASTER_0_sda_pin_config:
+ 247 0000 D0       	 .byte -48
+ 248 0001 000000   	 .space 3
+ 249 0004 01000000 	 .word 1
+ 250 0008 00       	 .byte 0
+ 251 0009 000000   	 .space 3
+ 252              	 .section .rodata.I2C_MASTER_0_scl_pin_config,"a",%progbits
+ 253              	 .align 2
+ 254              	 .set .LANCHOR2,.+0
+ 257              	I2C_MASTER_0_scl_pin_config:
+ 258 0000 D0       	 .byte -48
+ 259 0001 000000   	 .space 3
+ 260 0004 01000000 	 .word 1
+ 261 0008 00       	 .byte 0
+ 262 0009 000000   	 .space 3
+ 263              	 .section .data.I2C_MASTER_0,"aw",%progbits
+ 264              	 .align 2
+ 265              	 .set .LANCHOR3,.+0
+ 268              	I2C_MASTER_0:
+ 269 0000 00020248 	 .word 1208091136
+ 270 0004 00000000 	 .word I2C_MASTER_0_config
+ 271 0008 00000000 	 .word I2C_MASTER_0_runtime
+ 272              	 .section .data.I2C_MASTER_0_runtime,"aw",%progbits
+ 273              	 .align 2
+ 276              	I2C_MASTER_0_runtime:
+ 277 0000 00000000 	 .space 36
+ 277      00000000 
+ 277      00000000 
+ 277      00000000 
+ 277      00000000 
+ 278 0024 01       	 .byte 1
+ 279 0025 00       	 .byte 0
+ 280 0026 00       	 .byte 0
+ 281 0027 00       	 .byte 0
+ 282 0028 00       	 .byte 0
+ 283 0029 000000   	 .space 3
+ 284              	 .section .rodata.I2C_MASTER_0_channel_config,"a",%progbits
+ 285              	 .align 2
+ 286              	 .set .LANCHOR0,.+0
+ 289              	I2C_MASTER_0_channel_config:
+ 290 0000 801A0600 	 .word 400000
+ 291 0004 0000     	 .space 2
+ 292 0006 0000     	 .short 0
+ 293              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 i2c_master_conf.c
+    {standard input}:17     .text.I2C_MASTER_0_disable_io:00000000 $t
+    {standard input}:21     .text.I2C_MASTER_0_disable_io:00000000 I2C_MASTER_0_disable_io
+    {standard input}:37     .text.I2C_MASTER_0_disable_io:0000001c $d
+    {standard input}:41     .text.I2C_MASTER_0_enable_io:00000000 $t
+    {standard input}:45     .text.I2C_MASTER_0_enable_io:00000000 I2C_MASTER_0_enable_io
+    {standard input}:61     .text.I2C_MASTER_0_enable_io:0000001c $d
+    {standard input}:65     .text.NVIC_EncodePriority.constprop.1:00000000 $t
+    {standard input}:69     .text.NVIC_EncodePriority.constprop.1:00000000 NVIC_EncodePriority.constprop.1
+    {standard input}:88     .text.I2C_MASTER_0_init:00000000 $t
+    {standard input}:93     .text.I2C_MASTER_0_init:00000000 I2C_MASTER_0_init
+    {standard input}:173    .text.I2C_MASTER_0_init:000000cc $d
+    {standard input}:183    .text.USIC1_1_IRQHandler:00000000 $t
+    {standard input}:188    .text.USIC1_1_IRQHandler:00000000 USIC1_1_IRQHandler
+    {standard input}:197    .text.USIC1_1_IRQHandler:00000008 $d
+    {standard input}:200    .text.USIC1_0_IRQHandler:00000000 $t
+    {standard input}:205    .text.USIC1_0_IRQHandler:00000000 USIC1_0_IRQHandler
+    {standard input}:214    .text.USIC1_0_IRQHandler:00000008 $d
+    {standard input}:268    .data.I2C_MASTER_0:00000000 I2C_MASTER_0
+    {standard input}:276    .data.I2C_MASTER_0_runtime:00000000 I2C_MASTER_0_runtime
+    {standard input}:224    .rodata.I2C_MASTER_0_config:00000000 I2C_MASTER_0_config
+    {standard input}:289    .rodata.I2C_MASTER_0_channel_config:00000000 I2C_MASTER_0_channel_config
+    {standard input}:221    .rodata.I2C_MASTER_0_config:00000000 $d
+    {standard input}:242    .rodata.I2C_MASTER_0_sda_pin_config:00000000 $d
+    {standard input}:246    .rodata.I2C_MASTER_0_sda_pin_config:00000000 I2C_MASTER_0_sda_pin_config
+    {standard input}:253    .rodata.I2C_MASTER_0_scl_pin_config:00000000 $d
+    {standard input}:257    .rodata.I2C_MASTER_0_scl_pin_config:00000000 I2C_MASTER_0_scl_pin_config
+    {standard input}:264    .data.I2C_MASTER_0:00000000 $d
+    {standard input}:273    .data.I2C_MASTER_0_runtime:00000000 $d
+    {standard input}:285    .rodata.I2C_MASTER_0_channel_config:00000000 $d
+
+UNDEFINED SYMBOLS
+XMC_GPIO_SetMode
+XMC_I2C_CH_Init
+XMC_USIC_CH_TXFIFO_Configure
+XMC_USIC_CH_TXFIFO_SetInterruptNodePointer
+XMC_USIC_CH_RXFIFO_Configure
+XMC_USIC_CH_RXFIFO_SetInterruptNodePointer
+XMC_USIC_CH_SetInterruptNodePointer
+XMC_GPIO_Init
+I2C_MASTER_TransmitHandler
+I2C_MASTER_ReceiveHandler

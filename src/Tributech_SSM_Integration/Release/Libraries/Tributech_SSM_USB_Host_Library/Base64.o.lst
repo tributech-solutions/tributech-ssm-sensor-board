@@ -1,0 +1,415 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "Base64.c"
+  16              	 .section .text.base64_encode,"ax",%progbits
+  17              	 .align 1
+  18              	 .global base64_encode
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	base64_encode:
+  23              	 
+  24              	 
+  25 0000 2DE9F843 	 push {r3,r4,r5,r6,r7,r8,r9,lr}
+  26 0004 0E46     	 mov r6,r1
+  27 0006 0321     	 movs r1,#3
+  28 0008 B6FBF1F3 	 udiv r3,r6,r1
+  29 000c 03EB4303 	 add r3,r3,r3,lsl#1
+  30 0010 F31A     	 subs r3,r6,r3
+  31 0012 9BB2     	 uxth r3,r3
+  32 0014 03F00104 	 and r4,r3,#1
+  33 0018 C3F34003 	 ubfx r3,r3,#1,#1
+  34 001c 03EB4404 	 add r4,r3,r4,lsl#1
+  35 0020 0546     	 mov r5,r0
+  36 0022 3019     	 adds r0,r6,r4
+  37 0024 8000     	 lsls r0,r0,#2
+  38 0026 90FBF1F0 	 sdiv r0,r0,r1
+  39 002a 1080     	 strh r0,[r2]
+  40 002c 80B2     	 uxth r0,r0
+  41 002e 0130     	 adds r0,r0,#1
+  42 0030 0121     	 movs r1,#1
+  43 0032 FFF7FEFF 	 bl calloc
+  44 0036 0028     	 cmp r0,#0
+  45 0038 63D0     	 beq .L2
+  46 003a AE46     	 mov lr,r5
+  47 003c 0146     	 mov r1,r0
+  48 003e 0022     	 movs r2,#0
+  49              	.L3:
+  50 0040 B71E     	 subs r7,r6,#2
+  51 0042 9742     	 cmp r7,r2
+  52 0044 A1EB0003 	 sub r3,r1,r0
+  53 0048 0EF1030E 	 add lr,lr,#3
+  54 004c 01F10401 	 add r1,r1,#4
+  55 0050 28DD     	 ble .L11
+  56 0052 1EF8037C 	 ldrb r7,[lr,#-3]
+  57 0056 DFF8B080 	 ldr r8,.L12
+  58 005a 1EF8023C 	 ldrb r3,[lr,#-2]
+  59 005e 1EF801CC 	 ldrb ip,[lr,#-1]
+  60 0062 4FEA9709 	 lsr r9,r7,#2
+  61 0066 07F00307 	 and r7,r7,#3
+  62 006a 18F80990 	 ldrb r9,[r8,r9]
+  63 006e 01F8049C 	 strb r9,[r1,#-4]
+  64 0072 08EB0717 	 add r7,r8,r7,lsl#4
+  65 0076 4FEA1319 	 lsr r9,r3,#4
+  66 007a 03F00F03 	 and r3,r3,#15
+  67 007e 17F80970 	 ldrb r7,[r7,r9]
+  68 0082 01F8037C 	 strb r7,[r1,#-3]
+  69 0086 08EB8303 	 add r3,r8,r3,lsl#2
+  70 008a 4FEA9C17 	 lsr r7,ip,#6
+  71 008e 0CF03F0C 	 and ip,ip,#63
+  72 0092 DB5D     	 ldrb r3,[r3,r7]
+  73 0094 01F8023C 	 strb r3,[r1,#-2]
+  74 0098 18F80C30 	 ldrb r3,[r8,ip]
+  75 009c 01F8013C 	 strb r3,[r1,#-1]
+  76 00a0 0332     	 adds r2,r2,#3
+  77 00a2 CDE7     	 b .L3
+  78              	.L11:
+  79 00a4 022C     	 cmp r4,#2
+  80 00a6 1946     	 mov r1,r3
+  81 00a8 0FD1     	 bne .L5
+  82 00aa AA5C     	 ldrb r2,[r5,r2]
+  83 00ac 164D     	 ldr r5,.L12
+  84 00ae 9408     	 lsrs r4,r2,#2
+  85 00b0 02F00302 	 and r2,r2,#3
+  86 00b4 2C5D     	 ldrb r4,[r5,r4]
+  87 00b6 C454     	 strb r4,[r0,r3]
+  88 00b8 1201     	 lsls r2,r2,#4
+  89 00ba C418     	 adds r4,r0,r3
+  90 00bc AA5C     	 ldrb r2,[r5,r2]
+  91 00be 6270     	 strb r2,[r4,#1]
+  92 00c0 3D22     	 movs r2,#61
+  93 00c2 A270     	 strb r2,[r4,#2]
+  94 00c4 0433     	 adds r3,r3,#4
+  95 00c6 2146     	 mov r1,r4
+  96 00c8 18E0     	 b .L9
+  97              	.L5:
+  98 00ca 012C     	 cmp r4,#1
+  99 00cc 17D1     	 bne .L6
+ 100 00ce AC5C     	 ldrb r4,[r5,r2]
+ 101 00d0 0D4E     	 ldr r6,.L12
+ 102 00d2 1544     	 add r5,r5,r2
+ 103 00d4 A708     	 lsrs r7,r4,#2
+ 104 00d6 6A78     	 ldrb r2,[r5,#1]
+ 105 00d8 F75D     	 ldrb r7,[r6,r7]
+ 106 00da C754     	 strb r7,[r0,r3]
+ 107 00dc 04F00304 	 and r4,r4,#3
+ 108 00e0 1709     	 lsrs r7,r2,#4
+ 109 00e2 06EB0414 	 add r4,r6,r4,lsl#4
+ 110 00e6 02F00F02 	 and r2,r2,#15
+ 111 00ea C518     	 adds r5,r0,r3
+ 112 00ec 16F82220 	 ldrb r2,[r6,r2,lsl#2]
+ 113 00f0 E45D     	 ldrb r4,[r4,r7]
+ 114 00f2 AA70     	 strb r2,[r5,#2]
+ 115 00f4 6C70     	 strb r4,[r5,#1]
+ 116 00f6 0433     	 adds r3,r3,#4
+ 117 00f8 0144     	 add r1,r1,r0
+ 118 00fa 3D22     	 movs r2,#61
+ 119              	.L9:
+ 120 00fc CA70     	 strb r2,[r1,#3]
+ 121              	.L6:
+ 122 00fe 0022     	 movs r2,#0
+ 123 0100 C254     	 strb r2,[r0,r3]
+ 124              	.L2:
+ 125 0102 BDE8F883 	 pop {r3,r4,r5,r6,r7,r8,r9,pc}
+ 126              	.L13:
+ 127 0106 00BF     	 .align 2
+ 128              	.L12:
+ 129 0108 00000000 	 .word .LANCHOR0
+ 131              	 .section .text.b64_decoded_size,"ax",%progbits
+ 132              	 .align 1
+ 133              	 .global b64_decoded_size
+ 134              	 .thumb
+ 135              	 .thumb_func
+ 137              	b64_decoded_size:
+ 138              	 
+ 139              	 
+ 140 0000 38B5     	 push {r3,r4,r5,lr}
+ 141 0002 0446     	 mov r4,r0
+ 142 0004 78B1     	 cbz r0,.L18
+ 143 0006 FFF7FEFF 	 bl strlen
+ 144 000a 8308     	 lsrs r3,r0,#2
+ 145 000c 03EB4301 	 add r1,r3,r3,lsl#1
+ 146 0010 2218     	 adds r2,r4,r0
+ 147              	.L16:
+ 148 0012 0B1B     	 subs r3,r1,r4
+ 149 0014 1B1A     	 subs r3,r3,r0
+ 150 0016 A242     	 cmp r2,r4
+ 151 0018 1344     	 add r3,r3,r2
+ 152 001a 05D0     	 beq .L15
+ 153 001c 12F8015D 	 ldrb r5,[r2,#-1]!
+ 154 0020 3D2D     	 cmp r5,#61
+ 155 0022 F6D0     	 beq .L16
+ 156 0024 00E0     	 b .L15
+ 157              	.L18:
+ 158 0026 0346     	 mov r3,r0
+ 159              	.L15:
+ 160 0028 1846     	 mov r0,r3
+ 161 002a 38BD     	 pop {r3,r4,r5,pc}
+ 163              	 .section .text.b64_generate_decode_table,"ax",%progbits
+ 164              	 .align 1
+ 165              	 .global b64_generate_decode_table
+ 166              	 .thumb
+ 167              	 .thumb_func
+ 169              	b64_generate_decode_table:
+ 170              	 
+ 171              	 
+ 172 0000 00B5     	 push {lr}
+ 173 0002 D1B0     	 sub sp,sp,#324
+ 174 0004 6846     	 mov r0,sp
+ 175 0006 4FF0FF31 	 mov r1,#-1
+ 176 000a 4FF4A072 	 mov r2,#320
+ 177 000e FFF7FEFF 	 bl memset
+ 178 0012 51B0     	 add sp,sp,#324
+ 179              	 
+ 180 0014 5DF804FB 	 ldr pc,[sp],#4
+ 182              	 .section .text.b64_is_valid_char,"ax",%progbits
+ 183              	 .align 1
+ 184              	 .global b64_is_valid_char
+ 185              	 .thumb
+ 186              	 .thumb_func
+ 188              	b64_is_valid_char:
+ 189              	 
+ 190              	 
+ 191              	 
+ 192 0000 20F02003 	 bic r3,r0,#32
+ 193 0004 413B     	 subs r3,r3,#65
+ 194 0006 192B     	 cmp r3,#25
+ 195 0008 0AD9     	 bls .L24
+ 196 000a 2B28     	 cmp r0,#43
+ 197 000c 08D0     	 beq .L24
+ 198 000e A0F12F03 	 sub r3,r0,#47
+ 199 0012 0A2B     	 cmp r3,#10
+ 200 0014 04D9     	 bls .L24
+ 201 0016 A0F13D03 	 sub r3,r0,#61
+ 202 001a 5842     	 rsbs r0,r3,#0
+ 203 001c 5841     	 adcs r0,r0,r3
+ 204 001e 7047     	 bx lr
+ 205              	.L24:
+ 206 0020 0120     	 movs r0,#1
+ 207 0022 7047     	 bx lr
+ 209              	 .section .text.b64_decode,"ax",%progbits
+ 210              	 .align 1
+ 211              	 .global b64_decode
+ 212              	 .thumb
+ 213              	 .thumb_func
+ 215              	b64_decode:
+ 216              	 
+ 217              	 
+ 218 0000 2DE9F041 	 push {r4,r5,r6,r7,r8,lr}
+ 219 0004 0C46     	 mov r4,r1
+ 220 0006 1746     	 mov r7,r2
+ 221 0008 0546     	 mov r5,r0
+ 222 000a 0028     	 cmp r0,#0
+ 223 000c 4FD0     	 beq .L37
+ 224 000e 0029     	 cmp r1,#0
+ 225 0010 4FD0     	 beq .L38
+ 226 0012 FFF7FEFF 	 bl strlen
+ 227 0016 0646     	 mov r6,r0
+ 228 0018 2846     	 mov r0,r5
+ 229 001a FFF7FEFF 	 bl b64_decoded_size
+ 230 001e 8742     	 cmp r7,r0
+ 231 0020 4AD3     	 bcc .L40
+ 232 0022 B307     	 lsls r3,r6,#30
+ 233 0024 48D1     	 bne .L40
+ 234 0026 05EB0608 	 add r8,r5,r6
+ 235 002a 2F46     	 mov r7,r5
+ 236              	.L27:
+ 237 002c 4745     	 cmp r7,r8
+ 238 002e 06D0     	 beq .L50
+ 239 0030 17F8010B 	 ldrb r0,[r7],#1
+ 240 0034 FFF7FEFF 	 bl b64_is_valid_char
+ 241 0038 0028     	 cmp r0,#0
+ 242 003a F7D1     	 bne .L27
+ 243 003c 3DE0     	 b .L26
+ 244              	.L50:
+ 245 003e A11C     	 adds r1,r4,#2
+ 246 0040 2A46     	 mov r2,r5
+ 247              	.L29:
+ 248 0042 531B     	 subs r3,r2,r5
+ 249 0044 B342     	 cmp r3,r6
+ 250 0046 2FD2     	 bcs .L51
+ 251 0048 1378     	 ldrb r3,[r2]
+ 252 004a 5478     	 ldrb r4,[r2,#1]
+ 253 004c 1C48     	 ldr r0,.L52
+ 254 004e 2B3B     	 subs r3,r3,#43
+ 255 0050 2B3C     	 subs r4,r4,#43
+ 256 0052 50F82370 	 ldr r7,[r0,r3,lsl#2]
+ 257 0056 50F82430 	 ldr r3,[r0,r4,lsl#2]
+ 258 005a 9478     	 ldrb r4,[r2,#2]
+ 259 005c 3D2C     	 cmp r4,#61
+ 260 005e 18BF     	 it ne
+ 261 0060 2B3C     	 subne r4,r4,#43
+ 262 0062 43EA8713 	 orr r3,r3,r7,lsl#6
+ 263 0066 18BF     	 it ne
+ 264 0068 50F82440 	 ldrne r4,[r0,r4,lsl#2]
+ 265 006c 4FEA8313 	 lsl r3,r3,#6
+ 266 0070 18BF     	 it ne
+ 267 0072 2343     	 orrne r3,r3,r4
+ 268 0074 D478     	 ldrb r4,[r2,#3]
+ 269 0076 3D2C     	 cmp r4,#61
+ 270 0078 18BF     	 it ne
+ 271 007a 2B3C     	 subne r4,r4,#43
+ 272 007c 4FEA8313 	 lsl r3,r3,#6
+ 273 0080 1CBF     	 itt ne
+ 274 0082 50F82400 	 ldrne r0,[r0,r4,lsl#2]
+ 275 0086 0343     	 orrne r3,r3,r0
+ 276 0088 1814     	 asrs r0,r3,#16
+ 277 008a 01F8020C 	 strb r0,[r1,#-2]
+ 278 008e 9078     	 ldrb r0,[r2,#2]
+ 279 0090 3D28     	 cmp r0,#61
+ 280 0092 1CBF     	 itt ne
+ 281 0094 1812     	 asrne r0,r3,#8
+ 282 0096 01F8010C 	 strbne r0,[r1,#-1]
+ 283 009a D078     	 ldrb r0,[r2,#3]
+ 284 009c 3D28     	 cmp r0,#61
+ 285 009e 18BF     	 it ne
+ 286 00a0 0B70     	 strbne r3,[r1]
+ 287 00a2 0432     	 adds r2,r2,#4
+ 288 00a4 0331     	 adds r1,r1,#3
+ 289 00a6 CCE7     	 b .L29
+ 290              	.L51:
+ 291 00a8 0120     	 movs r0,#1
+ 292 00aa BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 293              	.L37:
+ 294 00ae BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 295              	.L38:
+ 296 00b2 0846     	 mov r0,r1
+ 297 00b4 BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 298              	.L40:
+ 299 00b8 0020     	 movs r0,#0
+ 300              	.L26:
+ 301 00ba BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 302              	.L53:
+ 303 00be 00BF     	 .align 2
+ 304              	.L52:
+ 305 00c0 00000000 	 .word .LANCHOR1
+ 307              	 .section .rodata.b64invs,"a",%progbits
+ 308              	 .align 2
+ 309              	 .set .LANCHOR1,.+0
+ 312              	b64invs:
+ 313 0000 3E000000 	 .word 62
+ 314 0004 FFFFFFFF 	 .word -1
+ 315 0008 FFFFFFFF 	 .word -1
+ 316 000c FFFFFFFF 	 .word -1
+ 317 0010 3F000000 	 .word 63
+ 318 0014 34000000 	 .word 52
+ 319 0018 35000000 	 .word 53
+ 320 001c 36000000 	 .word 54
+ 321 0020 37000000 	 .word 55
+ 322 0024 38000000 	 .word 56
+ 323 0028 39000000 	 .word 57
+ 324 002c 3A000000 	 .word 58
+ 325 0030 3B000000 	 .word 59
+ 326 0034 3C000000 	 .word 60
+ 327 0038 3D000000 	 .word 61
+ 328 003c FFFFFFFF 	 .word -1
+ 329 0040 FFFFFFFF 	 .word -1
+ 330 0044 FFFFFFFF 	 .word -1
+ 331 0048 FFFFFFFF 	 .word -1
+ 332 004c FFFFFFFF 	 .word -1
+ 333 0050 FFFFFFFF 	 .word -1
+ 334 0054 FFFFFFFF 	 .word -1
+ 335 0058 00000000 	 .word 0
+ 336 005c 01000000 	 .word 1
+ 337 0060 02000000 	 .word 2
+ 338 0064 03000000 	 .word 3
+ 339 0068 04000000 	 .word 4
+ 340 006c 05000000 	 .word 5
+ 341 0070 06000000 	 .word 6
+ 342 0074 07000000 	 .word 7
+ 343 0078 08000000 	 .word 8
+ 344 007c 09000000 	 .word 9
+ 345 0080 0A000000 	 .word 10
+ 346 0084 0B000000 	 .word 11
+ 347 0088 0C000000 	 .word 12
+ 348 008c 0D000000 	 .word 13
+ 349 0090 0E000000 	 .word 14
+ 350 0094 0F000000 	 .word 15
+ 351 0098 10000000 	 .word 16
+ 352 009c 11000000 	 .word 17
+ 353 00a0 12000000 	 .word 18
+ 354 00a4 13000000 	 .word 19
+ 355 00a8 14000000 	 .word 20
+ 356 00ac 15000000 	 .word 21
+ 357 00b0 16000000 	 .word 22
+ 358 00b4 17000000 	 .word 23
+ 359 00b8 18000000 	 .word 24
+ 360 00bc 19000000 	 .word 25
+ 361 00c0 FFFFFFFF 	 .word -1
+ 362 00c4 FFFFFFFF 	 .word -1
+ 363 00c8 FFFFFFFF 	 .word -1
+ 364 00cc FFFFFFFF 	 .word -1
+ 365 00d0 FFFFFFFF 	 .word -1
+ 366 00d4 FFFFFFFF 	 .word -1
+ 367 00d8 1A000000 	 .word 26
+ 368 00dc 1B000000 	 .word 27
+ 369 00e0 1C000000 	 .word 28
+ 370 00e4 1D000000 	 .word 29
+ 371 00e8 1E000000 	 .word 30
+ 372 00ec 1F000000 	 .word 31
+ 373 00f0 20000000 	 .word 32
+ 374 00f4 21000000 	 .word 33
+ 375 00f8 22000000 	 .word 34
+ 376 00fc 23000000 	 .word 35
+ 377 0100 24000000 	 .word 36
+ 378 0104 25000000 	 .word 37
+ 379 0108 26000000 	 .word 38
+ 380 010c 27000000 	 .word 39
+ 381 0110 28000000 	 .word 40
+ 382 0114 29000000 	 .word 41
+ 383 0118 2A000000 	 .word 42
+ 384 011c 2B000000 	 .word 43
+ 385 0120 2C000000 	 .word 44
+ 386 0124 2D000000 	 .word 45
+ 387 0128 2E000000 	 .word 46
+ 388 012c 2F000000 	 .word 47
+ 389 0130 30000000 	 .word 48
+ 390 0134 31000000 	 .word 49
+ 391 0138 32000000 	 .word 50
+ 392 013c 33000000 	 .word 51
+ 393              	 .section .rodata.b64,"a",%progbits
+ 394              	 .set .LANCHOR0,.+0
+ 397              	b64:
+ 398 0000 41424344 	 .ascii "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy"
+ 398      45464748 
+ 398      494A4B4C 
+ 398      4D4E4F50 
+ 398      51525354 
+ 399 0033 7A303132 	 .ascii "z0123456789+/\000"
+ 399      33343536 
+ 399      3738392B 
+ 399      2F00
+ 400              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 Base64.c
+    {standard input}:17     .text.base64_encode:00000000 $t
+    {standard input}:22     .text.base64_encode:00000000 base64_encode
+    {standard input}:129    .text.base64_encode:00000108 $d
+    {standard input}:132    .text.b64_decoded_size:00000000 $t
+    {standard input}:137    .text.b64_decoded_size:00000000 b64_decoded_size
+    {standard input}:164    .text.b64_generate_decode_table:00000000 $t
+    {standard input}:169    .text.b64_generate_decode_table:00000000 b64_generate_decode_table
+    {standard input}:183    .text.b64_is_valid_char:00000000 $t
+    {standard input}:188    .text.b64_is_valid_char:00000000 b64_is_valid_char
+    {standard input}:210    .text.b64_decode:00000000 $t
+    {standard input}:215    .text.b64_decode:00000000 b64_decode
+    {standard input}:305    .text.b64_decode:000000c0 $d
+    {standard input}:308    .rodata.b64invs:00000000 $d
+    {standard input}:312    .rodata.b64invs:00000000 b64invs
+    {standard input}:397    .rodata.b64:00000000 b64
+
+UNDEFINED SYMBOLS
+calloc
+strlen
+memset

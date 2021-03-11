@@ -1,0 +1,395 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "xmc_dac.c"
+  16              	 .section .text.XMC_DAC_Enable,"ax",%progbits
+  17              	 .align 1
+  18              	 .global XMC_DAC_Enable
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	XMC_DAC_Enable:
+  23              	 
+  24              	 
+  25 0000 10B5     	 push {r4,lr}
+  26 0002 044C     	 ldr r4,.L2
+  27 0004 2046     	 mov r0,r4
+  28 0006 FFF7FEFF 	 bl XMC_SCU_CLOCK_UngatePeripheralClock
+  29 000a 2046     	 mov r0,r4
+  30 000c BDE81040 	 pop {r4,lr}
+  31 0010 FFF7FEBF 	 b XMC_SCU_RESET_DeassertPeripheralReset
+  32              	.L3:
+  33              	 .align 2
+  34              	.L2:
+  35 0014 20000010 	 .word 268435488
+  37              	 .section .text.XMC_DAC_Disable,"ax",%progbits
+  38              	 .align 1
+  39              	 .global XMC_DAC_Disable
+  40              	 .thumb
+  41              	 .thumb_func
+  43              	XMC_DAC_Disable:
+  44              	 
+  45              	 
+  46 0000 10B5     	 push {r4,lr}
+  47 0002 044C     	 ldr r4,.L5
+  48 0004 2046     	 mov r0,r4
+  49 0006 FFF7FEFF 	 bl XMC_SCU_RESET_AssertPeripheralReset
+  50 000a 2046     	 mov r0,r4
+  51 000c BDE81040 	 pop {r4,lr}
+  52 0010 FFF7FEBF 	 b XMC_SCU_CLOCK_GatePeripheralClock
+  53              	.L6:
+  54              	 .align 2
+  55              	.L5:
+  56 0014 20000010 	 .word 268435488
+  58              	 .section .text.XMC_DAC_IsEnabled,"ax",%progbits
+  59              	 .align 1
+  60              	 .global XMC_DAC_IsEnabled
+  61              	 .thumb
+  62              	 .thumb_func
+  64              	XMC_DAC_IsEnabled:
+  65              	 
+  66              	 
+  67 0000 08B5     	 push {r3,lr}
+  68 0002 0348     	 ldr r0,.L8
+  69 0004 FFF7FEFF 	 bl XMC_SCU_RESET_IsPeripheralResetAsserted
+  70 0008 80F00100 	 eor r0,r0,#1
+  71 000c C0B2     	 uxtb r0,r0
+  72 000e 08BD     	 pop {r3,pc}
+  73              	.L9:
+  74              	 .align 2
+  75              	.L8:
+  76 0010 20000010 	 .word 268435488
+  78              	 .section .text.XMC_DAC_CH_Init,"ax",%progbits
+  79              	 .align 1
+  80              	 .global XMC_DAC_CH_Init
+  81              	 .thumb
+  82              	 .thumb_func
+  84              	XMC_DAC_CH_Init:
+  85              	 
+  86              	 
+  87 0000 70B5     	 push {r4,r5,r6,lr}
+  88 0002 0D46     	 mov r5,r1
+  89 0004 1646     	 mov r6,r2
+  90 0006 0446     	 mov r4,r0
+  91 0008 FFF7FEFF 	 bl XMC_DAC_Enable
+  92 000c 04EBC500 	 add r0,r4,r5,lsl#3
+  93 0010 3368     	 ldr r3,[r6]
+  94 0012 4360     	 str r3,[r0,#4]
+  95 0014 7368     	 ldr r3,[r6,#4]
+  96 0016 8360     	 str r3,[r0,#8]
+  97 0018 012D     	 cmp r5,#1
+  98 001a 9EBF     	 ittt ls
+  99 001c 8368     	 ldrls r3,[r0,#8]
+ 100 001e 43F08073 	 orrls r3,r3,#16777216
+ 101 0022 8360     	 strls r3,[r0,#8]
+ 102 0024 70BD     	 pop {r4,r5,r6,pc}
+ 104              	 .section .text.XMC_DAC_CH_SetFrequency,"ax",%progbits
+ 105              	 .align 1
+ 106              	 .global XMC_DAC_CH_SetFrequency
+ 107              	 .thumb
+ 108              	 .thumb_func
+ 110              	XMC_DAC_CH_SetFrequency:
+ 111              	 
+ 112              	 
+ 113 0000 70B5     	 push {r4,r5,r6,lr}
+ 114 0002 1446     	 mov r4,r2
+ 115 0004 0546     	 mov r5,r0
+ 116 0006 0E46     	 mov r6,r1
+ 117 0008 FFF7FEFF 	 bl XMC_SCU_CLOCK_GetPeripheralClockFrequency
+ 118 000c B0FBF4F0 	 udiv r0,r0,r4
+ 119 0010 0F28     	 cmp r0,#15
+ 120 0012 0BD9     	 bls .L14
+ 121 0014 B0F5801F 	 cmp r0,#1048576
+ 122 0018 0AD2     	 bcs .L15
+ 123 001a 05EBC601 	 add r1,r5,r6,lsl#3
+ 124 001e 4C68     	 ldr r4,[r1,#4]
+ 125 0020 230D     	 lsrs r3,r4,#20
+ 126 0022 1B05     	 lsls r3,r3,#20
+ 127 0024 0343     	 orrs r3,r3,r0
+ 128 0026 4B60     	 str r3,[r1,#4]
+ 129 0028 0020     	 movs r0,#0
+ 130 002a 70BD     	 pop {r4,r5,r6,pc}
+ 131              	.L14:
+ 132 002c 0420     	 movs r0,#4
+ 133 002e 70BD     	 pop {r4,r5,r6,pc}
+ 134              	.L15:
+ 135 0030 0320     	 movs r0,#3
+ 136 0032 70BD     	 pop {r4,r5,r6,pc}
+ 138              	 .section .text.XMC_DAC_CH_SetRampFrequency,"ax",%progbits
+ 139              	 .align 1
+ 140              	 .global XMC_DAC_CH_SetRampFrequency
+ 141              	 .thumb
+ 142              	 .thumb_func
+ 144              	XMC_DAC_CH_SetRampFrequency:
+ 145              	 
+ 146              	 
+ 147 0000 0B1D     	 adds r3,r1,#4
+ 148 0002 00EB8303 	 add r3,r0,r3,lsl#2
+ 149 0006 70B5     	 push {r4,r5,r6,lr}
+ 150 0008 5E68     	 ldr r6,[r3,#4]
+ 151 000a C369     	 ldr r3,[r0,#28]
+ 152 000c 0C01     	 lsls r4,r1,#4
+ 153 000e E340     	 lsrs r3,r3,r4
+ 154 0010 C3F30B03 	 ubfx r3,r3,#0,#12
+ 155 0014 9B1B     	 subs r3,r3,r6
+ 156 0016 03FB0222 	 mla r2,r3,r2,r2
+ 157 001a BDE87040 	 pop {r4,r5,r6,lr}
+ 158 001e FFF7FEBF 	 b XMC_DAC_CH_SetFrequency
+ 160              	 .section .text.XMC_DAC_CH_StartSingleValueMode,"ax",%progbits
+ 161              	 .align 1
+ 162              	 .global XMC_DAC_CH_StartSingleValueMode
+ 163              	 .thumb
+ 164              	 .thumb_func
+ 166              	XMC_DAC_CH_StartSingleValueMode:
+ 167              	 
+ 168              	 
+ 169              	 
+ 170 0000 00EBC101 	 add r1,r0,r1,lsl#3
+ 171 0004 0020     	 movs r0,#0
+ 172 0006 4B68     	 ldr r3,[r1,#4]
+ 173 0008 23F4E003 	 bic r3,r3,#7340032
+ 174 000c 43F48013 	 orr r3,r3,#1048576
+ 175 0010 4B60     	 str r3,[r1,#4]
+ 176 0012 7047     	 bx lr
+ 178              	 .section .text.XMC_DAC_CH_StartDataMode,"ax",%progbits
+ 179              	 .align 1
+ 180              	 .global XMC_DAC_CH_StartDataMode
+ 181              	 .thumb
+ 182              	 .thumb_func
+ 184              	XMC_DAC_CH_StartDataMode:
+ 185              	 
+ 186              	 
+ 187 0000 38B5     	 push {r3,r4,r5,lr}
+ 188 0002 00EBC104 	 add r4,r0,r1,lsl#3
+ 189 0006 6568     	 ldr r5,[r4,#4]
+ 190 0008 25F4E005 	 bic r5,r5,#7340032
+ 191 000c 6560     	 str r5,[r4,#4]
+ 192 000e 1546     	 mov r5,r2
+ 193 0010 62B1     	 cbz r2,.L20
+ 194              	.L22:
+ 195 0012 A268     	 ldr r2,[r4,#8]
+ 196 0014 22F4CE22 	 bic r2,r2,#421888
+ 197 0018 2A43     	 orrs r2,r2,r5
+ 198 001a A260     	 str r2,[r4,#8]
+ 199 001c 6368     	 ldr r3,[r4,#4]
+ 200 001e 23F4E003 	 bic r3,r3,#7340032
+ 201 0022 43F40013 	 orr r3,r3,#2097152
+ 202 0026 6360     	 str r3,[r4,#4]
+ 203 0028 0020     	 movs r0,#0
+ 204 002a 38BD     	 pop {r3,r4,r5,pc}
+ 205              	.L20:
+ 206 002c 1A46     	 mov r2,r3
+ 207 002e FFF7FEFF 	 bl XMC_DAC_CH_SetFrequency
+ 208 0032 0028     	 cmp r0,#0
+ 209 0034 EDD0     	 beq .L22
+ 210 0036 38BD     	 pop {r3,r4,r5,pc}
+ 212              	 .section .text.XMC_DAC_CH_StartRampMode,"ax",%progbits
+ 213              	 .align 1
+ 214              	 .global XMC_DAC_CH_StartRampMode
+ 215              	 .thumb
+ 216              	 .thumb_func
+ 218              	XMC_DAC_CH_StartRampMode:
+ 219              	 
+ 220              	 
+ 221 0000 F8B5     	 push {r3,r4,r5,r6,r7,lr}
+ 222 0002 0EB2     	 sxth r6,r1
+ 223 0004 00EBC604 	 add r4,r0,r6,lsl#3
+ 224 0008 0D46     	 mov r5,r1
+ 225 000a D4F804C0 	 ldr ip,[r4,#4]
+ 226 000e DDF818E0 	 ldr lr,[sp,#24]
+ 227 0012 0435     	 adds r5,r5,#4
+ 228 0014 00EB8505 	 add r5,r0,r5,lsl#2
+ 229 0018 2CF4E00C 	 bic ip,ip,#7340032
+ 230 001c C4F804C0 	 str ip,[r4,#4]
+ 231 0020 6A60     	 str r2,[r5,#4]
+ 232 0022 C569     	 ldr r5,[r0,#28]
+ 233 0024 3201     	 lsls r2,r6,#4
+ 234 0026 40F6FF76 	 movw r6,#4095
+ 235 002a 9640     	 lsls r6,r6,r2
+ 236 002c 25EA0605 	 bic r5,r5,r6
+ 237 0030 9340     	 lsls r3,r3,r2
+ 238 0032 2B43     	 orrs r3,r3,r5
+ 239 0034 C361     	 str r3,[r0,#28]
+ 240 0036 A368     	 ldr r3,[r4,#8]
+ 241 0038 23F4CE23 	 bic r3,r3,#421888
+ 242 003c 4EEA0303 	 orr r3,lr,r3
+ 243 0040 A360     	 str r3,[r4,#8]
+ 244 0042 BEF1000F 	 cmp lr,#0
+ 245 0046 07D0     	 beq .L27
+ 246              	.L29:
+ 247 0048 6368     	 ldr r3,[r4,#4]
+ 248 004a 23F4E003 	 bic r3,r3,#7340032
+ 249 004e 43F4A003 	 orr r3,r3,#5242880
+ 250 0052 6360     	 str r3,[r4,#4]
+ 251 0054 0020     	 movs r0,#0
+ 252 0056 F8BD     	 pop {r3,r4,r5,r6,r7,pc}
+ 253              	.L27:
+ 254 0058 079A     	 ldr r2,[sp,#28]
+ 255 005a FFF7FEFF 	 bl XMC_DAC_CH_SetRampFrequency
+ 256 005e 0028     	 cmp r0,#0
+ 257 0060 F2D0     	 beq .L29
+ 258 0062 F8BD     	 pop {r3,r4,r5,r6,r7,pc}
+ 260              	 .section .text.XMC_DAC_CH_StartNoiseMode,"ax",%progbits
+ 261              	 .align 1
+ 262              	 .global XMC_DAC_CH_StartNoiseMode
+ 263              	 .thumb
+ 264              	 .thumb_func
+ 266              	XMC_DAC_CH_StartNoiseMode:
+ 267              	 
+ 268              	 
+ 269 0000 38B5     	 push {r3,r4,r5,lr}
+ 270 0002 00EBC104 	 add r4,r0,r1,lsl#3
+ 271 0006 6568     	 ldr r5,[r4,#4]
+ 272 0008 25F4E005 	 bic r5,r5,#7340032
+ 273 000c 6560     	 str r5,[r4,#4]
+ 274 000e 1546     	 mov r5,r2
+ 275 0010 62B1     	 cbz r2,.L34
+ 276              	.L36:
+ 277 0012 A268     	 ldr r2,[r4,#8]
+ 278 0014 22F4CE22 	 bic r2,r2,#421888
+ 279 0018 2A43     	 orrs r2,r2,r5
+ 280 001a A260     	 str r2,[r4,#8]
+ 281 001c 6368     	 ldr r3,[r4,#4]
+ 282 001e 23F4E003 	 bic r3,r3,#7340032
+ 283 0022 43F48003 	 orr r3,r3,#4194304
+ 284 0026 6360     	 str r3,[r4,#4]
+ 285 0028 0020     	 movs r0,#0
+ 286 002a 38BD     	 pop {r3,r4,r5,pc}
+ 287              	.L34:
+ 288 002c 1A46     	 mov r2,r3
+ 289 002e FFF7FEFF 	 bl XMC_DAC_CH_SetFrequency
+ 290 0032 0028     	 cmp r0,#0
+ 291 0034 EDD0     	 beq .L36
+ 292 0036 38BD     	 pop {r3,r4,r5,pc}
+ 294              	 .section .text.XMC_DAC_CH_SetPattern,"ax",%progbits
+ 295              	 .align 1
+ 296              	 .global XMC_DAC_CH_SetPattern
+ 297              	 .thumb
+ 298              	 .thumb_func
+ 300              	XMC_DAC_CH_SetPattern:
+ 301              	 
+ 302              	 
+ 303 0000 70B5     	 push {r4,r5,r6,lr}
+ 304 0002 1478     	 ldrb r4,[r2]
+ 305 0004 0123     	 movs r3,#1
+ 306              	.L41:
+ 307 0006 D55C     	 ldrb r5,[r2,r3]
+ 308 0008 03EB8306 	 add r6,r3,r3,lsl#2
+ 309 000c 0133     	 adds r3,r3,#1
+ 310 000e B540     	 lsls r5,r5,r6
+ 311 0010 062B     	 cmp r3,#6
+ 312 0012 44EA0504 	 orr r4,r4,r5
+ 313 0016 F6D1     	 bne .L41
+ 314 0018 00EBC101 	 add r1,r0,r1,lsl#3
+ 315 001c 0123     	 movs r3,#1
+ 316 001e 0C62     	 str r4,[r1,#32]
+ 317 0020 12F8060F 	 ldrb r0,[r2,#6]!
+ 318              	.L42:
+ 319 0024 12F8014F 	 ldrb r4,[r2,#1]!
+ 320 0028 03EB8305 	 add r5,r3,r3,lsl#2
+ 321 002c 0133     	 adds r3,r3,#1
+ 322 002e AC40     	 lsls r4,r4,r5
+ 323 0030 062B     	 cmp r3,#6
+ 324 0032 40EA0400 	 orr r0,r0,r4
+ 325 0036 F5D1     	 bne .L42
+ 326 0038 4862     	 str r0,[r1,#36]
+ 327 003a 70BD     	 pop {r4,r5,r6,pc}
+ 329              	 .section .text.XMC_DAC_CH_StartPatternMode,"ax",%progbits
+ 330              	 .align 1
+ 331              	 .global XMC_DAC_CH_StartPatternMode
+ 332              	 .thumb
+ 333              	 .thumb_func
+ 335              	XMC_DAC_CH_StartPatternMode:
+ 336              	 
+ 337              	 
+ 338 0000 2DE9F843 	 push {r3,r4,r5,r6,r7,r8,r9,lr}
+ 339 0004 00EBC104 	 add r4,r0,r1,lsl#3
+ 340 0008 9846     	 mov r8,r3
+ 341 000a 6368     	 ldr r3,[r4,#4]
+ 342 000c 089D     	 ldr r5,[sp,#32]
+ 343 000e 23F4E003 	 bic r3,r3,#7340032
+ 344 0012 0646     	 mov r6,r0
+ 345 0014 0F46     	 mov r7,r1
+ 346 0016 9146     	 mov r9,r2
+ 347 0018 6360     	 str r3,[r4,#4]
+ 348 001a 5DB1     	 cbz r5,.L46
+ 349              	.L49:
+ 350 001c 3046     	 mov r0,r6
+ 351 001e 3946     	 mov r1,r7
+ 352 0020 4A46     	 mov r2,r9
+ 353 0022 FFF7FEFF 	 bl XMC_DAC_CH_SetPattern
+ 354 0026 B8F1010F 	 cmp r8,#1
+ 355 002a 09D1     	 bne .L55
+ 356 002c 6368     	 ldr r3,[r4,#4]
+ 357 002e 43F00053 	 orr r3,r3,#536870912
+ 358 0032 08E0     	 b .L56
+ 359              	.L46:
+ 360 0034 099A     	 ldr r2,[sp,#36]
+ 361 0036 5201     	 lsls r2,r2,#5
+ 362 0038 FFF7FEFF 	 bl XMC_DAC_CH_SetFrequency
+ 363 003c 80B9     	 cbnz r0,.L50
+ 364 003e EDE7     	 b .L49
+ 365              	.L55:
+ 366 0040 6368     	 ldr r3,[r4,#4]
+ 367 0042 23F00053 	 bic r3,r3,#536870912
+ 368              	.L56:
+ 369 0046 6360     	 str r3,[r4,#4]
+ 370 0048 A368     	 ldr r3,[r4,#8]
+ 371 004a 23F4CE23 	 bic r3,r3,#421888
+ 372 004e 2B43     	 orrs r3,r3,r5
+ 373 0050 A360     	 str r3,[r4,#8]
+ 374 0052 6368     	 ldr r3,[r4,#4]
+ 375 0054 23F4E003 	 bic r3,r3,#7340032
+ 376 0058 43F44013 	 orr r3,r3,#3145728
+ 377 005c 6360     	 str r3,[r4,#4]
+ 378 005e 0020     	 movs r0,#0
+ 379              	.L50:
+ 380 0060 BDE8F883 	 pop {r3,r4,r5,r6,r7,r8,r9,pc}
+ 382              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_dac.c
+    {standard input}:17     .text.XMC_DAC_Enable:00000000 $t
+    {standard input}:22     .text.XMC_DAC_Enable:00000000 XMC_DAC_Enable
+    {standard input}:35     .text.XMC_DAC_Enable:00000014 $d
+    {standard input}:38     .text.XMC_DAC_Disable:00000000 $t
+    {standard input}:43     .text.XMC_DAC_Disable:00000000 XMC_DAC_Disable
+    {standard input}:56     .text.XMC_DAC_Disable:00000014 $d
+    {standard input}:59     .text.XMC_DAC_IsEnabled:00000000 $t
+    {standard input}:64     .text.XMC_DAC_IsEnabled:00000000 XMC_DAC_IsEnabled
+    {standard input}:76     .text.XMC_DAC_IsEnabled:00000010 $d
+    {standard input}:79     .text.XMC_DAC_CH_Init:00000000 $t
+    {standard input}:84     .text.XMC_DAC_CH_Init:00000000 XMC_DAC_CH_Init
+    {standard input}:105    .text.XMC_DAC_CH_SetFrequency:00000000 $t
+    {standard input}:110    .text.XMC_DAC_CH_SetFrequency:00000000 XMC_DAC_CH_SetFrequency
+    {standard input}:139    .text.XMC_DAC_CH_SetRampFrequency:00000000 $t
+    {standard input}:144    .text.XMC_DAC_CH_SetRampFrequency:00000000 XMC_DAC_CH_SetRampFrequency
+    {standard input}:161    .text.XMC_DAC_CH_StartSingleValueMode:00000000 $t
+    {standard input}:166    .text.XMC_DAC_CH_StartSingleValueMode:00000000 XMC_DAC_CH_StartSingleValueMode
+    {standard input}:179    .text.XMC_DAC_CH_StartDataMode:00000000 $t
+    {standard input}:184    .text.XMC_DAC_CH_StartDataMode:00000000 XMC_DAC_CH_StartDataMode
+    {standard input}:213    .text.XMC_DAC_CH_StartRampMode:00000000 $t
+    {standard input}:218    .text.XMC_DAC_CH_StartRampMode:00000000 XMC_DAC_CH_StartRampMode
+    {standard input}:261    .text.XMC_DAC_CH_StartNoiseMode:00000000 $t
+    {standard input}:266    .text.XMC_DAC_CH_StartNoiseMode:00000000 XMC_DAC_CH_StartNoiseMode
+    {standard input}:295    .text.XMC_DAC_CH_SetPattern:00000000 $t
+    {standard input}:300    .text.XMC_DAC_CH_SetPattern:00000000 XMC_DAC_CH_SetPattern
+    {standard input}:330    .text.XMC_DAC_CH_StartPatternMode:00000000 $t
+    {standard input}:335    .text.XMC_DAC_CH_StartPatternMode:00000000 XMC_DAC_CH_StartPatternMode
+
+UNDEFINED SYMBOLS
+XMC_SCU_CLOCK_UngatePeripheralClock
+XMC_SCU_RESET_DeassertPeripheralReset
+XMC_SCU_RESET_AssertPeripheralReset
+XMC_SCU_CLOCK_GatePeripheralClock
+XMC_SCU_RESET_IsPeripheralResetAsserted
+XMC_SCU_CLOCK_GetPeripheralClockFrequency

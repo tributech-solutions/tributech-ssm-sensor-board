@@ -1,0 +1,205 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "ConfigDescriptors.c"
+  16              	 .section .text.USB_Host_GetDeviceConfigDescriptor,"ax",%progbits
+  17              	 .align 1
+  18              	 .global USB_Host_GetDeviceConfigDescriptor
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	USB_Host_GetDeviceConfigDescriptor:
+  23              	 
+  24              	 
+  25 0000 F0B5     	 push {r4,r5,r6,r7,lr}
+  26 0002 164C     	 ldr r4,.L8
+  27 0004 1E46     	 mov r6,r3
+  28 0006 0138     	 subs r0,r0,#1
+  29 0008 8023     	 movs r3,#128
+  30 000a 2370     	 strb r3,[r4]
+  31 000c 40F40070 	 orr r0,r0,#512
+  32 0010 0623     	 movs r3,#6
+  33 0012 85B0     	 sub sp,sp,#20
+  34 0014 6370     	 strb r3,[r4,#1]
+  35 0016 6080     	 strh r0,[r4,#2]
+  36 0018 0923     	 movs r3,#9
+  37 001a 0020     	 movs r0,#0
+  38 001c 2071     	 strb r0,[r4,#4]
+  39 001e 6071     	 strb r0,[r4,#5]
+  40 0020 E071     	 strb r0,[r4,#7]
+  41 0022 0F46     	 mov r7,r1
+  42 0024 1546     	 mov r5,r2
+  43 0026 A371     	 strb r3,[r4,#6]
+  44 0028 FFF7FEFF 	 bl Pipe_SelectPipe
+  45 002c 01A8     	 add r0,sp,#4
+  46 002e FFF7FEFF 	 bl USB_Host_SendControlRequest
+  47 0032 80B9     	 cbnz r0,.L2
+  48 0034 BDF80620 	 ldrh r2,[sp,#6]
+  49 0038 3A80     	 strh r2,[r7]
+  50 003a B242     	 cmp r2,r6
+  51 003c 0AD8     	 bhi .L4
+  52 003e 2846     	 mov r0,r5
+  53 0040 E280     	 strh r2,[r4,#6]
+  54 0042 FFF7FEFF 	 bl USB_Host_SendControlRequest
+  55 0046 30B9     	 cbnz r0,.L2
+  56 0048 6B78     	 ldrb r3,[r5,#1]
+  57 004a 022B     	 cmp r3,#2
+  58 004c 14BF     	 ite ne
+  59 004e 0620     	 movne r0,#6
+  60 0050 0020     	 moveq r0,#0
+  61 0052 00E0     	 b .L2
+  62              	.L4:
+  63 0054 0520     	 movs r0,#5
+  64              	.L2:
+  65 0056 05B0     	 add sp,sp,#20
+  66              	 
+  67 0058 F0BD     	 pop {r4,r5,r6,r7,pc}
+  68              	.L9:
+  69 005a 00BF     	 .align 2
+  70              	.L8:
+  71 005c 00000000 	 .word USB_ControlRequest
+  73              	 .section .text.USB_GetNextDescriptorOfType,"ax",%progbits
+  74              	 .align 1
+  75              	 .global USB_GetNextDescriptorOfType
+  76              	 .thumb
+  77              	 .thumb_func
+  79              	USB_GetNextDescriptorOfType:
+  80              	 
+  81              	 
+  82 0000 30B5     	 push {r4,r5,lr}
+  83              	.L11:
+  84 0002 0388     	 ldrh r3,[r0]
+  85 0004 5BB1     	 cbz r3,.L10
+  86 0006 0C68     	 ldr r4,[r1]
+  87 0008 2578     	 ldrb r5,[r4]
+  88 000a 9D42     	 cmp r5,r3
+  89 000c 28BF     	 it cs
+  90 000e 1D46     	 movcs r5,r3
+  91 0010 2C44     	 add r4,r4,r5
+  92 0012 5B1B     	 subs r3,r3,r5
+  93 0014 0C60     	 str r4,[r1]
+  94 0016 0380     	 strh r3,[r0]
+  95 0018 6378     	 ldrb r3,[r4,#1]
+  96 001a 9342     	 cmp r3,r2
+  97 001c F1D1     	 bne .L11
+  98              	.L10:
+  99 001e 30BD     	 pop {r4,r5,pc}
+ 101              	 .section .text.USB_GetNextDescriptorOfTypeBefore,"ax",%progbits
+ 102              	 .align 1
+ 103              	 .global USB_GetNextDescriptorOfTypeBefore
+ 104              	 .thumb
+ 105              	 .thumb_func
+ 107              	USB_GetNextDescriptorOfTypeBefore:
+ 108              	 
+ 109              	 
+ 110 0000 70B5     	 push {r4,r5,r6,lr}
+ 111              	.L16:
+ 112 0002 0488     	 ldrh r4,[r0]
+ 113 0004 84B1     	 cbz r4,.L15
+ 114 0006 0D68     	 ldr r5,[r1]
+ 115 0008 2E78     	 ldrb r6,[r5]
+ 116 000a A642     	 cmp r6,r4
+ 117 000c 28BF     	 it cs
+ 118 000e 2646     	 movcs r6,r4
+ 119 0010 3544     	 add r5,r5,r6
+ 120 0012 A41B     	 subs r4,r4,r6
+ 121 0014 0D60     	 str r5,[r1]
+ 122 0016 0480     	 strh r4,[r0]
+ 123 0018 6C78     	 ldrb r4,[r5,#1]
+ 124 001a 9442     	 cmp r4,r2
+ 125 001c 04D0     	 beq .L15
+ 126 001e 9C42     	 cmp r4,r3
+ 127 0020 EFD1     	 bne .L16
+ 128 0022 0023     	 movs r3,#0
+ 129 0024 0380     	 strh r3,[r0]
+ 130 0026 70BD     	 pop {r4,r5,r6,pc}
+ 131              	.L15:
+ 132 0028 70BD     	 pop {r4,r5,r6,pc}
+ 134              	 .section .text.USB_GetNextDescriptorOfTypeAfter,"ax",%progbits
+ 135              	 .align 1
+ 136              	 .global USB_GetNextDescriptorOfTypeAfter
+ 137              	 .thumb
+ 138              	 .thumb_func
+ 140              	USB_GetNextDescriptorOfTypeAfter:
+ 141              	 
+ 142              	 
+ 143 0000 70B5     	 push {r4,r5,r6,lr}
+ 144 0002 0446     	 mov r4,r0
+ 145 0004 1546     	 mov r5,r2
+ 146 0006 1A46     	 mov r2,r3
+ 147 0008 0E46     	 mov r6,r1
+ 148 000a FFF7FEFF 	 bl USB_GetNextDescriptorOfType
+ 149 000e 2388     	 ldrh r3,[r4]
+ 150 0010 33B1     	 cbz r3,.L22
+ 151 0012 2046     	 mov r0,r4
+ 152 0014 3146     	 mov r1,r6
+ 153 0016 2A46     	 mov r2,r5
+ 154 0018 BDE87040 	 pop {r4,r5,r6,lr}
+ 155 001c FFF7FEBF 	 b USB_GetNextDescriptorOfType
+ 156              	.L22:
+ 157 0020 70BD     	 pop {r4,r5,r6,pc}
+ 159              	 .section .text.USB_GetNextDescriptorComp,"ax",%progbits
+ 160              	 .align 1
+ 161              	 .global USB_GetNextDescriptorComp
+ 162              	 .thumb
+ 163              	 .thumb_func
+ 165              	USB_GetNextDescriptorComp:
+ 166              	 
+ 167              	 
+ 168 0000 2DE9F041 	 push {r4,r5,r6,r7,r8,lr}
+ 169 0004 0546     	 mov r5,r0
+ 170 0006 0E46     	 mov r6,r1
+ 171 0008 9046     	 mov r8,r2
+ 172              	.L25:
+ 173 000a 2C88     	 ldrh r4,[r5]
+ 174 000c 8CB1     	 cbz r4,.L31
+ 175 000e 3768     	 ldr r7,[r6]
+ 176 0010 3B78     	 ldrb r3,[r7]
+ 177 0012 A342     	 cmp r3,r4
+ 178 0014 28BF     	 it cs
+ 179 0016 2346     	 movcs r3,r4
+ 180 0018 F818     	 adds r0,r7,r3
+ 181 001a E31A     	 subs r3,r4,r3
+ 182 001c 3060     	 str r0,[r6]
+ 183 001e 2B80     	 strh r3,[r5]
+ 184 0020 C047     	 blx r8
+ 185 0022 0228     	 cmp r0,#2
+ 186 0024 F1D0     	 beq .L25
+ 187 0026 0128     	 cmp r0,#1
+ 188 0028 04D1     	 bne .L27
+ 189 002a 3760     	 str r7,[r6]
+ 190 002c 2C80     	 strh r4,[r5]
+ 191 002e BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 192              	.L31:
+ 193 0032 0220     	 movs r0,#2
+ 194              	.L27:
+ 195 0034 BDE8F081 	 pop {r4,r5,r6,r7,r8,pc}
+ 197              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 ConfigDescriptors.c
+    {standard input}:17     .text.USB_Host_GetDeviceConfigDescriptor:00000000 $t
+    {standard input}:22     .text.USB_Host_GetDeviceConfigDescriptor:00000000 USB_Host_GetDeviceConfigDescriptor
+    {standard input}:71     .text.USB_Host_GetDeviceConfigDescriptor:0000005c $d
+    {standard input}:74     .text.USB_GetNextDescriptorOfType:00000000 $t
+    {standard input}:79     .text.USB_GetNextDescriptorOfType:00000000 USB_GetNextDescriptorOfType
+    {standard input}:102    .text.USB_GetNextDescriptorOfTypeBefore:00000000 $t
+    {standard input}:107    .text.USB_GetNextDescriptorOfTypeBefore:00000000 USB_GetNextDescriptorOfTypeBefore
+    {standard input}:135    .text.USB_GetNextDescriptorOfTypeAfter:00000000 $t
+    {standard input}:140    .text.USB_GetNextDescriptorOfTypeAfter:00000000 USB_GetNextDescriptorOfTypeAfter
+    {standard input}:160    .text.USB_GetNextDescriptorComp:00000000 $t
+    {standard input}:165    .text.USB_GetNextDescriptorComp:00000000 USB_GetNextDescriptorComp
+
+UNDEFINED SYMBOLS
+Pipe_SelectPipe
+USB_Host_SendControlRequest
+USB_ControlRequest

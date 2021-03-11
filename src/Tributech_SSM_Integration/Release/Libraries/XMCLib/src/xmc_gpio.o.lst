@@ -1,0 +1,67 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "xmc_gpio.c"
+  16              	 .section .text.XMC_GPIO_SetMode,"ax",%progbits
+  17              	 .align 1
+  18              	 .global XMC_GPIO_SetMode
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	XMC_GPIO_SetMode:
+  23              	 
+  24              	 
+  25 0000 01F0FC03 	 and r3,r1,#252
+  26 0004 1844     	 add r0,r0,r3
+  27 0006 01F00301 	 and r1,r1,#3
+  28 000a 10B5     	 push {r4,lr}
+  29 000c C900     	 lsls r1,r1,#3
+  30 000e 0469     	 ldr r4,[r0,#16]
+  31 0010 F823     	 movs r3,#248
+  32 0012 8B40     	 lsls r3,r3,r1
+  33 0014 24EA0303 	 bic r3,r4,r3
+  34 0018 0361     	 str r3,[r0,#16]
+  35 001a 0369     	 ldr r3,[r0,#16]
+  36 001c 8A40     	 lsls r2,r2,r1
+  37 001e 1343     	 orrs r3,r3,r2
+  38 0020 0361     	 str r3,[r0,#16]
+  39 0022 10BD     	 pop {r4,pc}
+  41              	 .section .text.XMC_GPIO_SetHardwareControl,"ax",%progbits
+  42              	 .align 1
+  43              	 .global XMC_GPIO_SetHardwareControl
+  44              	 .thumb
+  45              	 .thumb_func
+  47              	XMC_GPIO_SetHardwareControl:
+  48              	 
+  49              	 
+  50 0000 436F     	 ldr r3,[r0,#116]
+  51 0002 4900     	 lsls r1,r1,#1
+  52 0004 10B5     	 push {r4,lr}
+  53 0006 0324     	 movs r4,#3
+  54 0008 8C40     	 lsls r4,r4,r1
+  55 000a 23EA0403 	 bic r3,r3,r4
+  56 000e 4367     	 str r3,[r0,#116]
+  57 0010 436F     	 ldr r3,[r0,#116]
+  58 0012 8A40     	 lsls r2,r2,r1
+  59 0014 1343     	 orrs r3,r3,r2
+  60 0016 4367     	 str r3,[r0,#116]
+  61 0018 10BD     	 pop {r4,pc}
+  63              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 xmc_gpio.c
+    {standard input}:17     .text.XMC_GPIO_SetMode:00000000 $t
+    {standard input}:22     .text.XMC_GPIO_SetMode:00000000 XMC_GPIO_SetMode
+    {standard input}:42     .text.XMC_GPIO_SetHardwareControl:00000000 $t
+    {standard input}:47     .text.XMC_GPIO_SetHardwareControl:00000000 XMC_GPIO_SetHardwareControl
+
+NO UNDEFINED SYMBOLS

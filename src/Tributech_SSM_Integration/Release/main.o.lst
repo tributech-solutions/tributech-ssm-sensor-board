@@ -1,0 +1,280 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "main.c"
+  16              	 .section .text.startup.main,"ax",%progbits
+  17              	 .align 1
+  18              	 .global main
+  19              	 .thumb
+  20              	 .thumb_func
+  22              	main:
+  23              	 
+  24              	 
+  25 0000 2DE9F047 	 push {r4,r5,r6,r7,r8,r9,r10,lr}
+  26 0004 564B     	 ldr r3,.L20
+  27 0006 96B0     	 sub sp,sp,#88
+  28 0008 02AA     	 add r2,sp,#8
+  29 000a 03F12005 	 add r5,r3,#32
+  30 000e 1646     	 mov r6,r2
+  31              	.L2:
+  32 0010 1868     	 ldr r0,[r3]
+  33 0012 5968     	 ldr r1,[r3,#4]
+  34 0014 1446     	 mov r4,r2
+  35 0016 03C4     	 stmia r4!,{r0,r1}
+  36 0018 0833     	 adds r3,r3,#8
+  37 001a AB42     	 cmp r3,r5
+  38 001c 2246     	 mov r2,r4
+  39 001e F7D1     	 bne .L2
+  40 0020 1868     	 ldr r0,[r3]
+  41 0022 1B79     	 ldrb r3,[r3,#4]
+  42 0024 2371     	 strb r3,[r4,#4]
+  43 0026 4F4B     	 ldr r3,.L20+4
+  44 0028 2060     	 str r0,[r4]
+  45 002a 0CAA     	 add r2,sp,#48
+  46 002c 03F12005 	 add r5,r3,#32
+  47 0030 1746     	 mov r7,r2
+  48              	.L3:
+  49 0032 1868     	 ldr r0,[r3]
+  50 0034 5968     	 ldr r1,[r3,#4]
+  51 0036 1446     	 mov r4,r2
+  52 0038 03C4     	 stmia r4!,{r0,r1}
+  53 003a 0833     	 adds r3,r3,#8
+  54 003c AB42     	 cmp r3,r5
+  55 003e 2246     	 mov r2,r4
+  56 0040 F7D1     	 bne .L3
+  57 0042 1868     	 ldr r0,[r3]
+  58 0044 1B79     	 ldrb r3,[r3,#4]
+  59 0046 2371     	 strb r3,[r4,#4]
+  60 0048 2060     	 str r0,[r4]
+  61 004a FFF7FEFF 	 bl ClockSetup
+  62 004e 4648     	 ldr r0,.L20+8
+  63 0050 FFF7FEFF 	 bl RTC_Init
+  64 0054 FFF7FEFF 	 bl UART_init
+  65 0058 FFF7FEFF 	 bl usb_host_init
+  66 005c FFF7FEFF 	 bl i2c_init
+  67 0060 FFF7FEFF 	 bl dps310_init
+  68 0064 FFF7FEFF 	 bl get_time
+  69 0068 8146     	 mov r9,r0
+  70 006a FFF7FEFF 	 bl get_time
+  71 006e 3F4B     	 ldr r3,.L20+12
+  72 0070 0022     	 movs r2,#0
+  73 0072 8046     	 mov r8,r0
+  74 0074 0721     	 movs r1,#7
+  75 0076 3E48     	 ldr r0,.L20+16
+  76 0078 1A60     	 str r2,[r3]
+  77 007a FFF7FEFF 	 bl UART_Transmit
+  78 007e 0125     	 movs r5,#1
+  79              	.L14:
+  80 0080 0124     	 movs r4,#1
+  81              	.L4:
+  82 0082 DFF800A1 	 ldr r10,.L20+36
+  83 0086 FFF7FEFF 	 bl usb_host_communication
+  84 008a 9AF80030 	 ldrb r3,[r10]
+  85 008e 0B2B     	 cmp r3,#11
+  86 0090 05D1     	 bne .L6
+  87 0092 FFF7FEFF 	 bl get_time
+  88 0096 8045     	 cmp r8,r0
+  89 0098 01DA     	 bge .L6
+  90 009a FFF7FEFF 	 bl dps310_get_cont_results
+  91              	.L6:
+  92 009e FFF7FEFF 	 bl get_time
+  93 00a2 09F10103 	 add r3,r9,#1
+  94 00a6 9842     	 cmp r0,r3
+  95 00a8 01DA     	 bge .L8
+  96 00aa 002C     	 cmp r4,#0
+  97 00ac 56D0     	 beq .L18
+  98              	.L8:
+  99 00ae 9AF80030 	 ldrb r3,[r10]
+ 100 00b2 0B2B     	 cmp r3,#11
+ 101 00b4 E4D1     	 bne .L14
+ 102 00b6 FFF7FEFF 	 bl get_time
+ 103 00ba 8045     	 cmp r8,r0
+ 104 00bc E0DA     	 bge .L14
+ 105 00be 2D4C     	 ldr r4,.L20+20
+ 106 00c0 15B3     	 cbz r5,.L10
+ 107 00c2 DFF8C480 	 ldr r8,.L20+40
+ 108 00c6 D4ED027A 	 flds s15,[r4,#8]
+ 109 00ca 98ED007A 	 flds s14,[r8]
+ 110 00ce B4EE677A 	 fcmps s14,s15
+ 111 00d2 F1EE10FA 	 fmstat
+ 112 00d6 3BD0     	 beq .L11
+ 113 00d8 1021     	 movs r1,#16
+ 114 00da 2748     	 ldr r0,.L20+24
+ 115 00dc FFF7FEFF 	 bl UART_Transmit
+ 116 00e0 04F10803 	 add r3,r4,#8
+ 117 00e4 0093     	 str r3,[sp]
+ 118 00e6 0423     	 movs r3,#4
+ 119 00e8 0193     	 str r3,[sp,#4]
+ 120 00ea 3046     	 mov r0,r6
+ 121 00ec 0023     	 movs r3,#0
+ 122 00ee 0022     	 movs r2,#0
+ 123 00f0 FFF7FEFF 	 bl provide_values
+ 124 00f4 214B     	 ldr r3,.L20+28
+ 125 00f6 1880     	 strh r0,[r3]
+ 126 00f8 E378     	 ldrb r3,[r4,#3]
+ 127 00fa 07EE903A 	 fmsr s15,r3
+ 128 00fe F8EE677A 	 fuitos s15,s15
+ 129 0102 C8ED007A 	 fsts s15,[r8]
+ 130 0106 22E0     	 b .L15
+ 131              	.L10:
+ 132 0108 1D4D     	 ldr r5,.L20+32
+ 133 010a D4ED037A 	 flds s15,[r4,#12]
+ 134 010e 95ED007A 	 flds s14,[r5]
+ 135 0112 B4EE677A 	 fcmps s14,s15
+ 136 0116 F1EE10FA 	 fmstat
+ 137 011a 18D0     	 beq .L15
+ 138 011c 1021     	 movs r1,#16
+ 139 011e 1648     	 ldr r0,.L20+24
+ 140 0120 FFF7FEFF 	 bl UART_Transmit
+ 141 0124 04F10C03 	 add r3,r4,#12
+ 142 0128 0093     	 str r3,[sp]
+ 143 012a 0423     	 movs r3,#4
+ 144 012c 0193     	 str r3,[sp,#4]
+ 145 012e 3846     	 mov r0,r7
+ 146 0130 0023     	 movs r3,#0
+ 147 0132 0022     	 movs r2,#0
+ 148 0134 FFF7FEFF 	 bl provide_values
+ 149 0138 104B     	 ldr r3,.L20+28
+ 150 013a 1880     	 strh r0,[r3]
+ 151 013c 6379     	 ldrb r3,[r4,#5]
+ 152 013e 07EE903A 	 fmsr s15,r3
+ 153 0142 F8EE677A 	 fuitos s15,s15
+ 154 0146 C5ED007A 	 fsts s15,[r5]
+ 155 014a 0125     	 movs r5,#1
+ 156 014c 00E0     	 b .L11
+ 157              	.L15:
+ 158 014e 0025     	 movs r5,#0
+ 159              	.L11:
+ 160 0150 FFF7FEFF 	 bl get_time
+ 161 0154 8146     	 mov r9,r0
+ 162 0156 FFF7FEFF 	 bl get_time
+ 163 015a 8046     	 mov r8,r0
+ 164              	.L18:
+ 165 015c 0024     	 movs r4,#0
+ 166 015e 90E7     	 b .L4
+ 167              	.L21:
+ 168              	 .align 2
+ 169              	.L20:
+ 170 0160 19000000 	 .word .LC0
+ 171 0164 3E000000 	 .word .LC1
+ 172 0168 00000000 	 .word RTC_0
+ 173 016c 00000000 	 .word transaction_nr_dec
+ 174 0170 00000000 	 .word .LC2
+ 175 0174 00000000 	 .word dps310_status
+ 176 0178 08000000 	 .word .LC3
+ 177 017c 00000000 	 .word .LANCHOR1
+ 178 0180 00000000 	 .word .LANCHOR2
+ 179 0184 00000000 	 .word USBHostState
+ 180 0188 00000000 	 .word .LANCHOR0
+ 182              	 .global return_code
+ 183              	 .global last_pres_reading
+ 184              	 .global last_temp_reading
+ 185              	 .comm error_code_string,50,1
+ 186              	 .comm transaction_nr_string,7,1
+ 187              	 .comm transaction_nr_dec,4,4
+ 188              	 .comm device_id_string,20,1
+ 189              	 .comm device_id_hex,8,8
+ 190              	 .comm t,4,4
+ 191              	 .comm p,12,4
+ 192              	 .comm RxBuffer,1024,1
+ 193              	 .comm request_send,1,1
+ 194              	 .comm recv_command_length,2,2
+ 195              	 .comm recv_command,4,4
+ 196              	 .comm send_buffer,4,4
+ 197              	 .comm uart_data_count,4,4
+ 198              	 .comm Rxlen,4,4
+ 199              	 .comm RxPtr,4,4
+ 200              	 .comm ReceivedByte,1,1
+ 201              	 .comm USBHostState,1,1
+ 202              	 .section .bss.last_pres_reading,"aw",%nobits
+ 203              	 .align 2
+ 204              	 .set .LANCHOR2,.+0
+ 207              	last_pres_reading:
+ 208 0000 00000000 	 .space 4
+ 209              	 .section .rodata.str1.1,"aMS",%progbits,1
+ 210              	.LC2:
+ 211 0000 48656C6C 	 .ascii "Hello\015\012\000"
+ 211      6F0D0A00 
+ 212              	.LC3:
+ 213 0008 50726F76 	 .ascii "Provide Values\015\012\000"
+ 213      69646520 
+ 213      56616C75 
+ 213      65730D0A 
+ 213      00
+ 214              	.LC0:
+ 215 0019 30353034 	 .ascii "050480c1-8008-7108-ffff-000000000001\000"
+ 215      38306331 
+ 215      2D383030 
+ 215      382D3731 
+ 215      30382D66 
+ 216              	.LC1:
+ 217 003e 30353034 	 .ascii "050480c1-8008-7108-ffff-000000000002\000"
+ 217      38306331 
+ 217      2D383030 
+ 217      382D3731 
+ 217      30382D66 
+ 218              	 .section .bss.last_temp_reading,"aw",%nobits
+ 219              	 .align 2
+ 220              	 .set .LANCHOR0,.+0
+ 223              	last_temp_reading:
+ 224 0000 00000000 	 .space 4
+ 225              	 .section .bss.return_code,"aw",%nobits
+ 226              	 .align 1
+ 227              	 .set .LANCHOR1,.+0
+ 230              	return_code:
+ 231 0000 0000     	 .space 2
+ 232              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.c
+    {standard input}:17     .text.startup.main:00000000 $t
+    {standard input}:22     .text.startup.main:00000000 main
+    {standard input}:170    .text.startup.main:00000160 $d
+                            *COM*:00000004 transaction_nr_dec
+                            *COM*:00000001 USBHostState
+    {standard input}:230    .bss.return_code:00000000 return_code
+    {standard input}:207    .bss.last_pres_reading:00000000 last_pres_reading
+    {standard input}:223    .bss.last_temp_reading:00000000 last_temp_reading
+                            *COM*:00000032 error_code_string
+                            *COM*:00000007 transaction_nr_string
+                            *COM*:00000014 device_id_string
+                            *COM*:00000008 device_id_hex
+                            *COM*:00000004 t
+                            *COM*:0000000c p
+                            *COM*:00000400 RxBuffer
+                            *COM*:00000001 request_send
+                            *COM*:00000002 recv_command_length
+                            *COM*:00000004 recv_command
+                            *COM*:00000004 send_buffer
+                            *COM*:00000004 uart_data_count
+                            *COM*:00000004 Rxlen
+                            *COM*:00000004 RxPtr
+                            *COM*:00000001 ReceivedByte
+    {standard input}:203    .bss.last_pres_reading:00000000 $d
+    {standard input}:219    .bss.last_temp_reading:00000000 $d
+    {standard input}:226    .bss.return_code:00000000 $d
+
+UNDEFINED SYMBOLS
+ClockSetup
+RTC_Init
+UART_init
+usb_host_init
+i2c_init
+dps310_init
+get_time
+UART_Transmit
+usb_host_communication
+dps310_get_cont_results
+provide_values
+RTC_0
+dps310_status

@@ -1,0 +1,64 @@
+   1              	 .syntax unified
+   2              	 .cpu cortex-m4
+   3              	 .eabi_attribute 27,3
+   4              	 .fpu fpv4-sp-d16
+   5              	 .eabi_attribute 20,1
+   6              	 .eabi_attribute 21,1
+   7              	 .eabi_attribute 23,3
+   8              	 .eabi_attribute 24,1
+   9              	 .eabi_attribute 25,1
+  10              	 .eabi_attribute 26,1
+  11              	 .eabi_attribute 30,4
+  12              	 .eabi_attribute 34,1
+  13              	 .eabi_attribute 18,4
+  14              	 .thumb
+  15              	 .file "rtc_conf.c"
+  16              	 .global RTC_0
+  17              	 .global RTC_0_time_alarm_config
+  18              	 .global RTC_0_config
+  19              	 .section .rodata.RTC_0_config,"a",%progbits
+  22              	RTC_0_config:
+  23 0000 01       	 .byte 1
+  24 0001 00       	 .byte 0
+  25 0002 00       	 .byte 0
+  26 0003 00       	 .byte 0
+  27 0004 00       	 .byte 0
+  28 0005 00       	 .byte 0
+  29 0006 00       	 .byte 0
+  30 0007 00       	 .byte 0
+  31              	 .section .data.RTC_0,"aw",%progbits
+  32              	 .align 2
+  35              	RTC_0:
+  36 0000 00000000 	 .word RTC_0_time_alarm_config
+  37 0004 00000000 	 .word RTC_0_config
+  38 0008 00       	 .byte 0
+  39 0009 000000   	 .space 3
+  40              	 .section .rodata.RTC_0_time_alarm_config,"a",%progbits
+  41              	 .align 2
+  44              	RTC_0_time_alarm_config:
+  45 0000 00       	 .byte 0
+  46 0001 00       	 .byte 0
+  47 0002 00       	 .byte 0
+  48 0003 00       	 .byte 0
+  49 0004 04       	 .byte 4
+  50 0005 00       	 .byte 0
+  51 0006 B207     	 .short 1970
+  52 0008 00       	 .byte 0
+  53 0009 01       	 .byte 1
+  54 000a 00       	 .byte 0
+  55 000b 00       	 .byte 0
+  56 000c 00       	 .space 1
+  57 000d 00       	 .byte 0
+  58 000e B207     	 .short 1970
+  59 0010 FF7F     	 .short 32767
+  60 0012 0000     	 .space 2
+  61              	 .ident "GCC: (GNU Tools for ARM Embedded Processors) 4.9.3 20141119 (release) [ARM/embedded-4_9-branch revision 218278]"
+DEFINED SYMBOLS
+                            *ABS*:00000000 rtc_conf.c
+    {standard input}:35     .data.RTC_0:00000000 RTC_0
+    {standard input}:44     .rodata.RTC_0_time_alarm_config:00000000 RTC_0_time_alarm_config
+    {standard input}:22     .rodata.RTC_0_config:00000000 RTC_0_config
+    {standard input}:32     .data.RTC_0:00000000 $d
+    {standard input}:41     .rodata.RTC_0_time_alarm_config:00000000 $d
+
+NO UNDEFINED SYMBOLS
