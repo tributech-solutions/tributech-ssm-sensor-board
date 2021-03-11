@@ -5,8 +5,8 @@ The RelaxKit in combination with an Infineon DPS310 preasure and temperature sen
 
 # Getting Started
 Software requirements:
-1. [DAVE<sup><b>TM</b>b></sup>  Infineon Technologies India Pvt. Ltd](https://infineoncommunity.com/dave-download_ID645) 
-2. [Segger J-Link Driver](https://www.segger.com/downloads/jlink/)
+1. [DAVE<sup><b>TM</b></sup>  Infineon Technologies India Pvt. Ltd](https://infineoncommunity.com/dave-download_ID645) version 4.4.2 or higher
+2. [Segger J-Link Driver](https://www.segger.com/downloads/jlink/) version 600b or higher
 3. Agent Companion
 
 Hardware Requirements:
@@ -21,8 +21,8 @@ Hardware Requirements:
 ## Set up 
 
 First see that all the requirements above are met.
-When all the requirements from above are met the project can be imported in DAVE^TM^.
-The project has to be imported as an Infineon DAVE project. 
+When all the requirements from above are met the project can be imported in Infineon DAVE<sup><b>TM</b></sup>.
+The project has to be imported as an Infineon DAVE<sup><b>TM</b></sup> project. 
 Before flashing the program to the RelaxKit check the ValueMetaDataIds in the program and
 check that the SSM also has those ValueMetaDataIds in its memory.
 This can be done with the Agent Companion provided by Tributech, which is also used to configure the SSM.
